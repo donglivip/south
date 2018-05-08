@@ -48,6 +48,18 @@ export default new Router({
       path: '/cuser',
       name: 'cuser',
       component:resolve => require(['@/components/cguan/cuser'], resolve)
+    },{
+      path: '/cjuan',
+      name: 'cjuan',
+      component:resolve => require(['@/components/cguan/cjuan'], resolve)
+    },{
+      path: '/csearch',
+      name: 'csearch',
+      component:resolve => require(['@/components/cguan/csearch'], resolve)
+    },{
+      path: '/cdetail',
+      name: 'cdetail',
+      component:resolve => require(['@/components/cguan/cdetail'], resolve)
     }
   ]
 })

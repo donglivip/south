@@ -7,14 +7,14 @@
 	    			工作轨迹
 	    	</span>
 			</div>
-			<div class="foot-nav" :class="tfoot==2?'fthis':''" @click="opennew('tindex')">
+			<div class="foot-nav" :class="tfoot==2?'fthis':''" @click="opennew('csearch')">
 				<img src="../../../static/c-ji-active.png" class="factive" />
 				<img src="../../../static/c-ji.png" class="fdefault" />
 				<span>
 	    			轨迹查询
 	    	</span>
 			</div>
-			<div class="foot-nav" :class="tfoot==3?'fthis':''" @click="opennew('tindex')">
+			<div class="foot-nav" :class="tfoot==3?'fthis':''" @click="opennew('cjuan')">
 				<img src="../../../static/c-pai-active.png" class="factive" />
 				<img src="../../../static/c-pai.png" class="fdefault" />
 				<span>
