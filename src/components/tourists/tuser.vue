@@ -2,52 +2,52 @@
   <div id="wrapper" class="user">
     	<t-head></t-head>
     	<div id="main">
-    		<img src="../../build/logo.png" class="avatar"/>
+    		<img src="../../../build/logo.png" class="avatar"/>
     		<div class="name">
     			张三-环卫
     		</div>
     		<div class="menu">
     			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../static/user-pwd.png"/>
+    				<img src="../../../static/user-pwd.png"/>
     				<span>
     					修改密码
     				</span>
-    				<img src="../../static/arrright.png"/>
+    				<img src="../../../static/arrright.png"/>
     			</div>
     			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../static/user-user.png"/>
+    				<img src="../../../static/user-user.png"/>
     				<span>
     					修改个人信息
     				</span>
-    				<img src="../../static/arrright.png"/>
+    				<img src="../../../static/arrright.png"/>
     			</div>
     			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../static/user-record.png"/>
+    				<img src="../../../static/user-record.png"/>
     				<span>
     					处理记录
     				</span>
-    				<img src="../../static/arrright.png"/>
+    				<img src="../../../static/arrright.png"/>
     			</div>
     			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../static/user-tong.png"/>
+    				<img src="../../../static/user-tong.png"/>
     				<span>
     					案卷统计
     				</span>
-    				<img src="../../static/arrright.png"/>
+    				<img src="../../../static/arrright.png"/>
     			</div>
     			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../static/user-ren.png"/>
+    				<img src="../../../static/user-ren.png"/>
     				<span>
     					人员统计
     				</span>
-    				<img src="../../static/arrright.png"/>
+    				<img src="../../../static/arrright.png"/>
     			</div>
     			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../static/user-wang.png"/>
+    				<img src="../../../static/user-wang.png"/>
     				<span>
     					网格管理
     				</span>
-    				<img src="../../static/arrright.png"/>
+    				<img src="../../../static/arrright.png"/>
     			</div>
     			<div class="clear">
     				退出登录
@@ -60,7 +60,7 @@
 
 <script>
 export default {
-  name: 'user',
+  name: 'tuser',
   data () {
     return {
       
@@ -85,8 +85,8 @@ export default {
   	}
   },
   components:{
-  	THead:resolve => require(['./tourists/thead'],resolve),
-  	TFoot:resolve => require(['./tourists/tfoot'],resolve)
+  	THead:resolve => require(['./thead'],resolve),
+  	TFoot:resolve => require(['./tfoot'],resolve)
   }
 }
 </script>

@@ -8,8 +8,7 @@ const store = new Vuex.Store({
 	state: {
 		thead:false,
 		tfoot:1,
-		navdata:['环卫工作者','环保小卫士','网格管理员'],
-		navid:''
+		navdata:['环卫工作者','环保小卫士','网格管理员']
 	}
 })
 

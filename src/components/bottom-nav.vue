@@ -4,7 +4,7 @@
     		<div class="sub-nav" v-for="val in navdata" @click="navchange(val)">
     			{{val}}
     		</div>
-    		<div class="sub-nav clear" @click="navchange()">
+    		<div class="sub-nav clear" @click="navchange('分类')">
     			取消
     		</div>
     	</div>
@@ -23,8 +23,7 @@ export default {
   },
   methods:{
 		navchange:function(id){
-//			this.$store.state.navid=id
-			this.$emit('navshow','id')
+			this.$emit('navshow',id)
 		}
   },
   computed:{

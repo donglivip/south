@@ -40,9 +40,9 @@
 				</div>
 				</transition>
 				<transition name='tran5'>
-				<div class="group width12" v-show="groupshow">
+				<div class="group width12" v-show="groupshow" @click="opennew('windex')">
 					<img src="../../static/home_06.png">
-					<div class="name1"><span>社区</span><span>网络员</span></div>
+					<div class="name1"><span>社区</span><span>网格员</span></div>
 				</div>
 				</transition>
 				<transition name='tran6'>
@@ -58,7 +58,7 @@
 				</div>
 				</transition>
 				<transition name='tran8'>
-				<div class="group width12" v-show="groupshow">
+				<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
 					<img src="../../static/home_06.png">
 					<div class="name1"><span>城管</span><span>中心</span></div>
 				</div>

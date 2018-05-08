@@ -21,13 +21,33 @@ export default new Router({
       name: 'tselect',
       component:resolve => require(['@/components/tourists/tselect'], resolve)
     },{
-      path: '/user',
-      name: 'user',
-      component:resolve => require(['@/components/user'], resolve)
+      path: '/tuser',
+      name: 'tuser',
+      component:resolve => require(['@/components/tourists/tuser'], resolve)
     },{
       path: '/hindex',
       name: 'hindex',
       component:resolve => require(['@/components/health/hindex'], resolve)
+    },{
+      path: '/windex',
+      name: 'windex',
+      component:resolve => require(['@/components/wadmin/windex'], resolve)
+    },{
+      path: '/wuser',
+      name: 'wuser',
+      component:resolve => require(['@/components/wadmin/wuser'], resolve)
+    },{
+      path: '/huser',
+      name: 'huser',
+      component:resolve => require(['@/components/health/huser'], resolve)
+    },{
+      path: '/cindex',
+      name: 'cindex',
+      component:resolve => require(['@/components/cguan/cindex'], resolve)
+    },{
+      path: '/cuser',
+      name: 'cuser',
+      component:resolve => require(['@/components/cguan/cuser'], resolve)
     }
   ]
 })

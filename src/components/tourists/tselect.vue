@@ -103,7 +103,7 @@
 									<div class="state">
 										<div class="type" @click="navshow(id)">
 											<span>
-												分类
+												{{navtext}}
 											</span>
 											<img src="../../../static/arr-bottom-grey.png"/>
 										</div>
@@ -140,7 +140,8 @@
 				timety: 0,
 				alertboo: false,
 				uploadtarget:'',
-				navboo:false
+				navboo:false,
+				navtext:'分类'
 			}
 		},
 		components: {
@@ -161,6 +162,7 @@
 		methods: {
 			navshow:function(id){
 				this.navboo=!this.navboo
+				this.navtext=id
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
@@ -401,7 +403,7 @@
 					color: gray;
 					height: .35rem;
 					line-height: .35rem;
-					margin-left: .5rem;
+					margin-left: .3rem;
 				}
 			}
 		}

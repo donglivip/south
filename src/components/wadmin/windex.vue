@@ -32,7 +32,7 @@
 		},
 		components: {
 			THead: resolve => require(['../tourists/thead'], resolve),
-			HFoot: resolve => require(['./hfoot'], resolve),
+			HFoot: resolve => require(['./wfoot'], resolve),
 			DMap: resolve => require(['../map'], resolve)
 		}
 	}

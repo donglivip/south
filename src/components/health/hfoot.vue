@@ -21,7 +21,7 @@
 	    			整改照
 	    	</span>
 			</div>
-			<div class="foot-nav" :class="tfoot==4?'fthis':''" @click="opennew('tindex')">
+			<div class="foot-nav" :class="tfoot==4?'fthis':''" @click="opennew('huser')">
 				<img src="../../../static/user-user.png" class="factive" />
 				<img src="../../../static/huan-wo.png" class="fdefault" />
 				<span>
