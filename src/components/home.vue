@@ -46,7 +46,7 @@
 				</div>
 				</transition>
 				<transition name='tran6'>
-				<div class="group width12" v-show="groupshow">
+				<div class="group width12" v-show="groupshow" @click="opennew('hindex')">
 					<img src="../../static/home_06.png">
 					<div class="name1"><span>环卫</span><span>工作者</span></div>
 				</div>
@@ -79,7 +79,7 @@
 
 <script>
 	export default {
-		name: 'home',
+		name: 'myhome',
 		data() {
 			return {
 					groupshow:false

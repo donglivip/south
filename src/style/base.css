@@ -33,7 +33,7 @@ body,html,#wrapper,#app{height: 100%;width: 100%;position: relative;overflow: hi
 .child-view {width: 100%;height: 100%;transition: all .5s cubic-bezier(.55, 0, .1, 1);}
 .alert-enter-active, .alert-leave-active {transition: all .6s;}
 .alert-enter, .alert-leave-to{opacity: 0;}
-#foot{position: absolute;bottom: 0;left: 0;width: 100%;height: .85rem;display: flex;align-items: center;border-top: 1px solid #828282;color: #828282;font-size: .2rem;}
+#foot{position: absolute;bottom: 0;left: 0;width: 100%;height: .85rem;display: flex;align-items: center;border-top: 1px solid #828282;color: #828282;font-size: .2rem;background: white;}
 #foot .foot-nav{flex: 1;display: flex;flex-direction: column;align-items: center;justify-content: center;}
 #foot .foot-nav img{height:.3rem ;margin-bottom: 5px;}
 .fthis{color: #1e81d2;}
@@ -41,3 +41,34 @@ body,html,#wrapper,#app{height: 100%;width: 100%;position: relative;overflow: hi
 .fthis .fdefault{display: none!important;}
 #foot .fdefault{display: block;}
 #foot .factive{display: none;}
+.alert{background: rgba(0,0,0,.5);display: flex;align-items: center;justify-content: center;position: absolute;width: 100%;height: 100%;top: 0;left: 0;z-index: 5;}
+.alert .alert-inner{background: white;border-radius: .1rem;width: 4rem;}
+.alert .alert-text{height: 1.5rem;display: flex;align-items: center;justify-content: center;}
+.alert .alert-setting{height: .6rem;display: flex;border-top: 1px solid #eeeeee;}
+.alert .setting-group{flex: 1;display: flex;align-items: center;justify-content: center;}
+.flexc{display: flex;align-items: center;justify-content: center;}
+.alert-enter-active, .alert-leave-active {
+			transform: translateZ(0);
+			  transition: all .4s;
+			}
+			.alert-enter, .alert-leave-to /* .fade-leave-active below version 2.1.8 */ {
+			  transform: translateZ(-100%);
+			  opacity: 0;
+			}
+			.amap-logo,.amap-copyright{display: none!important;}
+.start-enter-active, .start-leave-active {
+				transform: translateX(0);
+			  transition: all .3s;
+			}
+			.start-enter, .start-leave-to /* .fade-leave-active below version 2.1.8 */ {
+			  transform: translateX(30px);
+			  opacity: 0;
+			}
+			.nav-enter-active, .nav-leave-active {
+				transform: translateY(0);
+			  transition: all .3s;
+			}
+			.nav-enter, .nav-leave-to /* .fade-leave-active below version 2.1.8 */ {
+			  transform: translateY(100%);
+			  opacity: 0;
+			}

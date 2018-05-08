@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'thead',
+  name: 'dthead',
   data () {
     return {
       

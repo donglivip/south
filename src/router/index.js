@@ -20,6 +20,14 @@ export default new Router({
       path: '/tselect',
       name: 'tselect',
       component:resolve => require(['@/components/tourists/tselect'], resolve)
+    },{
+      path: '/user',
+      name: 'user',
+      component:resolve => require(['@/components/user'], resolve)
+    },{
+      path: '/hindex',
+      name: 'hindex',
+      component:resolve => require(['@/components/health/hindex'], resolve)
     }
   ]
 })

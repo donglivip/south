@@ -14,7 +14,7 @@
     				案卷调查
     			</span>
 		</div>
-		<div class="foot-nav" :class="tfoot==3?'fthis':''" @click="opennew('tuser')">
+		<div class="foot-nav" :class="tfoot==3?'fthis':''" @click="opennew('user')">
 			<img src="../../../static/index03-active.png" class="factive" />
 			<img src="../../../static/index03.png" class="fdefault" />
 			<span>
@@ -26,7 +26,7 @@
 
 <script>
 	export default {
-		name: 'index',
+		name: 'dtfoot',
 		data() {
 			return {
 

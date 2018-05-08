@@ -10,7 +10,9 @@ import './vuex/rem'
 import './style/base.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+import Calendar from 'vue-mobile-calendar'
 
+Vue.use(Calendar)
 Vue.config.productionTip = false
 Vue.prototype.axios='axios'
 Vue.use(VueAwesomeSwiper)
