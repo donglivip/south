@@ -18,14 +18,20 @@
 		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					已整改案卷
+					退回案卷
 				</div>
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
-					未整改案卷
+					预处理案卷
+				</div>
+				<div class="top-nav" :class="swiperindex==2?'active':''" @click="toswiper(2)">
+					待处理案卷
+				</div>
+				<div class="top-nav" :class="swiperindex==3?'active':''" @click="toswiper(3)">
+					已处理案卷
 				</div>
 			</div>
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
-			<div class="time-box">
+			<div class="time-box" v-show="swiperindex!=0">
 				<div class="box" @click="timeshow(0)">
 					{{starttime==''?'开始时间':starttime}}
 					<img src="../../../static/arrbottom.png" />
@@ -42,46 +48,22 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group">
-						<div class="group-inner">
-							<div class="group-title">
-								20110204案卷-育林社区1号网格
-							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改前
-									</div>
-								</div>
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改后
-									</div>
-								</div>
-							</div>
+					<div class="back-group" @click="opennew('cbackdetail')">
+						<div class="circle"></div>
+						<div class="date">
+							20110204
+						</div>
+						<div class="name">
+							玉林社区1号网格
 						</div>
 					</div>
-					<div class="select-group">
-						<div class="group-inner">
-							<div class="group-title">
-								20110204案卷-育林社区1号网格
-							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改前
-									</div>
-								</div>
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改后
-									</div>
-								</div>
-							</div>
+					<div class="back-group" @click="opennew('cbackdetail')">
+						<div class="circle"></div>
+						<div class="date">
+							20110204
+						</div>
+						<div class="name">
+							玉林社区1号网格
 						</div>
 					</div>
 				</swiper-slide>
@@ -99,17 +81,80 @@
 									</div>
 								</div>
 								<div class="img-group" @click="upload('2')">
-									<img src="../../../static/uploadselect.png" id='img2'/>
+									<img src="../../../static/uploadselect.png" id='img2' />
 									<div class="state">
-										<div class="type" @click="navshow(id)">
-											<span>
-												{{navtext}}
-											</span>
-											<img src="../../../static/arr-bottom-grey.png"/>
-										</div>
 										<span class="upload">
 											上传
 										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</swiper-slide>
+				<swiper-slide>
+					<div class="select-group">
+						<div class="group-inner">
+							<div class="group-title">
+								20110204案卷-育林社区1号网格
+							</div>
+							<div class="img-box">
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改前</span>
+									</div>
+								</div>
+								<div class="img-group" @click="upload('2')">
+									<img src="../../../static/uploadselect.png" id='img2' />
+									<div class="state">
+										<span class="upload">
+											上传
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</swiper-slide>
+				<swiper-slide>
+					<div class="select-group">
+						<div class="group-inner">
+							<div class="group-title">
+								20110204案卷-育林社区1号网格
+							</div>
+							<div class="img-box">
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改前</span>
+									</div>
+								</div>
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改后</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="select-group">
+						<div class="group-inner">
+							<div class="group-title">
+								20110204案卷-育林社区1号网格
+							</div>
+							<div class="img-box">
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改前</span>
+									</div>
+								</div>
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改后</span>
 									</div>
 								</div>
 							</div>
@@ -128,7 +173,7 @@
 <script>
 	import { swiper, swiperSlide } from 'vue-awesome-swiper'
 	export default {
-		name: 'tselect',
+		name: 'can',
 		data() {
 			return {
 				swiperOption: {},
@@ -139,20 +184,20 @@
 				startshow: false,
 				timety: 0,
 				alertboo: false,
-				uploadtarget:'',
-				navboo:false,
-				navtext:'分类'
+				uploadtarget: '',
+				navboo: false,
+				navtext: '分类'
 			}
 		},
 		components: {
 			swiper,
 			swiperSlide,
-			THead: resolve => require(['./thead'], resolve),
-			TFoot: resolve => require(['./tfoot'], resolve),
+			THead: resolve => require(['../tourists/thead'], resolve),
+			TFoot: resolve => require(['./cfoot'], resolve),
 			BootomNav: resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
-			this.$store.state.tfoot = 2
+			this.$store.state.tfoot = 4
 		},
 		computed: {
 			swiper() {
@@ -160,9 +205,14 @@
 			}
 		},
 		methods: {
-			navshow:function(id){
-				this.navboo=!this.navboo
-				this.navtext=id
+			opennew:function(target){
+				this.$router.push({
+					name:target
+				})
+			},
+			navshow: function(id) {
+				this.navboo = !this.navboo
+				this.navtext = id
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
@@ -190,7 +240,7 @@
 			},
 			upload: function(target) {
 				var that = this
-				that.uploadtarget=target
+				that.uploadtarget = target
 				var btnArray = [{
 					title: "照相机"
 				}, {
@@ -221,7 +271,7 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name; //获得图片名称
 						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('a'+that.uploadtarget).setAttribute('src',img_path)
+						document.getElementById('a' + that.uploadtarget).setAttribute('src', img_path)
 						that.upload_img(img_path);
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -238,7 +288,7 @@
 				var that = this
 				plus.gallery.pick(function(path) {
 					that.upload_img(path);
-					document.getElementById('a'+that.uploadtarget).setAttribute('src',path)
+					document.getElementById('a' + that.uploadtarget).setAttribute('src', path)
 					alert(path)
 				}, function(e) {
 					alert("取消选择图片");
@@ -300,10 +350,64 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		.type{
+		.back-group{
+			background: white;
+			width: 100%;
+			margin-top: .15rem;
+			box-shadow: 0 2px 2px 2px gainsboro;
+			height: .95rem;
 			display: flex;
 			align-items: center;
-			img{
+			font-size:.25rem;
+			.circle{
+				width: .2rem;
+			    height: .2rem;
+			    border-radius: 50%;
+			    background: #00b7ee;
+			    margin: 0 .22rem 0 .34rem;
+			}
+			.date{
+				width: 2rem;
+			}
+			&:nth-of-type(1n) .circle{
+				background: #00b7ee;
+			}
+			&:nth-of-type(2n) .circle{
+				background: #e39b00;
+			}
+			&:nth-of-type(3n) .circle{
+				background: #ff5c5c;
+			}
+			&:nth-of-type(4n) .circle{
+				background: #a8f247;
+			}
+			&:nth-of-type(5n) .circle{
+				background: #a264ff;
+			}
+			&:nth-of-type(6n) .circle{
+				background: #00b7ee;
+			}
+			&:nth-of-type(7n) .circle{
+				background: #ff6262;
+			}
+			&:nth-of-type(8n) .circle{
+				background: #b17dff;
+			}
+		}
+		.wwang{
+			display: flex;flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			.grey{
+				color: #8a8a8a;
+				font-size: .2rem;
+				font-weight: 400;
+			}
+		}
+		.type {
+			display: flex;
+			align-items: center;
+			img {
 				height: .1rem!important;
 				width: auto!important;
 				margin: 0 .05rem!important;
@@ -394,16 +498,18 @@
 					border: 1px solid #b8b8b8;
 					border-top: 0;
 					margin-top: -2px;
-					display: flex;align-items: center;
+					display: flex;
+					align-items: center;
 					justify-content: center;
+					font-size: .25rem;
+					font-weight: 600;
 				}
 				.upload {
 					background: #eeeeee;
-					padding: 0 .25rem;
+					padding: .05rem .25rem;
 					color: gray;
 					height: .35rem;
 					line-height: .35rem;
-					margin-left: .3rem;
 				}
 			}
 		}

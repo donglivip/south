@@ -1,11 +1,7 @@
 <template>
 	<div class="wrapper index">
 		<header class="header">
-			<span>
-				<img src="../../static/circle.png" class="circle"/>
-				<img src="../../static/circle.png" class="circle"/>
-				<img src="../../static/circle.png" class="circle"/>
-			</span>
+			<span></span>
 			<div>美丽南钢</div>
 			<span></span>
 		</header>

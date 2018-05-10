@@ -21,7 +21,7 @@
 	    			案卷派发
 	    	</span>
 			</div>
-			<div class="foot-nav" :class="tfoot==4?'fthis':''" @click="opennew('tindex')">
+			<div class="foot-nav" :class="tfoot==4?'fthis':''" @click="opennew('can')">
 				<img src="../../../static/c-pai-active.png" class="factive" />
 				<img src="../../../static/c-pai.png" class="fdefault" />
 				<span>

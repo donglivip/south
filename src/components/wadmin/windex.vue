@@ -16,7 +16,7 @@
 			}
 		},
 		mounted() {
-
+			this.$store.state.tfoot=1
 		},
 		methods: {
 			opennew: function(target) {

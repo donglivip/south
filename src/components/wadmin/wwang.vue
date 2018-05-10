@@ -18,10 +18,13 @@
 		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					已整改案卷
+					预处理案卷
 				</div>
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
-					未整改案卷
+					待处理案卷
+				</div>
+				<div class="top-nav" :class="swiperindex==2?'active':''" @click="toswiper(2)">
+					已处理案卷
 				</div>
 			</div>
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
@@ -54,31 +57,12 @@
 										整改前
 									</div>
 								</div>
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
+								<div class="img-group" @click="upload('2')">
+									<img src="../../../static/uploadselect.png" id='img2' />
 									<div class="state">
-										整改后
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="select-group">
-						<div class="group-inner">
-							<div class="group-title">
-								20110204案卷-育林社区1号网格
-							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改前
-									</div>
-								</div>
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改后
+										<span class="upload">
+											上传
+										</span>
 									</div>
 								</div>
 							</div>
@@ -94,21 +78,74 @@
 							<div class="img-box">
 								<div class="img-group">
 									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改前
+									<div class="state wwang">
+										<span>整改前</span>
+										<span class="grey">
+											备注-此处垃圾众多
+										</span>
 									</div>
 								</div>
 								<div class="img-group" @click="upload('2')">
-									<img src="../../../static/uploadselect.png" id='img2'/>
+									<img src="../../../static/uploadselect.png" id='img2' />
 									<div class="state">
-										<div class="type" @click="navshow(id)">
-											<span>
-												{{navtext}}
-											</span>
-											<img src="../../../static/arr-bottom-grey.png"/>
-										</div>
 										<span class="upload">
 											上传
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</swiper-slide>
+				<swiper-slide>
+					<div class="select-group">
+						<div class="group-inner">
+							<div class="group-title">
+								20110204案卷-育林社区1号网格
+							</div>
+							<div class="img-box">
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改前</span>
+										<span class="grey">
+											备注-此处垃圾众多
+										</span>
+									</div>
+								</div>
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改后</span>
+										<span class="grey">
+											备注-此处垃圾众多
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="select-group">
+						<div class="group-inner">
+							<div class="group-title">
+								20110204案卷-育林社区1号网格
+							</div>
+							<div class="img-box">
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改前</span>
+										<span class="grey">
+											备注-此处垃圾众多
+										</span>
+									</div>
+								</div>
+								<div class="img-group">
+									<img src="../../../static/prev.png" />
+									<div class="state wwang">
+										<span>整改后</span>
+										<span class="grey">
+											备注-此处垃圾众多
 										</span>
 									</div>
 								</div>
@@ -128,7 +165,7 @@
 <script>
 	import { swiper, swiperSlide } from 'vue-awesome-swiper'
 	export default {
-		name: 'tselect',
+		name: 'wwang',
 		data() {
 			return {
 				swiperOption: {},
@@ -139,16 +176,18 @@
 				startshow: false,
 				timety: 0,
 				alertboo: false,
-				uploadtarget:'',
-				navboo:false,
-				navtext:'分类'
+				uploadtarget: '',
+				navboo: false,
+				navtext: '分类',
+				server:'http://39.107.70.18/Transportation/uploadDriverImage',
+				files:[]
 			}
 		},
 		components: {
 			swiper,
 			swiperSlide,
-			THead: resolve => require(['./thead'], resolve),
-			TFoot: resolve => require(['./tfoot'], resolve),
+			THead: resolve => require(['../tourists/thead'], resolve),
+			TFoot: resolve => require(['./wfoot'], resolve),
 			BootomNav: resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
@@ -160,9 +199,9 @@
 			}
 		},
 		methods: {
-			navshow:function(id){
-				this.navboo=!this.navboo
-				this.navtext=id
+			navshow: function(id) {
+				this.navboo = !this.navboo
+				this.navtext = id
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
@@ -190,7 +229,8 @@
 			},
 			upload: function(target) {
 				var that = this
-				that.uploadtarget=target
+				that.files=[]
+				that.uploadtarget = target
 				var btnArray = [{
 					title: "照相机"
 				}, {
@@ -214,6 +254,7 @@
 				});
 			},
 			camera: function() {
+				console.log('相机')
 				var that = this
 				var cmr = plus.camera.getCamera();
 				cmr.captureImage(function(p) {
@@ -221,7 +262,7 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name; //获得图片名称
 						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('a'+that.uploadtarget).setAttribute('src',img_path)
+						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
 						that.upload_img(img_path);
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -235,21 +276,21 @@
 				}); //  “_doc/camera/“  为保存文件名
 			},
 			album: function() {
+				console.log('相册')
 				var that = this
 				plus.gallery.pick(function(path) {
+					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
 					that.upload_img(path);
-					document.getElementById('a'+that.uploadtarget).setAttribute('src',path)
-					alert(path)
 				}, function(e) {
 					alert("取消选择图片");
 				}, {
 					filter: "image"
 				});
 			},
-			upload_img: function() {
+			upload_img: function(p) {
 				var that = this
 				var n = p.substr(p.lastIndexOf('/') + 1);
-				this.files.push({
+				that.files.push({
 					name: "uploadkey",
 					path: p
 				});
@@ -257,13 +298,14 @@
 				that.start_upload();
 			},
 			start_upload: function() {
-				if(this.files.length <= 0) {
+				var that=this
+				if(that.files.length <= 0) {
 					plus.nativeUI.alert("没有添加上传文件！");
 					return;
 				}
 				//原生的转圈等待框
 				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(server, {
+				var task = plus.uploader.createUpload(that.server, {
 						method: "POST"
 					},
 					function(t, status) { //上传完成
@@ -273,7 +315,7 @@
 							//转换成json
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
-							var files = json.data;
+							that.files = json.data;
 							wt.close();
 						} else {
 							alert("上传失败：" + status);
@@ -281,9 +323,9 @@
 							wt.close();
 						}
 					});
-				task.addData("uid", this.getUid());
-				for(var i = 0; i < this.files.length; i++) {
-					var f = files[i];
+				task.addData("uid", that.getUid());
+				for(var i = 0; i < that.files.length; i++) {
+					var f = that.files[i];
 					task.addFile(f.path, {
 						key: f.name
 					});
@@ -300,10 +342,20 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		.type{
+		.wwang{
+			display: flex;flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			.grey{
+				color: #8a8a8a;
+				font-size: .2rem;
+				font-weight: 400;
+			}
+		}
+		.type {
 			display: flex;
 			align-items: center;
-			img{
+			img {
 				height: .1rem!important;
 				width: auto!important;
 				margin: 0 .05rem!important;
@@ -389,21 +441,24 @@
 					margin-top: .3rem;
 				}
 				.state {
-					line-height: .5rem;
+					line-height: .4rem;
+					height: .8rem;
 					text-align: center;
 					border: 1px solid #b8b8b8;
 					border-top: 0;
 					margin-top: -2px;
-					display: flex;align-items: center;
+					display: flex;
+					align-items: center;
 					justify-content: center;
+					font-size: .25rem;
+					font-weight: 600;
 				}
 				.upload {
 					background: #eeeeee;
-					padding: 0 .25rem;
+					padding: .05rem .25rem;
 					color: gray;
 					height: .35rem;
 					line-height: .35rem;
-					margin-left: .3rem;
 				}
 			}
 		}

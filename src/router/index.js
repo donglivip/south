@@ -37,6 +37,10 @@ export default new Router({
       name: 'wuser',
       component:resolve => require(['@/components/wadmin/wuser'], resolve)
     },{
+      path: '/wwang',
+      name: 'wwang',
+      component:resolve => require(['@/components/wadmin/wwang'], resolve)
+    },{
       path: '/huser',
       name: 'huser',
       component:resolve => require(['@/components/health/huser'], resolve)
@@ -60,6 +64,18 @@ export default new Router({
       path: '/cdetail',
       name: 'cdetail',
       component:resolve => require(['@/components/cguan/cdetail'], resolve)
+    },{
+      path: '/can',
+      name: 'can',
+      component:resolve => require(['@/components/cguan/can'], resolve)
+    },{
+      path: '/cbackdetail',
+      name: 'cbackdetail',
+      component:resolve => require(['@/components/cguan/cbackdetail'], resolve)
+    },{
+      path: '/userinform',
+      name: 'userinform',
+      component:resolve => require(['@/components/userinform'], resolve)
     }
   ]
 })
