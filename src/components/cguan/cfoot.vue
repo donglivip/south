@@ -1,6 +1,6 @@
 <template>
   <div id="foot">
-	  	<div class="foot-nav" :class="tfoot==1?'fthis':''" @click="opennew('cindex')">
+	  	<div class="foot-nav" :class="tfoot==1?'fthis':''" @click="opennew('cindex')" v-show="typefoot==1">
 				<img src="../../../static/c-gui-active.png" class="factive" />
 				<img src="../../../static/c-gui.png" class="fdefault" />
 				<span>
@@ -29,8 +29,8 @@
 	    	</span>
 			</div>
 			<div class="foot-nav" :class="tfoot==5?'fthis':''" @click="opennew('cuser')">
-				<img src="../../../static/index02-active.png" class="factive" />
-				<img src="../../../static/index02.png" class="fdefault" />
+				<img src="../../../static/index03-active.png" class="factive" />
+				<img src="../../../static/index03.png" class="fdefault" />
 				<span>
 	    			我的
 	    	</span>
@@ -62,6 +62,9 @@ export default {
   computed:{
   	tfoot(){
   		return this.$store.state.tfoot
+  	},
+  	typefoot(){
+  		return this.$store.state.typefoot
   	}
   }
 }

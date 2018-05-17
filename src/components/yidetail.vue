@@ -2,15 +2,15 @@
   <div id="wrapper" class="cbackdetail">
     	<div id="head">
     		<span @click="back">
-    			<img src="../../../static/back.png"/>
+    			<img src="../../static/back.png"/>
     		</span> 
-    		<div>退回案卷详情</div> 
+    		<div>已处理案卷详情</div> 
     		<span></span>
     	</div>
     	<div id="main">
     		<div class="detail-group">
     			<div class="detail-inner">
-    				<img src="../../../static/detail=adress.png"/>
+    				<img src="../../static/detail=adress.png"/>
     				<div class="detail-text">
     					育林社区1号网格
     				</div>
@@ -18,64 +18,42 @@
     		</div>
     		<div class="detail-group">
     			<div class="detail-inner">
-    				<img src="../../../static/detail-time.png"/>
+    				<img src="../../static/detail-time.png"/>
     				<div class="detail-text">
     					上报时间：2017-09-09
     				</div>
     			</div>
     			<div class="detail-inner">
-    				<img src="../../../static/detail-up.png"/>
+    				<img src="../../static/detail-up.png"/>
     				<div class="detail-text">
     					上报人：李四
     				</div>
     			</div>
     			<div class="detail-inner">
-    				<img src="../../../static/up-back.png"/>
-    				<div class="detail-text">
-    					退回人：张三
-    				</div>
-    			</div>
-    			<div class="detail-inner">
-    				<img src="../../../static/prev.png" class="big-img"/>
+    				<img src="../../static/prev.png" class="big-img"/>
     			</div>
     		</div>
     		<div class="detail-group">
-    			<div class="detail-inner" @click="navshow(id)">
+    			<div class="detail-inner">
+    				<img src="../../static/detail-time.png"/>
     				<div class="detail-text">
-    					可选网格：
+    					上报时间：2017-09-09
     				</div>
-    				<div class="detail-arr">
-    					请选择
-    				</div>
-    				<img src="../../../static/arrright.png" class="arrimg"/>
     			</div>
-    			<div class="detail-inner" @click="navshow(id)">
+    			<div class="detail-inner">
+    				<img src="../../static/up-back.png"/>
     				<div class="detail-text">
-    					案卷分类：
+    					上传人：张三
     				</div>
-    				<div class="detail-arr">
-    					请选择
-    				</div>
-    				<img src="../../../static/arrright.png" class="arrimg"/>
     			</div>
-    			<div class="detail-inner" @click="navshow(id)">
-    				<div class="detail-text">
-    					案卷时限：
-    				</div>
-    				<div class="detail-arr">
-    					请选择
-    				</div>
-    				<img src="../../../static/arrright.png" class="arrimg"/>
+    			<div class="detail-inner">
+    				<img src="../../static/prev.png" class="big-img"/>
     			</div>
-    		</div>
-    		<div class="godubmit">
-    			确认分配
     		</div>
     	</div>
     	<transition name='nav'>
 				<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
 			</transition>
-    	<t-foot></t-foot>
   </div>
 </template>
 
@@ -106,9 +84,7 @@ export default {
 			},
   },
   components:{
-  	THead:resolve => require(['../tourists/thead'],resolve),
-  	TFoot:resolve => require(['./cfoot'],resolve),
-  	BootomNav: resolve => require(['../bottom-nav'], resolve)
+  	BootomNav: resolve => require(['./bottom-nav'], resolve)
   }
 }
 </script>
@@ -116,6 +92,9 @@ export default {
 <style type="text/css" lang="scss">
 	.cbackdetail{
 		background: #EEEEEE;
+		#main{
+			height: calc(100% - .7rem);
+		}
 		.godubmit{
 			background: #1e81d2;
 			color: white;

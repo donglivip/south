@@ -69,7 +69,7 @@
 				</swiper-slide>
 				<swiper-slide>
 					<div class="select-group">
-						<div class="group-inner">
+						<div class="group-inner" @click="opennew('ydetail')">
 							<div class="group-title">
 								20110204案卷-育林社区1号网格
 							</div>
@@ -119,7 +119,7 @@
 				</swiper-slide>
 				<swiper-slide>
 					<div class="select-group">
-						<div class="group-inner">
+						<div class="group-inner" @click="opennew('yidetail')">
 							<div class="group-title">
 								20110204案卷-育林社区1号网格
 							</div>

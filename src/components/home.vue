@@ -18,21 +18,21 @@
 					</div>
 				</transition>
 				<transition name='tran2'>
-					<div class="group width12" v-show="groupshow">
+					<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>环保</span><span>小卫士</span></div>
 					</div>
 				</transition>
 				<transition name='tran3'>
-					<div class="group width12" v-show="groupshow">
+					<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>志愿</span><span>督察员</span></div>
 					</div>
 				</transition>
 				<transition name='tran4'>
-				<div class="group width12" v-show="groupshow">
+				<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
 					<img src="../../static/home_06.png">
-					<div class="name1"><span>社区</span><span>管理员</span></div>
+					<div class="name1"><span>社区</span><span>楼栋长</span></div>
 				</div>
 				</transition>
 				<transition name='tran5'>
@@ -48,7 +48,7 @@
 				</div>
 				</transition>
 				<transition name='tran7'>
-				<div class="group width12" v-show="groupshow">
+				<div class="group width12" v-show="groupshow" @click="opennew('hindex')">
 					<img src="../../static/home_06.png">
 					<div class="name1"><span>综合</span><span>执法队</span></div>
 				</div>
@@ -56,11 +56,11 @@
 				<transition name='tran8'>
 				<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
 					<img src="../../static/home_06.png">
-					<div class="name1"><span>城管</span><span>中心</span></div>
+					<div class="name1"><span>城管</span><span>执法队</span></div>
 				</div>
 				</transition>
 				<transition name='tran9'>
-				<div class="group width12" v-show="groupshow">
+				<div class="group width12" v-show="groupshow" @click="opennew('admin')">
 					<img src="../../static/home_06.png">
 					<div class="name1"><span>街办</span><span>管理员</span></div>
 				</div>
@@ -210,20 +210,19 @@
 	}
 	
 	.index .group:nth-of-type(5) {
-		top: 1.8rem;
-		left: 3.2rem;
+		top: 1.7rem;
+		left: 3rem;
 		
 	}
 	
 	.index .group:nth-of-type(6) {
 		top: 2.6rem;
-		left: 1.8rem;
+		left: 1.6rem;
 		
 	}
 	
 	.index .group:nth-of-type(7) {
 		top: 2.6rem;
-		left: .2rem;
 		
 	}
 	

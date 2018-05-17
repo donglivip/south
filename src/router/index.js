@@ -5,7 +5,21 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
+  {
+      path: '/changepwd',
+      name: 'changepwd',
+      component:resolve => require(['@/components/changepwd'], resolve)
+   },
+  {
+      path: '/register',
+      name: 'register',
+      component:resolve => require(['@/components/register'], resolve)
+   },
+  	{
+      path: '/login',
+      name: 'login',
+      component:resolve => require(['@/components/login'], resolve)
+   },{
       path: '/home',
       name: 'home',
       component:resolve => require(['@/components/home'], resolve)
@@ -41,9 +55,21 @@ export default new Router({
       name: 'wwang',
       component:resolve => require(['@/components/wadmin/wwang'], resolve)
     },{
+      path: '/ydetail',
+      name: 'ydetail',
+      component:resolve => require(['@/components/ydetail'], resolve)
+    },{
       path: '/huser',
       name: 'huser',
       component:resolve => require(['@/components/health/huser'], resolve)
+    },{
+      path: '/hwork',
+      name: 'hwork',
+      component:resolve => require(['@/components/health/hwork'], resolve)
+    },{
+      path: '/hchange',
+      name: 'hchange',
+      component:resolve => require(['@/components/health/hchange'], resolve)
     },{
       path: '/cindex',
       name: 'cindex',
@@ -71,11 +97,23 @@ export default new Router({
     },{
       path: '/cbackdetail',
       name: 'cbackdetail',
-      component:resolve => require(['@/components/cguan/cbackdetail'], resolve)
+      component:resolve => require(['@/components/cbackdetail'], resolve)
     },{
       path: '/userinform',
       name: 'userinform',
       component:resolve => require(['@/components/userinform'], resolve)
+    },{
+      path: '/admin',
+      name: 'admin',
+      component:resolve => require(['@/components/admin/admin'], resolve)
+    },{
+      path: '/yidetail',
+      name: 'yidetail',
+      component:resolve => require(['@/components/yidetail'], resolve)
+    },{
+      path: '/hworkdetail',
+      name: 'hworkdetail',
+      component:resolve => require(['@/components/hworkdetail'], resolve)
     }
   ]
 })

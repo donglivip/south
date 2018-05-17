@@ -22,13 +22,6 @@
     				<img src="../../../static/arrright.png"/>
     			</div>
     			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../../static/user-record.png"/>
-    				<span>
-    					处理记录
-    				</span>
-    				<img src="../../../static/arrright.png"/>
-    			</div>
-    			<div class="submenu" @click="opennew('changepwd')">
     				<img src="../../../static/user-tong.png"/>
     				<span>
     					案卷统计
@@ -39,13 +32,6 @@
     				<img src="../../../static/user-ren.png"/>
     				<span>
     					人员统计
-    				</span>
-    				<img src="../../../static/arrright.png"/>
-    			</div>
-    			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../../static/user-wang.png"/>
-    				<span>
-    					网格管理
     				</span>
     				<img src="../../../static/arrright.png"/>
     			</div>

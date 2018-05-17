@@ -45,7 +45,7 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group">
+					<div class="select-group" @click="opennew('ydetail')">
 						<div class="group-inner">
 							<div class="group-title">
 								20110204案卷-育林社区1号网格
@@ -199,6 +199,11 @@
 			}
 		},
 		methods: {
+			opennew:function(target) {
+				this.$router.push({
+					name: target
+				})
+			},
 			navshow: function(id) {
 				this.navboo = !this.navboo
 				this.navtext = id
