@@ -16,7 +16,7 @@
 					</div>
 				</div>
 				<div class="groupimg">
-					<img class="qlz" src="../../../static/img/prev.b7fbc1c.png">
+					<img class="qlz" src="../../static/zgimg.png">
 				</div>
 
 			</content>
