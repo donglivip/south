@@ -1,6 +1,10 @@
 <template>
 	<div id="wrapper" class="cdetail">
-		<t-head></t-head>
+		<div id="head">
+			<span @click="opennew('csearch')"><img src="../../../static/back.png"/></span>
+			<div>轨迹详情</div> 
+			<span style=""></span>
+		</div>
 		<div id="main">
 			<div class="csearch-top">
 				<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>

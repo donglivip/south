@@ -9,7 +9,7 @@
 			<div class="centercircle" v-show="groupshow">
 				<div class="group ">
 					<img src="../../static/yuan.png">
-					<span class="name">共筑美丽家园</span>
+					<span class="name">美南丽钢</span>
 				</div>
 				<transition name='tran1'>
 					<div class="group" v-show="groupshow" @click="opennew('tindex')">
@@ -48,7 +48,7 @@
 				</div>
 				</transition>
 				<transition name='tran7'>
-				<div class="group width12" v-show="groupshow" @click="opennew('hindex')">
+				<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
 					<img src="../../static/home_06.png">
 					<div class="name1"><span>综合</span><span>执法队</span></div>
 				</div>
@@ -60,7 +60,7 @@
 				</div>
 				</transition>
 				<transition name='tran9'>
-				<div class="group width12" v-show="groupshow" @click="opennew('admin')">
+				<div class="group width12" v-show="groupshow" @click="opennew('asearch')">
 					<img src="../../static/home_06.png">
 					<div class="name1"><span>街办</span><span>管理员</span></div>
 				</div>

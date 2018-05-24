@@ -8,11 +8,6 @@
 						<i class="icon-user"></i>
 						<input type="text" class="form-control" placeholder="请输入手机号码">
 					</div>
-					<div class="form-group yza">
-						<i class="icon-yz"></i>
-						<input type="text" class="form-control" placeholder="请输入验证码">
-						<a href="#" class="reg">发送验证码</a>
-					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
 						<input type="text" class="form-control" placeholder="请设置密码">

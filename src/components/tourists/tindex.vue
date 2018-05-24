@@ -4,7 +4,8 @@
 		<div id="main">
 			<div class="tindex-top">
 				<div class="img-box" @click="upload('1')">
-					<img src="../../../static/creame.png" class="gocream" id="img1"/>
+					<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
+					<img :src="upsrc"  id="img1" v-show="upimg"/>
 				</div>
 				<div class="tindex-setting">
 					<div class="setting-group" @click="clear">
@@ -74,7 +75,9 @@
 				creamsrc: '',
 				uploadtarget: '',
 				server:'http://39.107.70.18/Transportation/uploadDriverImage',
-				files:[]
+				files:[],
+				upimg:false,
+				upsrc:''
 			}
 		},
 		components: {
@@ -87,7 +90,7 @@
 		methods: {
 			clear:function(){
 				this.files=[]
-				document.getElementById('img1').setAttribute('src','../creame.png')
+				this.upimg=false
 			},
 			upload: function(target) {
 				var that = this
@@ -122,7 +125,8 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
-						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
+						that.upsrc=img_path
+						that.upimg=!that.upimg
 						that.upload_img(img_path);
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -138,7 +142,8 @@
 			album: function() {
 				var that = this
 				plus.gallery.pick(function(path) {
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
+					that.upsrc=path
+					that.upimg=!that.upimg
 					that.upload_img(path);
 				}, function(e) {
 					alert("取消选择图片");

@@ -1,8 +1,15 @@
 <template>
   <div class="bottom-nav">
     	<div class="nav-group">
-    		<div class="sub-nav" v-for="val in navdata" @click="navchange(val)">
-    			{{val}}
+    		<div class="sub-nav" v-for="(val,index) in navdata">
+    				<span v-show="navindex==-1" @click="navchange(val.name,index)">{{val.name}}</span>
+    				<transition name='tran2'>
+    					<div v-show="navindex==index?true:false">
+			    			<div class="sub-nav nav-inner" v-for="list in val.date" @click.stop="navchange(list)">
+				    			{{list}}
+				    		</div>
+			    		</div>
+		    		</transition>
     		</div>
     		<div class="sub-nav clear" @click="navchange('分类')">
     			取消
@@ -15,15 +22,19 @@ export default {
   name: 'bottomnav',
   data () {
     return {
-      
+      navindex:-1
     }
   },
   mounted(){
   
   },
   methods:{
-		navchange:function(id){
-			this.$emit('navshow',id)
+		navchange:function(id,index){
+			this.navindex=index
+			if(index==undefined){
+				this.$emit('navshow',id)
+				this.navindex=-1
+			}
 		}
   },
   computed:{
@@ -51,11 +62,17 @@ export default {
 			width:100%;
 			.sub-nav{
 				width: 100%;
-				height: .7rem;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				border-bottom: 1px solid ghostwhite;
+				flex-direction: column;
+			}
+			span{
+				padding: .3rem 0;
+			}
+			.nav-inner{
+				padding: .3rem 0;
 			}
 			.clear{
 				background: #1e81d2;

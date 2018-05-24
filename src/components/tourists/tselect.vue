@@ -98,10 +98,10 @@
 										整改前
 									</div>
 								</div>
-								<div class="img-group" @click="upload('2')">
-									<img src="../../../static/uploadselect.png" id='img2'/>
+								<div class="img-group">
+									<img src="../../../static/uploadselect.png" id='img2' @click="upload('2')"/>
 									<div class="state">
-										<div class="type" @click="navshow(id)">
+										<div class="type" @click="navshow('分类')">
 											<span>
 												{{navtext}}
 											</span>

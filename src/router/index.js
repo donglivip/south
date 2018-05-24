@@ -103,9 +103,13 @@ export default new Router({
       name: 'userinform',
       component:resolve => require(['@/components/userinform'], resolve)
     },{
-      path: '/admin',
-      name: 'admin',
-      component:resolve => require(['@/components/admin/admin'], resolve)
+      path: '/asearch',
+      name: 'asearch',
+      component:resolve => require(['@/components/admin/asearch'], resolve)
+    },{
+      path: '/acan',
+      name: 'acan',
+      component:resolve => require(['@/components/admin/acan'], resolve)
     },{
       path: '/yidetail',
       name: 'yidetail',
@@ -114,6 +118,34 @@ export default new Router({
       path: '/hworkdetail',
       name: 'hworkdetail',
       component:resolve => require(['@/components/hworkdetail'], resolve)
+    },{
+      path: '/changedetail',
+      name: 'changedetail',
+      component:resolve => require(['@/components/changedetail'], resolve)
+    },{
+      path: '/ajuan',
+      name: 'ajuan',
+      component:resolve => require(['@/components/admin/ajuan'], resolve)
+    },{
+      path: '/auser',
+      name: 'auser',
+      component:resolve => require(['@/components/admin/auser'], resolve)
+    },{
+      path: '/allguiji',
+      name: 'allguiji',
+      component:resolve => require(['@/components/allguiji'], resolve)
+    },{
+      path: '/allanjuan',
+      name: 'allanjuan',
+      component:resolve => require(['@/components/allanjuan'], resolve)
+    },{
+      path: '/allgongzuo',
+      name: 'allgongzuo',
+      component:resolve => require(['@/components/allgongzuo'], resolve)
+    },{
+      path: '/staticword',
+      name: 'staticword',
+      component:resolve => require(['@/components/staticword'], resolve)
     }
   ]
 })

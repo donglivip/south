@@ -4,8 +4,8 @@
     	<div id="main">
     		<div class="csearch-top">
     			<div class="csearch-inner">
-    				<div class="csearch-group">
-    					<span @click="navshow">
+    				<div class="csearch-group" @click="navshow">
+    					<span>
     						{{navtext}}
     					</span>
     					<img src="../../../static/xiaxia.png"/>
@@ -48,7 +48,7 @@
     		</div>
     	</div>
     	<transition name='nav'>
-				<bootom-nav v-show='navboo' v-on:navshow='navshow' ></bootom-nav>
+				<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
 			</transition>
     	<t-foot></t-foot>
   </div>
@@ -56,7 +56,7 @@
 
 <script>
 export default {
-  name: 'admin',
+  name: 'index',
   data () {
     return {
       navboo:false,
@@ -65,7 +65,6 @@ export default {
   },
   mounted(){
   	this.$store.state.tfoot=2
-  	this.$store.state.typefoot=2
   },
   methods:{
 		opennew:function(target){
@@ -85,7 +84,7 @@ export default {
   },
   components:{
   	THead:resolve => require(['../tourists/thead'],resolve),
-  	TFoot:resolve => require(['../cguan/cfoot'],resolve),
+  	TFoot:resolve => require(['./afoot'],resolve),
   	BootomNav: resolve => require(['../bottom-nav'], resolve)
   }
 }

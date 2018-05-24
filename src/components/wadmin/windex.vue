@@ -32,7 +32,7 @@
 				<swiper-slide>
 					<div class="workcamera">
 						<div class="box-group">
-							<div class="group">
+							<div class="group" @click="opennew('hworkdetail')">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span>20110204</span>
@@ -97,7 +97,7 @@
 				<swiper-slide>
 					<div class="hwzhenggai">
 						<div class="box-group">
-							<div class="group">
+							<div class="group" @click="opennew('changedetail')">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span>20110204</span>
@@ -178,7 +178,7 @@
 <script>
 	import { swiper, swiperSlide } from 'vue-awesome-swiper'
 	export default {
-		name: 'hindex',
+		name: 'windex',
 		data() {
 			return {
 				swiperOption: {},

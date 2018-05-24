@@ -28,7 +28,8 @@
 				</div>
 			</div>
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
-			<div class="time-box">
+			<transition name='alert'>
+			<div class="time-box" v-show='swiperindex!=0'>
 				<div class="box" @click="timeshow(0)">
 					{{starttime==''?'开始时间':starttime}}
 					<img src="../../../static/arrbottom.png" />
@@ -42,29 +43,59 @@
 					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
+			</transition>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group" @click="opennew('ydetail')">
-						<div class="group-inner">
-							<div class="group-title">
-								20110204案卷-育林社区1号网格
+					<div class="select-group workcamera" @click="opennew('ydetail')" style="background: none;">
+						<div class="box-group">
+							<div class="group">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>20110204</span>
+								</div>
+								<span class="text">环卫工作者清理垃圾</span>
+								<img src="../../../static/shanchu.png" />
 							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state">
-										整改前
-									</div>
+							<div class="group">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>20110204</span>
 								</div>
-								<div class="img-group" @click="upload('2')">
-									<img src="../../../static/uploadselect.png" id='img2' />
-									<div class="state">
-										<span class="upload">
-											上传
-										</span>
-									</div>
+								<span class="text">环卫工作者清理垃圾</span>
+								<img src="../../../static/shanchu.png" />
+							</div>
+							<div class="group">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>20110204</span>
 								</div>
+								<span class="text">环卫工作者清理垃圾</span>
+								<img src="../../../static/shanchu.png" />
+							</div>
+							<div class="group">
+								<div class="riqi">
+									<div class="circle  width12"></div>
+									<span>20110204</span>
+								</div>
+								<span class="text">环卫工作者清理垃圾</span>
+								<img src="../../../static/shanchu.png" />
+							</div>
+							<div class="group ">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>20110204</span>
+								</div>
+								<span class="text">环卫工作者清理垃圾</span>
+								<img src="../../../static/shanchu.png" />
+							</div>
+							<div class="group">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>20110204</span>
+								</div>
+								<span class="text">环卫工作者清理垃圾</span>
+								<img src="../../../static/shanchu.png" />
 							</div>
 						</div>
 					</div>
@@ -179,8 +210,8 @@
 				uploadtarget: '',
 				navboo: false,
 				navtext: '分类',
-				server:'http://39.107.70.18/Transportation/uploadDriverImage',
-				files:[]
+				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
+				files: []
 			}
 		},
 		components: {
@@ -199,7 +230,7 @@
 			}
 		},
 		methods: {
-			opennew:function(target) {
+			opennew: function(target) {
 				this.$router.push({
 					name: target
 				})
@@ -234,7 +265,7 @@
 			},
 			upload: function(target) {
 				var that = this
-				that.files=[]
+				that.files = []
 				that.uploadtarget = target
 				var btnArray = [{
 					title: "照相机"
@@ -303,7 +334,7 @@
 				that.start_upload();
 			},
 			start_upload: function() {
-				var that=this
+				var that = this
 				if(that.files.length <= 0) {
 					plus.nativeUI.alert("没有添加上传文件！");
 					return;
@@ -347,11 +378,12 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		.wwang{
-			display: flex;flex-direction: column;
+		.wwang {
+			display: flex;
+			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			.grey{
+			.grey {
 				color: #8a8a8a;
 				font-size: .2rem;
 				font-weight: 400;

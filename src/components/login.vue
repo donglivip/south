@@ -10,7 +10,7 @@
 					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
-						<input type="text" class="form-control" placeholder="请输入手机号码">
+						<input type="password" class="form-control" placeholder="请输入密码">
 					</div>
 
 				</div>

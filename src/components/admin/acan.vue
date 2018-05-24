@@ -17,30 +17,103 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tselect-top">
+				<div class="top-nav" :class="swiperindex==3?'active':''" @click="toswiper(3)">
+					退回案卷
+				</div>
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					待处理案卷
+					未受理案卷
 				</div>
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
-					已处理案卷
+					未整改案卷
+				</div>
+				<div class="top-nav" :class="swiperindex==2?'active':''" @click="toswiper(2)">
+					已整改案卷
 				</div>
 			</div>
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box">
-				<div class="box" @click="timeshow(0)">
-					{{starttime==''?'开始时间':starttime}}
-					<img src="../../../static/arrbottom.png" />
+				<div class="time-left">
+					<div class="left-box">
+						<div class="box" @click="navshow('0')">
+							{{community}}
+							<img src="../../../static/arrbottom.png" />
+						</div>
+						<span class="hr"></span>
+						<div class="box" @click="navshow('1')">
+							{{grid}}
+							<img src="../../../static/arrbottom.png" />
+						</div>
+					</div>
+					<div class="left-box">
+						<div class="box" @click="timeshow(0)">
+							{{starttime==''?'开始时间':starttime}}
+							<img src="../../../static/arrbottom.png" />
+						</div>
+						<span class="hr"></span>
+						<div class="box" @click="timeshow(1)">
+							{{endtime==''?'结束时间':starttime}}
+							<img src="../../../static/arrbottom.png" />
+						</div>
+					</div>
 				</div>
-				<span class="hr"></span>
-				<div class="box" @click="timeshow(1)">
-					{{endtime==''?'结束时间':starttime}}
-					<img src="../../../static/arrbottom.png" />
-				</div>
-				<div class="box-go" @click="navshow">
+				<div class="box-go" @click="navshow('2')">
 					{{navtext}}
 				</div>
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
+				<swiper-slide>
+					<div class="box-group">
+						<div class="group" @click="opennew('cbackdetail')">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle  width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group ">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+					</div>
+				</swiper-slide>
 				<swiper-slide>
 					<div class="select-group">
 						<div class="group-inner">
@@ -110,15 +183,67 @@
 						</div>
 					</div>
 				</swiper-slide>
+				<swiper-slide>
+					<div class="box-group">
+						<div class="group" @click="opennew('cbackdetail')">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle  width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group ">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+						<div class="group">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span>20110204</span>
+							</div>
+							<span class="text">环卫工作者清理垃圾</span>
+							<img src="../../../static/shanchu.png" />
+						</div>
+					</div>
+				</swiper-slide>
 			</swiper>
 		</div>
 		<transition name='nav'>
-			<div class="bottom-nav" v-show="navboo">
+			<div class="bottom-nav" v-show="navboo" @click="navshow(0)">
 				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in navdata" @click="navchange(val,index)" :class="navindex==index?'active':''">
-						{{val}}
+					<div class="sub-nav" v-for="(val,index) in navdata" @click.stop="navchange(val.name,index)" :class="navindex==index?'active':''">
+						{{val.name}}
 					</div>
-					<div class="sub-nav clear" @click="gosearch">
+					<div class="sub-nav clear" @click.stop="gosearch">
 						搜索
 					</div>
 				</div>
@@ -145,14 +270,17 @@
 				uploadtarget: '',
 				navboo: false,
 				navtext: '选择分类',
-				navindex:-1
+				navindex: -1,
+				community:'选择社区',
+				grid:'选择网格',
+				texttype:'0'
 			}
 		},
 		components: {
 			swiper,
 			swiperSlide,
 			THead: resolve => require(['../tourists/thead'], resolve),
-			TFoot: resolve => require(['./cfoot'], resolve),
+			TFoot: resolve => require(['./afoot'], resolve),
 			BootomNav: resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
@@ -162,23 +290,31 @@
 			swiper() {
 				return this.$refs.mySwiper.swiper;
 			},
-			navdata(){
-		  		return this.$store.state.navdata
-		  	}
+			navdata() {
+				return this.$store.state.navdata
+			}
 		},
 		methods: {
-			navchange:function(id,index){
-				this.navtext = id
-				this.navindex=index
+			navchange: function(id, index) {
+				console.log(this.texttype)
+				this.navindex = index
+				if(this.texttype==0){
+					this.community=id
+				}else if(this.texttype==1){
+					this.grid=id
+				}else{
+					this.navtext = id
+				}
 			},
 			opennew: function(target) {
 				this.$router.push({
 					name: target
 				})
 			},
-			navshow: function(id) {
+			navshow: function(num) {
 				this.navboo = !this.navboo
-				this.navtext = id
+				this.texttype = num
+				console.log(num)
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
@@ -197,8 +333,7 @@
 			},
 			gosearch: function() {
 				if(this.starttime == '' || this.endtime == '') {
-					this.navtext('选择分类')
-					this.navshow()
+					this.navshow('0')
 					this.alerttab()
 					return
 				}
@@ -318,6 +453,20 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
+		.time-left{
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			.left-box{
+				display: flex;
+				align-items: center;
+				margin: .1rem 0;
+			}
+		}
+		.time-box{
+			height: auto;
+			padding: .2rem 0;
+		}
 		.bottom-nav {
 			position: absolute;
 			width: 100%;
@@ -345,11 +494,54 @@
 					color: white;
 					height: .8rem;
 				}
-				.active{
+				.active {
 					background: #1e81d2;
 					color: white;
 				}
 			}
+		}
+		.group img {
+			height: .35rem;
+		}
+		.box-group .group {
+			background: #FFFFFF;
+			margin: .2rem 0;
+			height: .8rem;
+			display: flex;
+			align-items: center;
+			box-shadow: 0 2px 2px 2px gainsboro;
+		}
+		.riqi {
+			display: flex;
+			align-items: center;
+			margin: 0 .2rem 0 .34rem;
+		}
+		.text {
+			width: 4.4rem;
+		}
+		.width12 {
+			width: .17rem;
+			height: .17rem;
+			border-radius: 50%;
+			margin-right: .35rem;
+		}
+		.group:nth-of-type(1) .circle {
+			background: blue;
+		}
+		.group:nth-of-type(2) .circle {
+			background: yellow;
+		}
+		.group:nth-of-type(3) .circle {
+			background: red;
+		}
+		.group:nth-of-type(4) .circle {
+			background: pink;
+		}
+		.group:nth-of-type(5) .circle {
+			background: peru;
+		}
+		.group:nth-of-type(6) .circle {
+			background: green;
 		}
 		.back-group {
 			background: white;

@@ -28,6 +28,13 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
+				<div class="submenu" @click="opennew('changepwd')">
+					<img src="../../../static/user-wang.png" />
+					<span>
+    					我的网格
+    				</span>
+					<img src="../../../static/arrright.png" />
+				</div>
 				<div class="clear">
 					退出登录
 				</div>

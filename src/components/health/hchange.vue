@@ -2,8 +2,16 @@
   		<div class="hwzhenggai" id="warpper">
   			<t-head></t-head>
 			<div id="main">
+				<div class="nav">
+					<div class="nav-tab" :class="navtype==0?'active':''" @click="tab(0)">
+						未整改
+					</div>
+					<div class="nav-tab" :class="navtype==1?'active':''" @click="tab(1)">
+						整改
+					</div>
+				</div>
 					<div class="box-group">
-						<div class="group">
+						<div class="group" @click="opennew('changedetail')">
 							<div class="riqi">
 								<div class="circle width12"></div>
 								<span>20110204</span>
@@ -53,28 +61,8 @@
 						</div>
 					</div>			
 				</div>
-
-				<footer>
-					<div class="box-upload">
-						<div class="upload">
-							<div class="zhenggai">
-								<div class="zhenggaia">
-									<img class="zgz" src="../../../static/zgimg.png" id="img1" @click="upload('1')">
-									<span>整改前</span>
-								</div>
-							</div>
-							<div class="shangchuan">
-								<img class="scz" src="../../../static/scimggrey.png" id="img2" @click="upload('2')">
-								<div class="sc">
-									<div class="fenlei" @click="navshow"><span>{{navtext}}</span><img class="sanjiao" src="../../../static/sanjiao.png"></div>
-									<div class="scbut">上传</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</footer>
 				<transition name='nav'>
-					<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
+					<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
 				</transition>
 				<t-foot></t-foot>
 			</div>
@@ -89,14 +77,18 @@ export default {
       uploadtarget: '',
 			server:'http://39.107.70.18/Transportation/uploadDriverImage',
 			files:[],
-			navboo:true,
-			navtext:'分类'
+			navboo:false,
+			navtext:'分类',
+			navtype:0
     }
   },
   mounted(){
   	this.$store.state.tfoot=3
   },
   methods:{
+  	tab:function(inedx){
+  		this.navtype=inedx
+  	},
   			navshow:function(id){
 				this.navboo=!this.navboo
 				this.navtext=id
@@ -226,8 +218,23 @@ export default {
 </script>
 
 <style type="text/css" lang="scss">
+	.hwzhenggai .nav{
+			display: flex;
+			width: 100%;
+			height: .8rem;
+			background: white;
+			.nav-tab{
+				flex: 1;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.active{
+				border-bottom: 2px solid #1e81d2;
+			}
+		}
 		header{display: flex;justify-content: space-between;align-items: center;height:1rem;color: #FFFFFF;background:rgb(30,129,214);font-size: .3rem;}
-		.hwzhenggai{background: #eeeeee;height: 100%;}
+		.hwzhenggai{background: #eeeeee;height: 100%;position: initial;}
 		.hwzhenggai .group img{height: .35rem;}
 		.hwzhenggai .box-group .group{background: #FFFFFF;margin: .2rem 0;height:.8rem;display: flex;align-items: center;box-shadow: 0 2px 2px 2px gainsboro;}
 		.hwzhenggai .riqi{display: flex;align-items: center;margin: 0 .2rem 0 .34rem;}

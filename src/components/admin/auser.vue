@@ -2,7 +2,7 @@
 	<div id="wrapper" class="user">
 		<t-head></t-head>
 		<div id="main">
-			<img src="../../../build/logo.png" class="avatar" id="img1" @click="upload('1')" />
+			<img src="../../../build/logo.png" class="avatar" />
 			<div class="name">
 				张三-环卫
 			</div>
@@ -21,34 +21,48 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<!--<div class="submenu" @click="opennew('changepwd')">
-					<img src="../../../static/user-record.png" />
+				<div class="submenu" @click="opennew('changepwd')">
+					<img src="../../../static/user-ren.png" />
 					<span>
     					处理记录
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('allanjuan')">
 					<img src="../../../static/user-tong.png" />
 					<span>
-    					案卷统计
+    					案卷查询
+    				</span>
+					<img src="../../../static/arrright.png" />
+				</div>
+				<div class="submenu" @click="opennew('allgongzuo')">
+					<img src="../../../static/user-ren.png" />
+					<span>
+    					工作照查询
+    				</span>
+					<img src="../../../static/arrright.png" />
+				</div>
+				<div class="submenu" @click="opennew('allguiji')">
+					<img src="../../../static/user-wang.png" />
+					<span>
+    					轨迹查询
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
 				<div class="submenu" @click="opennew('changepwd')">
-					<img src="../../../static/user-ren.png" />
+					<img src="../../../static/date.png" />
 					<span>
     					人员统计
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
-					<img src="../../../static/user-wang.png" />
+				<div class="submenu" @click="opennew('staticword')">
+					<img src="../../../static/date.png" />
 					<span>
-    					网格管理
+    					案卷统计
     				</span>
 					<img src="../../../static/arrright.png" />
-				</div>-->
+				</div>
 				<div class="clear">
 					退出登录
 				</div>
@@ -72,7 +86,7 @@
 
 		},
 		mounted() {
-			this.$store.state.tfoot = 3
+			this.$store.state.tfoot = 5
 		},
 		methods: {
 			opennew: function(target) {
@@ -195,8 +209,8 @@
 			}
 		},
 		components: {
-			THead: resolve => require(['./thead'], resolve),
-			TFoot: resolve => require(['./tfoot'], resolve)
+			THead: resolve => require(['../tourists/thead'], resolve),
+			TFoot: resolve => require(['./afoot'], resolve)
 		}
 	}
 </script>
