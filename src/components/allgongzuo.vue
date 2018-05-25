@@ -21,7 +21,7 @@
 				<div>美丽南钢</div>
 				<span></span>
 			</div>
-			<div id="main">
+			<div id="main" style="height: calc(100% - .7rem);">
 				<div>
 					<div class="box-group">
 						<div class="group" @click="opennew('hworkdetail')">
@@ -74,21 +74,7 @@
 						</div>
 					</div>			
 				</div>
-				</div>
-
-				<footer>
-					<div class="box-upload">
-						<div class="upload">
-							<img src="../../static/upload02.png" id="img1" @click="upload('1')">
-							<div class="shangchuan">
-								<input class="sck" type="text" placeholder="请填写标题"></input>
-								<div class="sctext"><span>上传</span></div>
-							</div>
-						</div>
-					</div>
-				</footer>
-			
-					
+			</div>
 			</div>
 		</div>
 </template>

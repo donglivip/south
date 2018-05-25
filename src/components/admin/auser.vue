@@ -14,7 +14,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('userinform')">
 					<img src="../../../static/user-user.png" />
 					<span>
     					修改个人信息
@@ -49,14 +49,14 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('staticuser')">
 					<img src="../../../static/date.png" />
 					<span>
     					人员统计
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('staticword')">
+				<div class="submenu" @click="opennew('allwor')">
 					<img src="../../../static/date.png" />
 					<span>
     					案卷统计

@@ -55,7 +55,7 @@
 						show: true,
 						yAxisIndex: 0,
 						filterMode: 'empty',
-						width: 30,
+						width: 60,
 						height: '80%',
 						showDataShadow: false,
 						left: '93%'

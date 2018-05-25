@@ -17,13 +17,12 @@
 
 				<div class="denglu">
 					<div class="denglucon">
-						<span>立即注册</span>
+						<span>立即登录</span>
 					</div>
 
 					<div class="zhuce" @click="opennew('register')">
 						<span>已经有账号，去注册</span>
 						<img class="jiantou" src="../../static/jiantou2.png">
-
 					</div>
 				</div>
 			</div>

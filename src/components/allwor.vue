@@ -55,11 +55,9 @@
 			<table>
 				<tr class="title">
 					<td>
-						姓名
+						网格区域
 					</td>
 					<td>
-						类别
-					</td>
 					<td>
 						上报数量
 					</td>
@@ -69,11 +67,9 @@
 				</tr>
 				<tr>
 					<td>
-						某某人
+						一号网格
 					</td>
 					<td>
-						游客
-					</td>
 					<td>
 						5
 					</td>
@@ -95,6 +91,9 @@
 				</div>
 			</div>
 		</transition>	
+		<div class="btn" @click="opennew('staticword')">
+			图表查询
+		</div>
 	</div>
 </template>
 
@@ -173,6 +172,19 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
+		.btn{
+			position: absolute;
+			bottom: .2rem;
+			width: calc(100% - .4rem);
+			left: .2rem;
+			background: #1e81d2;
+			color: white;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: .8rem;
+			border-radius: .1rem;
+		}
 		table{
 			width: 100%;
 			background: white;

@@ -28,7 +28,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('mygrid')">
 					<img src="../../../static/user-wang.png" />
 					<span>
     					我的网格

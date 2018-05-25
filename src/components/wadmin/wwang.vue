@@ -27,8 +27,8 @@
 					已处理案卷
 				</div>
 			</div>
-			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
-			<transition name='alert'>
+			<!--<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>-->
+			<!--<transition name='alert'>
 			<div class="time-box" v-show='swiperindex!=0'>
 				<div class="box" @click="timeshow(0)">
 					{{starttime==''?'开始时间':starttime}}
@@ -43,7 +43,7 @@
 					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
-			</transition>
+			</transition>-->
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
@@ -378,6 +378,9 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
+		.swiper-container{
+			margin-top: .2rem;
+		}
 		.wwang {
 			display: flex;
 			flex-direction: column;

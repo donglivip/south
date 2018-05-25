@@ -459,6 +459,9 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
+		#main{
+			height: calc(100% - .7rem);
+		}
 		.time-left{
 			flex: 1;
 			display: flex;
