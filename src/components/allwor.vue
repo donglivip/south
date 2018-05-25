@@ -58,7 +58,6 @@
 						网格区域
 					</td>
 					<td>
-					<td>
 						上报数量
 					</td>
 					<td>
@@ -69,7 +68,6 @@
 					<td>
 						一号网格
 					</td>
-					<td>
 					<td>
 						5
 					</td>
@@ -131,6 +129,9 @@
 			}
 		},
 		methods: {
+			navchange:function(val,num){
+				this.navindex=num
+			},
 			back: function() {
 				this.$router.back()
 			},
@@ -142,7 +143,6 @@
 			navshow: function(num) {
 				this.navboo = !this.navboo
 				this.texttype = num
-				console.log(num)
 			},
 			startchang: function(date, formatDate) {
 				if(this.timety == 0) {

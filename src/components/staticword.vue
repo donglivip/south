@@ -28,7 +28,7 @@
 				tooltip: {
 					trigger: 'axis',
 					axisPointer: { // 坐标轴指示器，坐标轴触发有效
-						type: 'line' // 默认为直线，可选为：'line' | 'shadow'
+						type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
 					}
 				},
 				legend: {
@@ -43,22 +43,13 @@
 				}],
 				dataZoom: [{
 						show: true,
-						start: 94,
+						start: 80,
 						end: 100
 					},
 					{
 						type: 'inside',
-						start: 94,
+						start: 80,
 						end: 100
-					},
-					{
-						show: true,
-						yAxisIndex: 0,
-						filterMode: 'empty',
-						width: 60,
-						height: '80%',
-						showDataShadow: false,
-						left: '93%'
 					}
 				],
 				series: [{

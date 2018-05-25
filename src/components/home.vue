@@ -56,7 +56,7 @@
 				<transition name='tran8'>
 				<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
 					<img src="../../static/home_06.png">
-					<div class="name1"><span>城管</span><span>执法队</span></div>
+					<div class="name1"><span>城管</span><span>中心</span></div>
 				</div>
 				</transition>
 				<transition name='tran9'>

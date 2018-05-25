@@ -2,7 +2,7 @@
   <div id="wrapper" class="mygrid">
     	<div id="head">
 				<span @click="back()">
-					<img src="../../../dist/static/back.png"/>
+					<img src="../../../static/back.png"/>
 				</span>
 				<div>美丽南钢</div>
 				<span></span>

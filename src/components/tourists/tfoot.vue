@@ -11,7 +11,7 @@
 			<img src="../../../static/index02-active.png" class="factive" />
 			<img src="../../../static/index02.png" class="fdefault" />
 			<span>
-    				案卷调查
+    				案卷查询
     			</span>
 		</div>
 		<div class="foot-nav" :class="tfoot==3?'fthis':''" @click="opennew('tuser')">
