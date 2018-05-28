@@ -14,6 +14,13 @@
     				</span>
     				<img src="../../../static/arrright.png"/>
     			</div>
+    			<div class="submenu" @click="opennew('news')">
+						<img src="../../../static/news.png" />
+						<span>
+	    					消息中心
+	    				</span>
+						<img src="../../../static/arrright.png" />
+					</div>
     			<div class="submenu" @click="opennew('userinform')">
     				<img src="../../../static/user-user.png"/>
     				<span>

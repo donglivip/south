@@ -234,7 +234,7 @@ export default {
 			}
 		}
 		header{display: flex;justify-content: space-between;align-items: center;height:1rem;color: #FFFFFF;background:rgb(30,129,214);font-size: .3rem;}
-		.hwzhenggai{background: #eeeeee;height: 100%;position: initial;}
+		.hwzhenggai{background: #eeeeee;height: 100%;position: relative;overflow: hidden;}
 		.hwzhenggai .group img{height: .35rem;}
 		.hwzhenggai .box-group .group{background: #FFFFFF;margin: .2rem 0;height:.8rem;display: flex;align-items: center;box-shadow: 0 2px 2px 2px gainsboro;}
 		.hwzhenggai .riqi{display: flex;align-items: center;margin: 0 .2rem 0 .34rem;}

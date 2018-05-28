@@ -12,9 +12,7 @@
 						<i class="icon-mima"></i>
 						<input type="password" class="form-control" placeholder="请输入密码">
 					</div>
-
 				</div>
-
 				<div class="denglu">
 					<div class="denglucon">
 						<span>立即登录</span>

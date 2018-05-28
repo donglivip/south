@@ -231,5 +231,5 @@ export default {
 
 <style type="text/css" lang="scss">
 	html,body,.warpper{padding: 0px;margin: 0px; font-size:.2rem;width: 100%;height: 100%;position: relative;}
-		
+	.workcamera{overflow: hidden;}
 </style>

@@ -11,7 +11,7 @@
 		name: 'dthead',
 		data() {
 			return {
-				thead: ''
+				thead: true
 			}
 		},
 		methods: {
@@ -23,9 +23,9 @@
 		},
 		mounted(){
 			if(localStorage.getItem('userid')==null){
-				this.thead=false
-			}else{
 				this.thead=true
+			}else{
+				this.thead=false
 			}
 		}
 	}

@@ -1,3 +1,4 @@
+
 <template>
   <div id="foot">
 	  	<div class="foot-nav" :class="tfoot==1?'fthis':''" @click="opennew('cindex')" v-show="typefoot==1">
@@ -40,7 +41,7 @@
 
 <script>
 export default {
-  name: 'hfoot',
+  name: 'cfoot',
   data () {
     return {
       

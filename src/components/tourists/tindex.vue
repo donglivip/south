@@ -205,6 +205,9 @@
 
 <style lang="scss">
 	.tindex {
+		#img1{
+			height: 100%;
+		}
 		.tindex-top {
 			height: 6.2rem;
 			width: 100%;

@@ -158,6 +158,14 @@ export default new Router({
       path: '/allwor',
       name: 'allwor',
       component:resolve => require(['@/components/allwor'], resolve)
+    },{
+      path: '/news',
+      name: 'news',
+      component:resolve => require(['@/components/news'], resolve)
+    },{
+      path: '/newdetail',
+      name: 'newdetail',
+      component:resolve => require(['@/components/newdetail'], resolve)
     }
   ]
 })
