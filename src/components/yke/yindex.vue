@@ -3,24 +3,34 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tindex-top">
-				<div class="img-box" @click="upload('1')">
-					<img src="../../../static/creame.png" class="gocream"  v-show="!upimg"/>
-					<img :src="creamsrc" class="creamok"  v-show="upimg"/>
-				</div>
-				<div class="tindex-setting">
-					<div class="setting-group" @click="clear">
-						<img src="../../../static/reset.png" />
-						<span>
-    						 取消
-    					</span>
+				<form @submit.prevent="submit($event)">
+					<input type="text" id="imgfile" name="cfileDealPrevImg1" style="display: none;"/>
+					<input type="text" name="cuserCode" v-model="cuserCode" style="display: none;"/>
+					<input type="number" name="cuserRole" value="0" style="display: none;"/>
+					<input type="text" name="ctypeTwoId" v-model="bottomtwoid" style="display: none;"/>
+					<input type="text" name="cfileStation" v-model="cfileStation" style="display: none;"/>
+					<div class="img-box" @click="upload('1')">
+						<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
+						<img :src="upsrc"  id="img1" v-show="upimg"/>
 					</div>
-					<div class="setting-group">
-						<img src="../../../static/upload.png" />
-						<span>
-    						 上传
-    					</span>
+					<div class="tindex-setting">
+						<div class="setting-group" @click="clear">
+							<img src="../../../static/reset.png" />
+							<span>
+	    						 取消
+	    					</span>
+						</div>
+						<div class="setting-group" @click="navshow('分类')">
+							{{navtext}}
+						</div>
+						<div class="setting-group">
+							<img src="../../../static/upload.png" />
+							<span>
+	    						 <input type="submit"  value="上传" />
+	    					</span>
+						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 			<div class="tindex-bottom">
 				<div class="bottom-title">
@@ -64,28 +74,92 @@
 			</div>
 		</div>
 		<t-foot></t-foot>
+		<transition name='bottom'>
+			<bottom-nav v-show='bottomboo' @navshow='navshow'></bottom-nav>
+		</transition>
 	</div>
 </template>
+
 <script>
 	export default {
-		name: 'ajuan',
+		name: 'tindex',
 		data() {
 			return {
 				creamsrc: '',
-				server:'http://39.107.70.18/Transportation/uploadDriverImage',
+				uploadtarget: '',
+				server:'',
 				files:[],
 				upimg:false,
-				upsrc:''
+				upsrc:'',
+				navtext:'选择分类',
+				bottomboo:false,
+				cuserCode:'',
+				cuserRole:'',
+				cfileStation:''
 			}
 		},
 		components: {
-			THead: resolve => require(['../tourists/thead'], resolve),
-			TFoot: resolve => require(['./afoot'], resolve)
+			THead: resolve => require(['../tourists/head'], resolve),
+			TFoot: resolve => require(['./yfoot'], resolve),
+			bottomNav:resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
-			this.$store.state.tfoot = 3
+			this.$store.state.tfoot = 1
+			this.server=this.service+'/uploadYkImage'
+			var that=this
+			
 		},
 		methods: {
+			submit:function(event){
+				var that=this
+				function plusReady(){
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting( "上传中..." );
+					that.cuserCode=plus.device.uuid
+					plus.geolocation.getCurrentPosition(function(p){
+						that.cfileStation=''
+						that.cfileStation=p.coords.longitude+','+p.coords.latitude
+					}, function(e){
+						alert('Geolocation error: ' + e.message);
+					} );
+					}
+				if(window.plus){
+					plusReady();
+				}else{
+					document.addEventListener("plusready",plusReady,false);
+				}
+				var formData = new FormData(event.target);
+				$.ajax({
+					type: "post",
+					url: that.service + "/insertCfileAndCuser",
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: formData,
+					success: function(res) {
+						if(res.status != 200) {
+							alert(res.msg)
+							return false;
+						}else{
+							function plusReady(){
+								plus.nativeUI.closeWaiting();
+								plus.nativeUI.toast("上传完成");
+								that.upimg=false
+								that.navtext='选择分类'
+							}
+							if(window.plus){
+								plusReady();
+							}else{
+								document.addEventListener("plusready",plusReady,false);
+							}
+						}
+					}
+				});
+			},
+			navshow:function(name){
+				this.navtext=name
+				this.bottomboo=!this.bottomboo
+			},
 			clear:function(){
 				this.files=[]
 				this.upimg=false
@@ -123,9 +197,26 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
-						that.upsrc = img_path
-						that.upimg = !that.upimg
+						that.upsrc=img_path
+						that.upimg=!that.upimg
 						that.upload_img(img_path);
+						var img = document.getElementByid("img");//通过ID获取IMG元素
+ 
+						    var image = new Image();//new一个image对象
+						 
+						    image.src=img.src;
+						 
+						    //获取大小
+						 
+						    image.onreadystatechange = function ()
+							{	
+						       if (image.readyState == "complete")
+						       {
+						         initFileSize=image.fileSize;
+						         var fileSize=Math.ceil(initFileSize/1024);
+						         alert(fileSize+"k")
+						        }
+						    }
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
 					});
@@ -140,8 +231,8 @@
 			album: function() {
 				var that = this
 				plus.gallery.pick(function(path) {
-					that.upsrc = path
-					that.upimg = !that.upimg
+					that.upsrc=path
+					that.upimg=!that.upimg
 					that.upload_img(path);
 				}, function(e) {
 					alert("取消选择图片");
@@ -177,7 +268,8 @@
 							//转换成json
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
-							that.files = json.data;
+							var files = json.data;
+							$("#imgfile").val(files)
 							wt.close();
 						} else {
 							alert("上传失败：" + status);
@@ -197,12 +289,28 @@
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
+		},
+		computed:{
+			service(){
+				return this.$store.state.service
+			},
+			bottomtwoid(){
+				return this.$store.state.bottomtwoid
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
 	.tindex {
+		input[type=submit]{
+			border: 0;
+			background: none;
+			color: white;
+		}
+		#img1{
+			height: 100%;
+		}
 		.tindex-top {
 			height: 6.2rem;
 			width: 100%;
@@ -216,7 +324,7 @@
 				align-items: center;
 				margin: .7rem auto 1.2rem;
 				.gocream {
-					height: 1rem;
+					width: 1.4rem;
 				}
 				.creamok {
 					height: 2.9rem;

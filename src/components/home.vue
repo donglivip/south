@@ -12,7 +12,7 @@
 					<span class="name">美南丽钢</span>
 				</div>
 				<transition name='tran1'>
-					<div class="group" v-show="groupshow" @click="opennew('tindex')">
+					<div class="group" v-show="groupshow" @click="opennew('yindex',1)">
 						<img src="../../static/home_03.png">
 						<div class="name1"><span>居民</span><span>随手拍</span></div>
 					</div>
@@ -30,40 +30,40 @@
 					</div>
 				</transition>
 				<transition name='tran4'>
-				<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
-					<img src="../../static/home_06.png">
-					<div class="name1"><span>社区</span><span>楼栋长</span></div>
-				</div>
+					<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
+						<img src="../../static/home_06.png">
+						<div class="name1"><span>社区</span><span>楼栋长</span></div>
+					</div>
 				</transition>
 				<transition name='tran5'>
-				<div class="group width12" v-show="groupshow" @click="opennew('windex')">
-					<img src="../../static/home_06.png">
-					<div class="name1"><span>社区</span><span>网格员</span></div>
-				</div>
+					<div class="group width12" v-show="groupshow" @click="opennew('windex')">
+						<img src="../../static/home_06.png">
+						<div class="name1"><span>社区</span><span>网格员</span></div>
+					</div>
 				</transition>
 				<transition name='tran6'>
-				<div class="group width12" v-show="groupshow" @click="opennew('hindex')">
-					<img src="../../static/home_06.png">
-					<div class="name1"><span>环卫</span><span>工作者</span></div>
-				</div>
+					<div class="group width12" v-show="groupshow" @click="opennew('hindex')">
+						<img src="../../static/home_06.png">
+						<div class="name1"><span>环卫</span><span>工作者</span></div>
+					</div>
 				</transition>
 				<transition name='tran7'>
-				<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
-					<img src="../../static/home_06.png">
-					<div class="name1"><span>综合</span><span>执法队</span></div>
-				</div>
+					<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
+						<img src="../../static/home_06.png">
+						<div class="name1"><span>综合</span><span>执法队</span></div>
+					</div>
 				</transition>
 				<transition name='tran8'>
-				<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
-					<img src="../../static/home_06.png">
-					<div class="name1"><span>城管</span><span>中心</span></div>
-				</div>
+					<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
+						<img src="../../static/home_06.png">
+						<div class="name1"><span>城管</span><span>中心</span></div>
+					</div>
 				</transition>
 				<transition name='tran9'>
-				<div class="group width12" v-show="groupshow" @click="opennew('asearch')">
-					<img src="../../static/home_06.png">
-					<div class="name1"><span>街办</span><span>管理员</span></div>
-				</div>
+					<div class="group width12" v-show="groupshow" @click="opennew('asearch')">
+						<img src="../../static/home_06.png">
+						<div class="name1"><span>街办</span><span>管理员</span></div>
+					</div>
 				</transition>
 			</div>
 		</div>
@@ -78,18 +78,69 @@
 		name: 'myhome',
 		data() {
 			return {
-					groupshow:false
+				groupshow: false
 			}
 		},
-		mounted(){
-			var that=this
-				that.groupshow=true
+		mounted() {
+			var that = this
+			that.groupshow = true
+			var mynav = []
+			$.ajax({
+				type: "get",
+				url: that.service + "/queryCtypeOne",
+				async: true,
+				dataType: 'json',
+				success: function(res) {
+					for(var i = 0; i < res.data.length; i++) {
+						var myjson = {
+							name: '' + res.data[i].ctypeTitle + '',
+							id: '' + res.data[i].ctypeId + ''
+						}
+						mynav.push(myjson)
+					}
+					that.$store.state.bottomone = mynav
+				}
+			});
+			var cuserRole = localStorage.getItem('cuserRole')
+			if(cuserRole == 0 || cuserRole == 1 || cuserRole == 2 || cuserRole == 3) {
+				that.opennew('tindex', 1)
+			} else if(cuserRole == 4) {
+				that.opennew('windex')
+			} else if(cuserRole == 5) {
+				that.opennew('hindex')
+			} else if(cuserRole == 6 || cuserRole == 7) {
+				that.opennew('cindex')
+			} else if(cuserRole == 8) {
+				that.opennew('asearch')
+			}
+			function plusReady(){
+				that.$store.state.uuid=plus.device.uuid
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
-		methods:{
-			opennew:function(target){
-				this.$router.push({
-					name:target
-				})
+		methods: {
+			opennew: function(target, type) {
+				if(type == 1) {
+					this.$store.state.usertype = 1
+					this.$router.push({
+						name: target
+					})
+				} else {
+					this.$store.state.usertype = 0
+				}
+
+			}
+		},
+		computed: {
+			service() {
+				return this.$store.state.service
+			},
+			uuid(){
+				return this.$store.state.uuid
 			}
 		}
 	}
@@ -97,11 +148,19 @@
 
 <style lang="scss">
 	@for $i from 1 through 9 {
-  	.tran#{$i}-enter-active,.tran#{$i}-leave-active { transition:all .25s * $i ease-in-out;}
+		.tran#{$i}-enter-active,
+		.tran#{$i}-leave-active {
+			transition: all .25s * $i ease-in-out;
+		}
 	}
+	
 	@for $i from 1 through 9 {
-  	.tran#{$i}-enter,.tran#{$i}-leave {opacity: 0;}
+		.tran#{$i}-enter,
+		.tran#{$i}-leave {
+			opacity: 0;
+		}
 	}
+	
 	html,
 	body,
 	.wrapper {
@@ -152,7 +211,6 @@
 		background: url(../../static/bgimg.jpg) no-repeat;
 		background-size: 100% 100%;
 	}
-	
 	/*.index .main {
 		display: flex;
 		align-items: center;
@@ -180,65 +238,60 @@
 	.index .group {
 		color: rgb(4, 158, 255);
 	}
+	
 	.index .group:nth-of-type(1) {
 		width: 2.8rem;
 		height: 2.8rem;
 		color: #FFFFFF;
 		font-size: 0.48rem;
-		top:-.9rem;
-		right:.1rem
-		
+		top: -.9rem;
+		right: .1rem
 	}
 	
 	.index .group:nth-of-type(2) {
 		width: 1.5rem;
 		height: 1.5rem;
-		top:-2.9rem;
-		right:.7rem
-		
+		top: -2.9rem;
+		right: .7rem
 	}
 	
 	.index .group:nth-of-type(3) {
-		top:-1.8rem;
+		top: -1.8rem;
 		left: 2.8rem;
-		
 	}
 	
 	.index .group:nth-of-type(4) {
 		left: 3.4rem;
-		
 	}
 	
 	.index .group:nth-of-type(5) {
 		top: 1.7rem;
 		left: 3rem;
-		
 	}
 	
 	.index .group:nth-of-type(6) {
 		top: 2.6rem;
 		left: 1.6rem;
-		
 	}
 	
 	.index .group:nth-of-type(7) {
 		top: 2.6rem;
-		
 	}
 	
 	.index .group:nth-of-type(8) {
 		top: 1.8rem;
 		left: -1.4rem;
-		
 	}
 	
 	.index .group:nth-of-type(9) {
 		right: 3.4rem;
 	}
+	
 	.index .group:nth-of-type(10) {
 		top: -1.8rem;
 		left: -1.4rem;
 	}
+	
 	.index .group {
 		position: absolute;
 		display: flex;

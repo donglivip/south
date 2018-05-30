@@ -1,14 +1,8 @@
 <template>
 	<div id="head">
-		<span>
-			<em v-show="thead" @click="opennew('login')">
-				登陆
-			</em>
-		</span>
+		<span v-show="thead" @click="opennew('login')">登陆</span>
 		<div>美丽南钢</div>
-		<span>
-			
-		</span>
+		<span v-show="thead" @click="opennew('register')">注册</span>
 	</div>
 </template>
 
@@ -32,11 +26,6 @@
 				this.thead=true
 			}else{
 				this.thead=false
-			}
-		},
-		computed:{
-			usertype(){
-				return this.$store.state.usertype
 			}
 		}
 	}

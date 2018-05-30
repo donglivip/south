@@ -1,15 +1,11 @@
 <template>
   <div class="bottom-nav">
     	<div class="nav-group">
-    		<div class="sub-nav" v-for="(val,index) in navdata">
-    				<span v-show="navindex==-1" @click="navchange(val.name,index)">{{val.name}}</span>
-    				<transition name='tran2'>
-    					<div v-show="navindex==index?true:false">
-			    			<div class="sub-nav nav-inner" v-for="list in val.date" @click.stop="navchange(list)">
-				    			{{list}}
-				    		</div>
-			    		</div>
-		    		</transition>
+    		<div class="sub-nav" v-for="(val,index) in bottomone" v-show="navindex==0">
+    				<span @click="havetwo(val.id)">{{val.name}}</span>
+    		</div>
+    		<div class="sub-nav" v-for="(val) in bottomtwo" v-show="navindex==1">
+    				<span @click="navchange(val.name,val.id)">{{val.name}}</span>
     		</div>
     		<div class="sub-nav clear" @click="navchange('分类')">
     			取消
@@ -22,24 +18,47 @@ export default {
   name: 'bottomnav',
   data () {
     return {
-      navindex:-1
+      navindex:0,
+      bottomtwo:[]
     }
   },
   mounted(){
-  
+  	
   },
   methods:{
-		navchange:function(id,index){
-			this.navindex=index
-			if(index==undefined){
-				this.$emit('navshow',id)
-				this.navindex=-1
-			}
+		navchange:function(name,id){
+			this.$emit('navshow',name)
+			this.$store.state.bottomtwoid=id
+		},
+		havetwo:function(id){
+			var that=this
+			var mynav=[]
+			$.ajax({
+				type: "get",
+				url: that.service + "/queryCtypeTwo",
+				async: true,
+				dataType: 'json',
+				data:{
+					ctypeId:id
+				},
+				success: function(res) {
+					console.log(res)
+					for (var i=0;i<res.data.length;i++) {
+						var myjson={name:''+res.data[i].ctypeTwoTitle+'',id:''+res.data[i].ctypeTwoId+''}
+						mynav.push(myjson)
+					}
+					that.bottomtwo=mynav
+					that.navindex=1
+				}
+			});
 		}
   },
   computed:{
-  	navdata(){
-  		return this.$store.state.navdata
+  	bottomone(){
+  		return this.$store.state.bottomone
+  	},
+  	service(){
+  		return this.$store.state.service
   	}
   }
 }

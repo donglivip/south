@@ -3,24 +3,33 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tindex-top">
-				<div class="img-box" @click="upload('1')">
-					<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
-					<img :src="upsrc"  id="img1" v-show="upimg"/>
-				</div>
-				<div class="tindex-setting">
-					<div class="setting-group" @click="clear">
-						<img src="../../../static/reset.png" />
-						<span>
-    						 取消
-    					</span>
+				<form @submit.prevent="submit($event)">
+					<input type="text" id="imgfile" name="cfileDealPrevImg1" style="display: none;"/>
+					<input type="text" name="ctypeTwoId" v-model="bottomtwoid" style="display: none;"/>
+					<input type="text" name="cfileStation" v-model="cfileStation" style="display: none;"/>
+					<input type="text" name="cuserId" v-model="cuserCode" style="display: none;"/>
+					<div class="img-box" @click="upload('1')">
+						<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
+						<img :src="upsrc"  id="img1" v-show="upimg"/>
 					</div>
-					<div class="setting-group" @click="upload('1')">
-						<img src="../../../static/upload.png" />
-						<span>
-    						 上传
-    					</span>
+					<div class="tindex-setting">
+						<div class="setting-group" @click="clear">
+							<img src="../../../static/reset.png" />
+							<span>
+	    						 取消
+	    					</span>
+						</div>
+						<div class="setting-group" @click="navshow('分类')">
+							{{navtext}}
+						</div>
+						<div class="setting-group">
+							<img src="../../../static/upload.png" />
+							<span>
+	    						 <input type="submit"  value="上传" />
+	    					</span>
+						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 			<div class="tindex-bottom">
 				<div class="bottom-title">
@@ -64,6 +73,9 @@
 			</div>
 		</div>
 		<t-foot></t-foot>
+		<transition name='bottom'>
+			<bottom-nav v-show='bottomboo' @navshow='navshow'></bottom-nav>
+		</transition>
 	</div>
 </template>
 
@@ -74,20 +86,86 @@
 			return {
 				creamsrc: '',
 				uploadtarget: '',
-				server:'http://39.107.70.18/Transportation/uploadDriverImage',
+				server:'',
 				files:[],
 				upimg:false,
-				upsrc:''
+				upsrc:'',
+				navtext:'选择分类',
+				bottomboo:false,
+				cuserCode:'',
+				cuserRole:'',
+				cfileStation:''
 			}
 		},
 		components: {
 			THead: resolve => require(['./thead'], resolve),
-			TFoot: resolve => require(['./tfoot'], resolve)
+			TFoot: resolve => require(['./tfoot'], resolve),
+			bottomNav:resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
 			this.$store.state.tfoot = 1
+			this.server=this.service+'/uploadYhImage'
+			var that=this
+			function plusReady(){
+				
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
 		methods: {
+			submit:function(event){
+				var that=this
+				function plusReady(){
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting( "上传中..." );
+					that.cuserCode=localStorage.getItem('userid')
+					plus.geolocation.getCurrentPosition(function(p){
+						that.cfileStation=''
+						that.cfileStation=p.coords.longitude+','+p.coords.latitude
+					}, function(e){
+						alert('Geolocation error: ' + e.message);
+					} );
+				}
+				if(window.plus){
+					plusReady();
+				}else{
+					document.addEventListener("plusready",plusReady,false);
+				}
+				var formData = new FormData(event.target);
+				$.ajax({
+					type: "post",
+					url: that.service + "/insertCfileAndCuserAreadyRegister",
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: formData,
+					success: function(res) {
+						if(res.status != 200) {
+							alert(res.msg)
+							return false;
+						}else{
+							function plusReady(){
+								plus.nativeUI.closeWaiting();
+								plus.nativeUI.toast("上传完成");
+								that.upimg=false
+								that.navtext='选择分类'
+							}
+							if(window.plus){
+								plusReady();
+							}else{
+								document.addEventListener("plusready",plusReady,false);
+							}
+						}
+					}
+				});
+			},
+			navshow:function(name){
+				this.navtext=name
+				this.bottomboo=!this.bottomboo
+			},
 			clear:function(){
 				this.files=[]
 				this.upimg=false
@@ -179,7 +257,8 @@
 							//转换成json
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
-							that.files = json.data;
+							var files = json.data;
+							$("#imgfile").val(files)
 							wt.close();
 						} else {
 							alert("上传失败：" + status);
@@ -199,12 +278,25 @@
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
+		},
+		computed:{
+			service(){
+				return this.$store.state.service
+			},
+			bottomtwoid(){
+				return this.$store.state.bottomtwoid
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
 	.tindex {
+		input[type=submit]{
+			border: 0;
+			background: none;
+			color: white;
+		}
 		#img1{
 			height: 100%;
 		}

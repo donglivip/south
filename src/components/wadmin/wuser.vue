@@ -21,7 +21,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('userinform')">
 					<img src="../../../static/user-user.png" />
 					<span>
     					修改个人信息

@@ -6,28 +6,31 @@
 				<div class="box-group">
 					<div class="form-group">
 						<i class="icon-user"></i>
-						<input type="text" class="form-control" placeholder="请输入手机号码">
+						<input type="text" class="form-control" placeholder="请输入手机号码" name="cuserPhone" v-model='cuserPhone'>
 					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
-						<input type="text" class="form-control" placeholder="请设置密码">
+						<input type="text" class="form-control" placeholder="请输入身份证号" name="cuserIdentityId" v-model="cuserIdentityId">
 					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
-						<input type="text" class="form-control" placeholder="请设置密码">
+						<input type="text" class="form-control" placeholder="请设置密码" name="cuserPassword" v-model="cuserPassword">
+					</div>
+					<div class="form-group">
+						<i class="icon-mima"></i>
+						<input type="text" class="form-control" placeholder="请设置密码" v-model="pwd">
 					</div>
 					
 				</div>
 				
-				<div class="denglu">
+				<div class="denglu" @click="myajax">
 					<div class="denglucon">
 						<span>立即修改</span>
 					</div>
 					
-					<div class="zhuce">
+					<div class="zhuce" @click="back">
 						<img class="jiantou" src="../../static/jiantou2.png"> 
-						<span>已经有账号，去注册</span>
-						
+						<span>返回</span>
 					</div>
 				</div>
 			</div>
@@ -43,22 +46,84 @@ export default {
   name: 'changepwd',
   data () {
     return {
-      
+      cuserPhone:'',
+      cuserIdentityId:'',
+      cuserPassword:'',
+      pwd:''
     }
   },
   mounted(){
   
   },
   methods:{
-	opennew:function(target){
-		this.$router.push({
-			name:target
-		})
-	}
+  	back:function(){
+  		this.$router.back()
+  	},
+		opennew:function(target){
+			this.$router.push({
+				name:target
+			})
+		},
+		myajax:function(){
+			var that=this
+			if(that.cuserPhone==''||that.cuserIdentityId==''||that.cuserPassword==''||that.pwd==''){
+				function plusReady(){
+					// 显示自动消失的提示消息
+					plus.nativeUI.toast( "请把信息填写完整，不能留空");
+				}
+				if(window.plus){
+					plusReady();
+				}else{
+					document.addEventListener("plusready",plusReady,false);
+				}
+				return false;
+			}
+			if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.cuserPhone))) {
+					function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "不是完整的11位手机号或者正确的手机号前七位");
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+					return false;
+			}
+			if(that.cuserPassword!=that.pwd){
+				function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "两次密码不一致");
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+					return false;
+			}
+			$.ajax({
+					type: "post",
+					url: that.service + "/updatePasswordByCusers",
+					dataType: 'json',
+					data: {
+						cuserPhone:that.cuserPhone,
+						cuserIdentityId:that.cuserIdentityId,
+						cuserPassword:that.cuserPassword
+					},
+					success: function(res) {
+						if(res.status != 200) {
+							alert(res.msg)
+							return false;
+						}
+						that.opennew('login')
+					}
+				});
+		}
   },
   computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
+  	service(){
+  		return this.$store.state.service
   	}
   }
 }

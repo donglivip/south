@@ -11,11 +11,15 @@ import './style/base.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import Calendar from 'vue-mobile-calendar'
+import $ from 'jquery'
 
 Vue.use(Calendar)
 Vue.config.productionTip = false
-Vue.prototype.axios='axios'
+//Vue.prototype.$ajax = axios
 Vue.use(VueAwesomeSwiper)
+Vue.filter('myimg', function (value) {
+ 	return 'http://27.54.248.14:8080' + value
+})
 
 /* eslint-disable no-new */
 new Vue({

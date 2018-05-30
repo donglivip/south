@@ -10,13 +10,13 @@
     	<div id="main">
     		<div class="group">
     			<div class="title">
-    				这里是标题
+    				{{mydata.cmessageTitle}}
     			</div>
     			<div class="text">
-    				这里是内容，这里是内容，这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容，，这里是内容，这里是内容这里是内容，这里是内容
+    				{{mydata.cmessageContent}}
     			</div>
     			<div class="time">
-    				2018-05-16
+    				{{mydata.createTime1}}
     			</div>
     		</div>
     	</div>
@@ -25,14 +25,14 @@
 
 <script>
 export default {
-  name: 'news',
+  name: 'newdetail',
   data () {
     return {
-      
+      mydata:[]
     }
   },
   mounted(){
-  
+  	this.myajax()
   },
   methods:{
 		opennew:function(target){
@@ -42,11 +42,32 @@ export default {
 		},
 		back:function(){
 			this.$router.back()
+		},
+		myajax:function(){
+			var that=this
+			$.ajax({
+				type:"post",
+				url:that.service+"/updateCuserCmessageByPrimaryKeySelective",
+				dataType:'json',
+				data:{
+					cmessageId:that.newid,
+					cuserCmessageId:that.newstwoid
+				},
+				success:function(res){
+					that.mydata=res.data
+				}
+			});
 		}
   },
   computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
+  	newid(){
+  		return this.$store.state.newid
+  	},
+  	newstwoid(){
+  		return this.$store.state.newstwoid
+  	},
+  	service(){
+  		return this.$store.state.service
   	}
   },
   components:{

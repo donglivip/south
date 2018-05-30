@@ -166,6 +166,18 @@ export default new Router({
       path: '/newdetail',
       name: 'newdetail',
       component:resolve => require(['@/components/newdetail'], resolve)
+    },{
+      path: '/yfoot',
+      name: 'yfoot',
+      component:resolve => require(['@/components/yke/yfoot'], resolve)
+    },{
+      path: '/yindex',
+      name: 'yindex',
+      component:resolve => require(['@/components/yke/yindex'], resolve)
+    },{
+      path: '/yselect',
+      name: 'yselect',
+      component:resolve => require(['@/components/yke/yselect'], resolve)
     }
   ]
 })

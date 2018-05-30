@@ -6,18 +6,17 @@
 				<div class="box-group">
 					<div class="form-group">
 						<i class="icon-user"></i>
-						<input type="text" class="form-control" placeholder="请输入手机号码">
+						<input type="text" class="form-control" placeholder="请输入手机号码" v-model="phone">
 					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
-						<input type="password" class="form-control" placeholder="请输入密码">
+						<input type="password" class="form-control" placeholder="请输入密码" v-model="pwd">
 					</div>
 				</div>
 				<div class="denglu">
-					<div class="denglucon">
+					<div class="denglucon" @click="submit">
 						<span>立即登录</span>
 					</div>
-
 					<div class="zhuce" @click="opennew('register')">
 						<span>已经有账号，去注册</span>
 						<img class="jiantou" src="../../static/jiantou2.png">
@@ -30,13 +29,13 @@
 		</div>
 	</div>
 </template>
-
 <script>
 	export default {
 		name: 'login',
 		data() {
 			return {
-
+				phone: '',
+				pwd: ''
 			}
 		},
 		mounted() {
@@ -47,36 +46,210 @@
 				this.$router.push({
 					name: target
 				})
+			},
+			submit: function() {
+				if(this.phone==''||this.pwd==''){
+					alert('账号或密码不能为空！')
+					return
+				}
+				if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.phone))){ 
+				  alert("不是完整的11位手机号或者正确的手机号前七位"); 
+				  return false; 
+				 } 
+				var that = this
+				$.ajax({
+					type: "get",
+					url: that.service + "/queryLoginByCuserPhone",
+					async: true,
+					dataType: 'json',
+					data: {
+						cuserPhone: that.phone,
+						cuserPassword: that.pwd
+					},
+					success: function(res) {
+						console.log(res)
+						if(res.status!=200){
+							alert(res.msg)
+							return false;
+						}else{
+							localStorage.setItem('userid',res.data.cuserId)
+							localStorage.setItem('cuserRole',res.data.cuserRole)
+							localStorage.setItem('cuserHeadImg',res.data.cuserHeadImg)
+							localStorage.setItem('phone',res.data.cuserPhone)
+							localStorage.setItem('sex',res.data.cuserSex)
+							localStorage.setItem('usercode',res.data.cuserIdentityId)
+							localStorage.setItem('username',res.data.cuserName)
+							if(res.data.cuserRole==0||res.data.cuserRole==1||res.data.cuserRole==2||res.data.cuserRole==3){
+								that.opennew('tindex')
+							}else if(res.data.cuserRole==4){
+								that.opennew('windex')
+							}else if(res.data.cuserRole==5){
+								that.opennew('hindex')
+							}else if(res.data.cuserRole==6||res.data.cuserRole==7){
+								that.opennew('cindex')
+							}else{
+								that.opennew('asearch')
+							}
+						}
+						
+					}
+				});
 			}
 		},
 		computed: {
-			tfoot() {
-				return this.$store.state.tfoot
+			service() {
+				return this.$store.state.service
 			}
 		}
 	}
 </script>
 
 <style type="text/css" lang="scss">
-		html,body,.warpper{padding: 0px;margin: 0px; font-size:.2rem;width: 100%;height: 100%;}
-		.login{background: rgb(30,129,214);}
-		.login .title{height:4rem;display: flex;justify-content: center;align-items: center; }
-		.login .title img{height: .7rem;margin: 0 .6rem;}
-		.login .box-group{display: flex;flex-direction: column;justify-content: center;}
-		.login .denglu{display: flex;justify-content: center;flex-direction: column;align-items: center;}
-		.login .box-group{display: flex;align-items: center;}
-		.login .you,.zhuce{display: flex;color: #FFFFFF;}
-		.login .jiantou{height: .3rem;transform: rotate(180deg);margin-left: .3rem;}
-		.login .zhuce{align-self: flex-end;margin-right:1.3rem;}
-		.login .you,.zhuce{display: flex;justify-content: flex-end;color: #FFFFFF;margin-top:.2rem;}
-		.login .denglucon{margin-bottom:.2rem;width:5rem; height: .8rem;background:rgb(255,103,105);color: #fff; border: solid 1px grey;display: flex;justify-content:center;align-items: center;border-radius: .4rem;}
-		.login .footer{width:100%;position: absolute;bottom:0px;height: 1rem;display: flex;justify-content:center;align-items: center;color: #FFFFFF;}
-		.login .form-group{margin: 0 0 .5rem 0;position: relative;display: flex;align-items: center;width: 5rem;}
-		.login .form-control{flex:1;border:1px #ccc solid;border-radius: .5rem;box-shadow: none;padding: 0 .45rem 0 .9rem;height: .86rem;}
-		.login .form-group .reg{position: absolute;background: url(../../static/yzkuangn.png);width:1.8rem;height: .8rem;background-size: cover;font-size: .25rem;display: flex;align-items: center;justify-content: center;text-decoration: none;color: #fff;transition: all 0.5s ease 0s;margin-left:3.1rem ;}
-		.login input{outline:medium;}
-		.login .icon-mima,.icon-user{position: absolute;width: .42rem;height: .5rem;margin: 0 .3rem;}
-		.login .icon-user{background: url(../../static/phone.png) no-repeat;background-size: cover;}
-		.login .icon-mima{background: url(../../static/mima.png) no-repeat;background-size: cover;}
-		
+	html,
+	body,
+	.warpper {
+		padding: 0px;
+		margin: 0px;
+		font-size: .2rem;
+		width: 100%;
+		height: 100%;
+	}
+	
+	.login {
+		background: rgb(30, 129, 214);
+	}
+	
+	.login .title {
+		height: 4rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.login .title img {
+		height: .7rem;
+		margin: 0 .6rem;
+	}
+	
+	.login .box-group {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	
+	.login .denglu {
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+	}
+	
+	.login .box-group {
+		display: flex;
+		align-items: center;
+	}
+	
+	.login .you,
+	.zhuce {
+		display: flex;
+		color: #FFFFFF;
+	}
+	
+	.login .jiantou {
+		height: .3rem;
+		transform: rotate(180deg);
+		margin-left: .3rem;
+	}
+	
+	.login .zhuce {
+		align-self: flex-end;
+		margin-right: 1.3rem;
+	}
+	
+	.login .you,
+	.zhuce {
+		display: flex;
+		justify-content: flex-end;
+		color: #FFFFFF;
+		margin-top: .2rem;
+	}
+	
+	.login .denglucon {
+		margin-bottom: .2rem;
+		width: 5rem;
+		height: .8rem;
+		background: rgb(255, 103, 105);
+		color: #fff;
+		border: solid 1px grey;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: .4rem;
+	}
+	
+	.login .footer {
+		width: 100%;
+		position: absolute;
+		bottom: 0px;
+		height: 1rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: #FFFFFF;
+	}
+	
+	.login .form-group {
+		margin: 0 0 .5rem 0;
+		position: relative;
+		display: flex;
+		align-items: center;
+		width: 5rem;
+	}
+	
+	.login .form-control {
+		flex: 1;
+		border: 1px #ccc solid;
+		border-radius: .5rem;
+		box-shadow: none;
+		padding: 0 .45rem 0 .9rem;
+		height: .86rem;
+	}
+	
+	.login .form-group .reg {
+		position: absolute;
+		background: url(../../static/yzkuangn.png);
+		width: 1.8rem;
+		height: .8rem;
+		background-size: cover;
+		font-size: .25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none;
+		color: #fff;
+		transition: all 0.5s ease 0s;
+		margin-left: 3.1rem;
+	}
+	
+	.login input {
+		outline: medium;
+	}
+	
+	.login .icon-mima,
+	.icon-user {
+		position: absolute;
+		width: .42rem;
+		height: .5rem;
+		margin: 0 .3rem;
+	}
+	
+	.login .icon-user {
+		background: url(../../static/phone.png) no-repeat;
+		background-size: cover;
+	}
+	
+	.login .icon-mima {
+		background: url(../../static/mima.png) no-repeat;
+		background-size: cover;
+	}
 </style>

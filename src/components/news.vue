@@ -8,13 +8,10 @@
 				<span ></span>
 			</div>
     	<div id="main">
-    		<div class="group" @click="opennew('newdetail')">
+    		<div class="group" v-for="val in mydata" @click="opennew('newdetail',val.cmessageId,val.cuserCmessageId)" >
     			<div class="circle"></div>
     			<div class="title">
-    				恭喜您获得老东家黄焖鸡赠送的代金卷一张
-    			</div>
-    			<div class="time">
-    				2018-05-16
+    				{{val.cmessageTitle}}
     			</div>
     		</div>
     	</div>
@@ -26,25 +23,47 @@ export default {
   name: 'news',
   data () {
     return {
-      
+      mydata:[]
     }
   },
   mounted(){
-  
+  	this.myajax()
   },
   methods:{
-		opennew:function(target){
+		opennew:function(target,id,twoid){
+			this.$store.state.newid=id
+			this.$store.state.newstwoid=twoid
 			this.$router.push({
 				name:target
 			})
 		},
 		back:function(){
 			this.$router.back()
+		},
+		myajax:function(){
+			var that=this;
+			$.ajax({
+				type:"get",
+				url:that.service+"/queryCuserMessagePojoByCuserId",
+				dataType:'json',
+				data:{
+					cuserId:localStorage.getItem('userid')
+				},
+				success:function(res){
+					that.mydata=res.data
+				}
+			});
 		}
   },
   computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
+  	newid(){
+  		return this.$store.state.newid
+  	},
+  	newstwoid(){
+  		return this.$store.state.newstwoid
+  	},
+  	service(){
+  		return this.$store.state.service
   	}
   },
   components:{
@@ -62,6 +81,7 @@ export default {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			border-bottom: 1px solid #ECECEC;
 			.title{
 				font-size: .3rem;
 				font-weight: 600;

@@ -4,8 +4,8 @@
 		<div id="main">
 			<div class="tindex-top">
 				<div class="img-box" @click="upload('1')">
-					<img src="../../../static/creame.png" class="gocream" />
-					<img :src="creamsrc" class="creamok" v-show="creamsrc!=''" />
+					<img src="../../../static/creame.png" class="gocream"  v-show="!upimg"/>
+					<img :src="creamsrc" class="creamok" v-show="upimg" />
 				</div>
 				<div class="tindex-setting">
 					<div class="setting-group" @click="clear">
@@ -72,7 +72,11 @@
 		name: 'tindex',
 		data() {
 			return {
-				creamsrc: ''
+				creamsrc: '',
+				server:'http://39.107.70.18/Transportation/uploadDriverImage',
+				files:[],
+				upimg:false,
+				upsrc:''
 			}
 		},
 		components: {
