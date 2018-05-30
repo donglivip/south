@@ -22,32 +22,65 @@
 		data() {
 			return {
 				start: false,
-				setime: ''
+				setime: '',
+				mapcenter: []
 			}
 		},
 		mounted() {
-			this.mylocation()
+			this.havecenter()
+
 		},
 		methods: {
 			change: function() {
+				var that = this
 				this.start = !this.start
 				if(this.start) {
 					this.setime = setInterval(function() {
-						console.log(['173.5500', '174.555'])
+						that.havecenter()
 					}, 3000)
 				} else {
 					clearInterval(this.setime)
 				}
 			},
-			mylocation:function(){
+			mylocation: function() {
+				var that = this
 				var map = new AMap.Map('map-container', {
 					zoom: 15,
-					center: [116.39, 39.9]
+					center: that.mapcenter
 				})
 				var marker = new AMap.Marker({
 					title: '提示'
 				});
 				marker.setMap(map);
+			},
+			havecenter: function() {
+				var that = this
+				plus.geolocation.getCurrentPosition(function(p) {
+					that.mapcenter = [p.coords.longitude, p.coords.latitude]
+					that.mylocation()
+					$.ajax({
+						type: "post",
+						url: that.service + "/insertCworkBytxt",
+						async: true,
+						dataType: 'json',
+						data: {
+							cuserId: localStorage.getItem('userid'),
+							point: that.mapcenter
+						},
+						success: function(res) {
+							alert(JSON.stringify(res.data))
+							if(res.status != 200) {
+								alert(res.msg)
+								return false;
+							} else {
+
+							}
+
+						}
+					});
+				}, function(e) {
+					alert('Geolocation error: ' + e.message);
+				});
 			}
 		}
 	}

@@ -36,31 +36,31 @@
 					</div>
 				</transition>
 				<transition name='tran5'>
-					<div class="group width12" v-show="groupshow" @click="opennew('windex')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>社区</span><span>网格员</span></div>
 					</div>
 				</transition>
 				<transition name='tran6'>
-					<div class="group width12" v-show="groupshow" @click="opennew('hindex')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>环卫</span><span>工作者</span></div>
 					</div>
 				</transition>
 				<transition name='tran7'>
-					<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>综合</span><span>执法队</span></div>
 					</div>
 				</transition>
 				<transition name='tran8'>
-					<div class="group width12" v-show="groupshow" @click="opennew('cindex')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>城管</span><span>中心</span></div>
 					</div>
 				</transition>
 				<transition name='tran9'>
-					<div class="group width12" v-show="groupshow" @click="opennew('asearch')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>街办</span><span>管理员</span></div>
 					</div>
@@ -126,13 +126,12 @@
 			opennew: function(target, type) {
 				if(type == 1) {
 					this.$store.state.usertype = 1
-					this.$router.push({
-						name: target
-					})
 				} else {
 					this.$store.state.usertype = 0
 				}
-
+				this.$router.push({
+					name: target
+				})
 			}
 		},
 		computed: {
