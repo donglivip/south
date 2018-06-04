@@ -23,11 +23,11 @@
 			return {
 				start: false,
 				setime: '',
-				mapcenter: []
+				mapcenter: [117.471564,34.366127]
 			}
 		},
 		mounted() {
-			this.havecenter()
+			this.mylocation()
 
 		},
 		methods: {
@@ -46,7 +46,7 @@
 				var that = this
 				var map = new AMap.Map('map-container', {
 					zoom: 15,
-					center: that.mapcenter
+					center: JSON.parse(that.mapcenter)
 				})
 				var marker = new AMap.Marker({
 					title: '提示'
@@ -56,31 +56,32 @@
 			havecenter: function() {
 				var that = this
 				plus.geolocation.getCurrentPosition(function(p) {
-					that.mapcenter = [p.coords.longitude, p.coords.latitude]
+					that.mapcenter = '['+p.coords.longitude+','+p.coords.latitude+']'
 					that.mylocation()
+					alert(that.service + "/insertCworkBytxt")
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCworkBytxt",
-						async: true,
 						dataType: 'json',
 						data: {
-							cuserId: localStorage.getItem('userid'),
-							point: that.mapcenter
+							cuserId:'4561562562',
+							point:'[117.471564,34.366127]'	
 						},
 						success: function(res) {
-							alert(JSON.stringify(res.data))
-							if(res.status != 200) {
-								alert(res.msg)
-								return false;
-							} else {
-
-							}
-
+							console.log(JSON.stringify(res))
+						},
+						error:function(err){
+							console.log(JSON.stringify(err))
 						}
 					});
 				}, function(e) {
 					alert('Geolocation error: ' + e.message);
 				});
+			}
+		},
+		computed:{
+			service(){
+				return this.$store.state.service
 			}
 		}
 	}

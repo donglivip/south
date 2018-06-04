@@ -4,9 +4,7 @@
     	<div id="main">
     		
     	</div>
-    	<t-foot>
-    		
-    	</t-foot>
+    	<t-foot></t-foot>
   </div>
 </template>
 

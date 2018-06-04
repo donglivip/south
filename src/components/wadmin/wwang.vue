@@ -47,80 +47,37 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group workcamera" @click="opennew('ydetail')" style="background: none;">
+					<div class="select-group workcamera"style="background: none;">
 						<div class="box-group">
-							<div class="group">
+							<div class="group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)" >
 								<div class="riqi">
 									<div class="circle width12"></div>
-									<span>20110204</span>
+									<span>{{val.createTime1}}</span>
 								</div>
-								<span class="text">环卫工作者清理垃圾</span>
-								<img src="../../../static/shanchu.png" />
-							</div>
-							<div class="group">
-								<div class="riqi">
-									<div class="circle width12"></div>
-									<span>20110204</span>
-								</div>
-								<span class="text">环卫工作者清理垃圾</span>
-								<img src="../../../static/shanchu.png" />
-							</div>
-							<div class="group">
-								<div class="riqi">
-									<div class="circle width12"></div>
-									<span>20110204</span>
-								</div>
-								<span class="text">环卫工作者清理垃圾</span>
-								<img src="../../../static/shanchu.png" />
-							</div>
-							<div class="group">
-								<div class="riqi">
-									<div class="circle  width12"></div>
-									<span>20110204</span>
-								</div>
-								<span class="text">环卫工作者清理垃圾</span>
-								<img src="../../../static/shanchu.png" />
-							</div>
-							<div class="group ">
-								<div class="riqi">
-									<div class="circle width12"></div>
-									<span>20110204</span>
-								</div>
-								<span class="text">环卫工作者清理垃圾</span>
-								<img src="../../../static/shanchu.png" />
-							</div>
-							<div class="group">
-								<div class="riqi">
-									<div class="circle width12"></div>
-									<span>20110204</span>
-								</div>
-								<span class="text">环卫工作者清理垃圾</span>
+								<span class="text">{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" />
 							</div>
 						</div>
 					</div>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group">
+					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								20110204案卷-育林社区1号网格
+								{{val.createTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img src="../../../static/prev.png" />
+									<img :src="mydata.fileDealPrevImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改前</span>
-										<span class="grey">
-											备注-此处垃圾众多
-										</span>
 									</div>
 								</div>
-								<div class="img-group" @click="upload('2')">
-									<img src="../../../static/uploadselect.png" id='img2' />
+								<div class="img-group" >
+									<img src="../../../static/uploadselect.png" :id='["img"+index]' />
 									<div class="state">
 										<span class="upload">
-											上传
+											待上传
 										</span>
 									</div>
 								</div>
@@ -129,55 +86,22 @@
 					</div>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group">
+					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==2" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								20110204案卷-育林社区1号网格
+								{{val.createTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img src="../../../static/prev.png" />
+									<img :src="mydata.fileDealPrevImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改前</span>
-										<span class="grey">
-											备注-此处垃圾众多
-										</span>
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../../static/prev.png" />
+									<img :src="mydata.cfileDealAfterImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改后</span>
-										<span class="grey">
-											备注-此处垃圾众多
-										</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="select-group">
-						<div class="group-inner">
-							<div class="group-title">
-								20110204案卷-育林社区1号网格
-							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改前</span>
-										<span class="grey">
-											备注-此处垃圾众多
-										</span>
-									</div>
-								</div>
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改后</span>
-										<span class="grey">
-											备注-此处垃圾众多
-										</span>
 									</div>
 								</div>
 							</div>
@@ -186,9 +110,6 @@
 				</swiper-slide>
 			</swiper>
 		</div>
-		<transition name='nav'>
-			<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
-		</transition>
 		<t-foot></t-foot>
 	</div>
 </template>
@@ -210,8 +131,9 @@
 				uploadtarget: '',
 				navboo: false,
 				navtext: '分类',
-				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
-				files: []
+				server: '',
+				files: [],
+				mydata:''
 			}
 		},
 		components: {
@@ -219,18 +141,40 @@
 			swiperSlide,
 			THead: resolve => require(['../tourists/thead'], resolve),
 			TFoot: resolve => require(['./wfoot'], resolve),
-			BootomNav: resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
 			this.$store.state.tfoot = 2
+			this.server=this.service+'/uploadworkImage'
+			this.myajax()
 		},
 		computed: {
 			swiper() {
 				return this.$refs.mySwiper.swiper;
+			},
+			service() {
+				return this.$store.state.service;
+			},
+			windexid() {
+				return this.$store.state.windexid;
 			}
 		},
 		methods: {
-			opennew: function(target) {
+			myajax:function(){
+				var that=this
+				$.ajax({
+					type: "get",
+					url: that.service + "/queryListByCuserIdNetwork",
+					dataType: 'json',
+					data: {
+						cuserIdNetwork:localStorage.getItem('userid')
+					},
+					success: function(res) {
+						that.mydata=res.data
+					}
+				});
+			},
+			opennew: function(target,id) {
+				this.$store.state.windexid=id
 				this.$router.push({
 					name: target
 				})

@@ -1,104 +1,143 @@
 <template>
-  		<div class="hwzhenggai" id="warpper">
-  			<t-head></t-head>
-			<div id="main">
-				<div class="nav">
-					<div class="nav-tab" :class="navtype==0?'active':''" @click="tab(0)">
-						未整改
-					</div>
-					<div class="nav-tab" :class="navtype==1?'active':''" @click="tab(1)">
-						整改
-					</div>
+	<div class="hwzhenggai" id="warpper">
+		<t-head></t-head>
+		<div id="main">
+			<div class="nav">
+				<div class="nav-tab" :class="navtype==0?'active':''" @click="tab(0)">
+					未整改
 				</div>
-					<div class="box-group">
-						<div class="group" @click="opennew('changedetail')">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">育林社区1号网格</span>
-							<img src="../../../static/shanchu.png">
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">育林社区1号网格</span>
-							<img src="../../../static/shanchu.png">
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">育林社区1号网格</span>
-							<img src="../../../static/shanchu.png">
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle  width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">育林社区1号网格</span>
-							<img src="../../../static/shanchu.png">
-						</div>
-						<div class="group ">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">育林社区1号网格</span>
-							<img src="../../../static/shanchu.png">
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">育林社区1号网格</span>
-							<img src="../../../static/shanchu.png">
-						</div>
-					</div>			
+				<div class="nav-tab" :class="navtype==2?'active':''" @click="tab(2)">
+					整改
 				</div>
-				<transition name='nav'>
-					<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
-				</transition>
-				<t-foot></t-foot>
+			</div>
+			<div class="box-group">
+				<div class="box-group">
+					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0">
+						<div class="riqi">
+							<div class="circle width12"></div>
+							<span>{{val.createTime}}</span>
+						</div>
+						<span class="text">{{val.cgridName}}</span>
+						<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+					</div>
+					<p v-if="changephoto.length==0">暂无数据</p>
+				</div>
 			</div>
 		</div>
+		<transition name='nav'>
+			<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
+		</transition>
+		<t-foot></t-foot>
+	</div>
+	</div>
 </template>
 
 <script>
-export default {
-  name: 'hchange',
-  data () {
-    return {
-      uploadtarget: '',
-			server:'http://39.107.70.18/Transportation/uploadDriverImage',
-			files:[],
-			navboo:false,
-			navtext:'分类',
-			navtype:0
-    }
-  },
-  mounted(){
-  	this.$store.state.tfoot=3
-  },
-  methods:{
-  	tab:function(inedx){
-  		this.navtype=inedx
-  	},
-  			navshow:function(id){
-				this.navboo=!this.navboo
-				this.navtext=id
-			},
-		opennew:function(target){
-			this.$router.push({
-				name:target
-			})
+	export default {
+		name: 'hchange',
+		data() {
+			return {
+				uploadtarget: '',
+				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
+				files: [],
+				navboo: false,
+				navtext: '分类',
+				navtype: 0,
+				changephoto: []
+			}
 		},
-		upload: function(target) {
+		mounted() {
+			this.$store.state.tfoot = 3
+			this.server=this.service+'/uploadworkImage'
+			this.myajax()
+		},
+		methods: {
+			filephotod: function(id) {
+				var that = this
+				var btnArray = [{
+					title: "删除"
+				}, ]; //选择按钮  1 2 3
+				plus.nativeUI.actionSheet({
+					title: "请选择",
+					cancel: "取消",
+					buttons: btnArray
+				}, function(e) {
+					var index = e.index;
+					switch(index) {
+						case 1:
+							$.ajax({
+								type: "post",
+								url: that.service + "/deleteCorkByCfileId",
+								dataType: 'json',
+								data: {
+									cfileId: id
+								},
+								success: function(res) {
+									if(res.status == 200) {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除完成！");
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+									} else {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除失败!");
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+
+									}
+								}
+							});
+							break;
+					}
+				});
+
+			},
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
+				this.$router.push({
+					name: target
+				})
+			},
+			myajax: function() {
+				var that = this
+				$.ajax({
+					type: "get",
+					url: that.service + "/queryListByCuserId",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid'),
+						cfileResult:that.navtype
+					},
+					success: function(res) {
+						console.log(res)
+						that.changephoto = res.data
+					}
+				});
+			},
+			tab: function(inedx) {
+				this.navtype = inedx
+				this.myajax()
+			},
+			navshow: function(id) {
+				this.navboo = !this.navboo
+				this.navtext = id
+			},
+			opennew: function(target) {
+				this.$router.push({
+					name: target
+				})
+			},
+			upload: function(target) {
 				var that = this
 				that.files = []
 				that.uploadtarget = target
@@ -203,60 +242,199 @@ export default {
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
-  },
-  computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
-  	}
-  },
-  components:{
-  	THead:resolve => require(['../tourists/thead'],resolve),
-  	TFoot:resolve => require(['./hfoot'],resolve),
-  	BottomNav:resolve => require(['../bottom-nav'],resolve)
-  }
-}
+		},
+		computed: {
+			tfoot() {
+				return this.$store.state.tfoot
+			},
+			service() {
+				return this.$store.state.service
+			}
+		},
+		components: {
+			THead: resolve => require(['../tourists/thead'], resolve),
+			TFoot: resolve => require(['./hfoot'], resolve),
+			BottomNav: resolve => require(['../bottom-nav'], resolve)
+		}
+	}
 </script>
 
 <style type="text/css" lang="scss">
-	.hwzhenggai .nav{
+	.hwzhenggai .nav {
+		display: flex;
+		width: 100%;
+		height: .8rem;
+		background: white;
+		.nav-tab {
+			flex: 1;
 			display: flex;
-			width: 100%;
-			height: .8rem;
-			background: white;
-			.nav-tab{
-				flex: 1;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-			.active{
-				border-bottom: 2px solid #1e81d2;
-			}
+			align-items: center;
+			justify-content: center;
 		}
-		header{display: flex;justify-content: space-between;align-items: center;height:1rem;color: #FFFFFF;background:rgb(30,129,214);font-size: .3rem;}
-		.hwzhenggai{background: #eeeeee;height: 100%;position: relative;overflow: hidden;}
-		.hwzhenggai .group img{height: .35rem;}
-		.hwzhenggai .box-group .group{background: #FFFFFF;margin: .2rem 0;height:.8rem;display: flex;align-items: center;box-shadow: 0 2px 2px 2px gainsboro;}
-		.hwzhenggai .riqi{display: flex;align-items: center;margin: 0 .2rem 0 .34rem;}
-		.hwzhenggai .text{width: 4.4rem;}
-		.hwzhenggai .width12{width:.17rem;height: .17rem;border-radius:50%; margin-right:.35rem;}
-		.hwzhenggai .group:nth-of-type(1) .circle{background: blue;}
-		.hwzhenggai .group:nth-of-type(2) .circle{background: yellow;}
-		.hwzhenggai .group:nth-of-type(3) .circle{background: red;}
-		.hwzhenggai .group:nth-of-type(4) .circle{background: pink;}
-		.hwzhenggai .group:nth-of-type(5) .circle{background: peru;}
-		.hwzhenggai .group:nth-of-type(6) .circle{background: green;}
-		.hwzhenggai .box-upload{background: #FFFFFF;}
-		.hwzhenggai footer{background: #FFFFFF; position: absolute;bottom:.85rem;width:100%;}
-		.hwzhenggai .upload{height: 3rem;display: flex;align-items: center;justify-content: space-between;}
-		.hwzhenggai .zhenggai{display: flex;flex-direction: column;}
-		.hwzhenggai .sc {display: flex;justify-content: space-around;align-items: center;height: .7rem;}
-		.hwzhenggai .scbut{width:1.2rem;height: .5rem;background: rgb(221,221,221);display: flex;align-items: center;justify-content: center;color: rgb(173,173,173);}
-		.hwzhenggai .zhenggai span{height: .7rem;display: flex;align-items: center;justify-content: center;}
-		.hwzhenggai .zhenggaia,.shangchuan{border:1px solid rgb(236,236,236);margin:.3rem;width:3rem;height: 2.65rem;}
-		.hwzhenggai .zgz,.scz{height: 1.82rem;}
-		.hwzhenggai .sanjiao{height: .12rem;margin-left: .1rem;}
-		.hwzhenggai .footerbox-group{border-top: 1px solid rgb(221,221,221);width:100%;display: flex;justify-content: space-between;align-items:center;height: 1rem;}
-		.hwzhenggai .footergroup{display: flex; flex-direction: column;align-items:center;margin: 0 .35rem;color:rgb(137,137,137)}
-		.hwzhenggai .footergroup img{height: .4rem;margin-bottom:.1rem;}
+		.active {
+			border-bottom: 2px solid #1e81d2;
+		}
+	}
+	
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 1rem;
+		color: #FFFFFF;
+		background: rgb(30, 129, 214);
+		font-size: .3rem;
+	}
+	
+	.hwzhenggai {
+		p{
+			text-align: center;
+			line-height: 1rem;
+		}
+		background: #eeeeee;
+		height: 100%;
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.hwzhenggai .group img {
+		height: .35rem;
+	}
+	
+	.hwzhenggai .box-group .group {
+		background: #FFFFFF;
+		margin: .2rem 0;
+		height: .8rem;
+		display: flex;
+		align-items: center;
+		box-shadow: 0 2px 2px 2px gainsboro;
+	}
+	
+	.hwzhenggai .riqi {
+		display: flex;
+		align-items: center;
+		margin: 0 .2rem 0 .34rem;
+	}
+	
+	.hwzhenggai .text {
+		width: 4.4rem;
+	}
+	
+	.hwzhenggai .width12 {
+		width: .17rem;
+		height: .17rem;
+		border-radius: 50%;
+		margin-right: .35rem;
+	}
+	
+	.hwzhenggai .group:nth-of-type(1) .circle {
+		background: blue;
+	}
+	
+	.hwzhenggai .group:nth-of-type(2) .circle {
+		background: yellow;
+	}
+	
+	.hwzhenggai .group:nth-of-type(3) .circle {
+		background: red;
+	}
+	
+	.hwzhenggai .group:nth-of-type(4) .circle {
+		background: pink;
+	}
+	
+	.hwzhenggai .group:nth-of-type(5) .circle {
+		background: peru;
+	}
+	
+	.hwzhenggai .group:nth-of-type(6) .circle {
+		background: green;
+	}
+	
+	.hwzhenggai .box-upload {
+		background: #FFFFFF;
+	}
+	
+	.hwzhenggai footer {
+		background: #FFFFFF;
+		position: absolute;
+		bottom: .85rem;
+		width: 100%;
+	}
+	
+	.hwzhenggai .upload {
+		height: 3rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	
+	.hwzhenggai .zhenggai {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.hwzhenggai .sc {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		height: .7rem;
+	}
+	
+	.hwzhenggai .scbut {
+		width: 1.2rem;
+		height: .5rem;
+		background: rgb(221, 221, 221);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: rgb(173, 173, 173);
+	}
+	
+	.hwzhenggai .zhenggai span {
+		height: .7rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.hwzhenggai .zhenggaia,
+	.shangchuan {
+		border: 1px solid rgb(236, 236, 236);
+		margin: .3rem;
+		width: 3rem;
+		height: 2.65rem;
+	}
+	
+	.hwzhenggai .zgz,
+	.scz {
+		height: 1.82rem;
+	}
+	
+	.hwzhenggai .sanjiao {
+		height: .12rem;
+		margin-left: .1rem;
+	}
+	
+	.hwzhenggai .footerbox-group {
+		border-top: 1px solid rgb(221, 221, 221);
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 1rem;
+	}
+	
+	.hwzhenggai .footergroup {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin: 0 .35rem;
+		color: rgb(137, 137, 137)
+	}
+	
+	.hwzhenggai .footergroup img {
+		height: .4rem;
+		margin-bottom: .1rem;
+	}
 </style>

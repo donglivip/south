@@ -1,64 +1,71 @@
 <template>
-  <div id="wrapper" class="user">
-    	<t-head></t-head>
-    	<div id="main">
-    		<img src="../../../build/logo.png" class="avatar"/>
-    		<div class="name">
-    			张三-环卫
-    		</div>
-    		<div class="menu">
-    			<div class="submenu" @click="opennew('changepwd')">
-    				<img src="../../../static/user-pwd.png"/>
-    				<span>
+	<div id="wrapper" class="user">
+		<t-head></t-head>
+		<div id="main">
+			<img :src="cuserHeadImg" class="avatar" id="img1" @click="upload('1')" />
+			<div class="name">
+				{{name}}
+			</div>
+			<div class="menu">
+				<div class="submenu" @click="opennew('changepwd')">
+					<img src="../../../static/user-pwd.png" />
+					<span>
     					修改密码
     				</span>
-    				<img src="../../../static/arrright.png"/>
-    			</div>
-    			<div class="submenu" @click="opennew('news')">
-						<img src="../../../static/news.png" />
-						<span>
+					<img src="../../../static/arrright.png" />
+				</div>
+				<div class="submenu" @click="opennew('news')">
+					<img src="../../../static/news.png" />
+					<span>
 	    					消息中心
 	    				</span>
-						<img src="../../../static/arrright.png" />
-					</div>
-    			<div class="submenu" @click="opennew('userinform')">
-    				<img src="../../../static/user-user.png"/>
-    				<span>
+					<img src="../../../static/arrright.png" />
+				</div>
+				<div class="submenu" @click="opennew('userinform')">
+					<img src="../../../static/user-user.png" />
+					<span>
     					修改个人信息
     				</span>
-    				<img src="../../../static/arrright.png"/>
-    			</div>
-    			<div class="clear">
-    				退出登录
-    			</div>
-    		</div>
-    	</div>
-    	<t-foot></t-foot>
-  </div>
+					<img src="../../../static/arrright.png" />
+				</div>
+				<div class="clear">
+					退出登录
+				</div>
+			</div>
+		</div>
+		<t-foot></t-foot>
+	</div>
 </template>
 
 <script>
-export default {
-  name: 'tuser',
-  data () {
-    return {
-      uploadtarget: '',
+	export default {
+		name: 'tuser',
+		data() {
+			return {
+				uploadtarget: '',
 				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
-				files: []
-    }
-  },
-  components:{
-  	
-  },
-  mounted(){
-  	this.$store.state.tfoot=4
-  },
-  methods:{
-		opennew:function(target) {
+				files: [],
+				cuserHeadImg:require('../../../static/creame.png'),
+				name:localStorage.getItem('username')
+			}
+		},
+		components: {
+
+		},
+		mounted() {
+			this.$store.state.tfoot = 4
+		},
+		methods: {
+			clear: function() {
+				localStorage.clear()
+				this.opennew('home')
+			},
+			opennew: function(target) {
 				this.$router.push({
 					name: target
 				})
-		},upload: function(target) {
+			},
+			upload: function(target) {
 				var that = this
 				that.files = []
 				that.uploadtarget = target
@@ -166,53 +173,53 @@ export default {
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
-  },
-  computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
-  	}
-  },
-  components:{
-  	THead:resolve => require(['../tourists/thead'],resolve),
-  	TFoot:resolve => require(['./hfoot'],resolve)
-  }
-}
+		},
+		computed: {
+			tfoot() {
+				return this.$store.state.tfoot
+			}
+		},
+		components: {
+			THead: resolve => require(['../tourists/thead'], resolve),
+			TFoot: resolve => require(['./hfoot'], resolve)
+		}
+	}
 </script>
 
 <style type="text/css" lang="scss">
-	.user{
-		.avatar{
+	.user {
+		.avatar {
 			width: 1.5rem;
 			height: 1.5rem;
 			border-radius: 50%;
 			display: block;
 			margin: 1rem auto 0;
 		}
-		.name{
+		.name {
 			font-size: .33rem;
 			text-align: center;
-			margin-top:.4rem ;
+			margin-top: .4rem;
 			text-align: center;
 			font-weight: 500;
 		}
-		.menu{
+		.menu {
 			margin: .9rem 0 0 0;
-			.submenu{
+			.submenu {
 				margin: 0 .5rem;
 				display: flex;
 				align-items: center;
-				border-bottom:1px solid #d8d8d8;
+				border-bottom: 1px solid #d8d8d8;
 				height: .8rem;
-				img{
+				img {
 					height: .3rem;
 				}
-				span{
+				span {
 					flex: 1;
 					margin-left: .18rem;
 				}
 			}
 		}
-		.clear{
+		.clear {
 			background: #ff5757;
 			color: white;
 			height: .8rem;

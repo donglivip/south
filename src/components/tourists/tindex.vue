@@ -117,6 +117,28 @@
 		},
 		methods: {
 			submit:function(event){
+				if($("#imgfile").val()==''){
+					function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "请选择图片后重试!");
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+				}
+				if(that.bottomtwoid==''){
+					function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "请选择分类后重试!");
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+				}
 				var that=this
 				function plusReady(){
 					// 弹出系统等待对话框

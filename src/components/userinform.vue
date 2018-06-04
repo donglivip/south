@@ -178,7 +178,6 @@
 				plus.gallery.pick(function(path) {
 					that.upload_img(path);
 					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-					alert(path)
 				}, function(e) {
 					alert("取消选择图片");
 				}, {
@@ -196,7 +195,6 @@
 				that.start_upload();
 			},
 			start_upload: function() {
-				alert('上传')
 				var that = this
 				if(this.files.length <= 0) {
 					plus.nativeUI.alert("没有添加上传文件！");
@@ -215,7 +213,6 @@
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
 							that.files = json.data;
-							alert(that.files)
 							that.cfileDealAfterImg1 = that.files
 							wt.close();
 						} else {

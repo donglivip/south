@@ -111,6 +111,30 @@
 		},
 		methods: {
 			submit:function(event){
+				if(this.navtext=='选择分类'){
+					function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "请选择分类!");
+						return false;
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+				}
+				if(this.upsrc==''){
+					function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "请上传图片!");
+						return false;
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+				}
 				var that=this
 				function plusReady(){
 					// 弹出系统等待对话框

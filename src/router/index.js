@@ -178,6 +178,10 @@ export default new Router({
       path: '/yselect',
       name: 'yselect',
       component:resolve => require(['@/components/yke/yselect'], resolve)
+    },{
+      path: '/allchuli',
+      name: 'allchuli',
+      component:resolve => require(['@/components/allchuli'], resolve)
     }
   ]
 })

@@ -2,9 +2,9 @@
 	<div id="wrapper" class="user">
 		<t-head></t-head>
 		<div id="main">
-			<img src="../../../build/logo.png" class="avatar" id="img1" @click="upload('1')"/>
+			<img :src="cuserHeadImg | myimg" class="avatar" id="img1" @click="upload('1')" />
 			<div class="name">
-				张三-环卫
+				{{name}}
 			</div>
 			<div class="menu">
 				<div class="submenu" @click="opennew('changepwd')">
@@ -28,7 +28,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('allchuli')">
 					<img src="../../../static/user-record.png" />
 					<span>
     					处理记录
@@ -42,7 +42,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="clear">
+				<div class="clear" @click="clear">
 					退出登录
 				</div>
 			</div>
@@ -58,7 +58,9 @@
 			return {
 				uploadtarget: '',
 				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
-				files: []
+				files: [],
+				cuserHeadImg:localStorage.getItem('cuserHeadImg'),
+				name:localStorage.getItem('username')
 			}
 		},
 		components: {
@@ -68,6 +70,10 @@
 			this.$store.state.tfoot = 3
 		},
 		methods: {
+			clear:function(){
+				localStorage.clear()
+				this.opennew('home')
+			},
 			opennew: function(target) {
 				this.$router.push({
 					name: target

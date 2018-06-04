@@ -2,27 +2,106 @@
 	<div id="wrapper" class="windex">
 		<t-head></t-head>
 		<div id="main">
-			<d-map></d-map>
+			<div class="map">
+				<div id="map-container"></div>
+				<div class="img-box" @click="change">
+					<transition name='start'>
+						<img src="../../../static/kai.png" v-show="!start" />
+					</transition>
+					<transition name='start'>
+						<img src="../../../static/ting.png" v-show="start" />
+					</transition>
+				</div>
+				<h1 @click="change">
+							{{start==false?'开始记录':'停止记录'}}
+						</h1>
+			</div>
 		</div>
 		<transition name='nav'>
-					<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
-				</transition>
+			<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
+		</transition>
 		<h-foot></h-foot>
 	</div>
 </template>
 <script>
+	import AMap from 'AMap'
 	export default {
-		name: 'windex',
+		name: 'hindex',
 		data() {
 			return {
-				navboo:false,
-				navtext:'分类'
+				navboo: false,
+				navtext: '分类',
+				start: false,
+				setime: '',
+				mapcenter: '[117.471564,34.366127]',
+				map: '',
+				workphoto: []
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 1
+			this.mylocation()
 		},
 		methods: {
+			myajax: function() {
+				var that = this
+				$.ajax({
+					type: "get",
+					url: that.service + "/querAllCwork",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid')
+					},
+					success: function(res) {
+						that.workphoto = res.data
+					}
+				});
+			},
+			change: function() {
+				var that = this
+				this.start = !this.start
+				if(this.start) {
+					this.setime = setInterval(function() {
+						that.havecenter()
+					}, 3000)
+				} else {
+					clearInterval(this.setime)
+				}
+			},
+			mylocation: function() {
+				var that = this
+				that.map = new AMap.Map('map-container', {
+					zoom: 15,
+					center: JSON.parse(that.mapcenter)
+				})
+				that.marker = new AMap.Marker({
+					title: '提示'
+				});
+				that.marker.setMap(that.map);
+			},
+			havecenter: function() {
+				var that = this
+				plus.geolocation.getCurrentPosition(function(p) {
+					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
+					that.map.setCenter(JSON.parse(that.mapcenter));
+					that.marker.setMap(that.map);
+					alert(that.service + "/insertCworkBytxt")
+					$.ajax({
+						type: "post",
+						url: that.service + "/insertCworkBytxt",
+						dataType: 'json',
+						data: {
+							cuserId: localStorage.getItem('userid'),
+							point: that.mapcenter
+						},
+						success: function(res) {
+							console.log('s' + res)
+						}
+					});
+				}, function(e) {
+					alert('Geolocation error: ' + e.message);
+				});
+			},
 			opennew: function(target) {
 				this.$router.push({
 					name: target
@@ -145,13 +224,15 @@
 		computed: {
 			tfoot() {
 				return this.$store.state.tfoot
+			},
+			service() {
+				return this.$store.state.service
 			}
 		},
 		components: {
 			THead: resolve => require(['../tourists/thead'], resolve),
 			HFoot: resolve => require(['./hfoot'], resolve),
-			DMap: resolve => require(['../map'], resolve),
-			BottomNav:resolve => require(['../bottom-nav'],resolve)
+			BottomNav: resolve => require(['../bottom-nav'], resolve)
 		}
 	}
 </script>
@@ -194,6 +275,38 @@
 		}
 		.swiper-container {
 			height: 100%;
+		}
+		.map {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			#map-container {
+				width: 100%;
+				flex: 1;
+				border-bottom: 1px solid #d5d4d3;
+			}
+			img {
+				display: block;
+				width: 1.65rem;
+				height: 1.65rem;
+			}
+			h1 {
+				font-size: .35rem;
+				text-align: center;
+				font-weight: 600;
+				margin: .4rem 0;
+			}
+			.img-box {
+				z-index: 555;
+				position: relative;
+				width: 1.65rem;
+				height: 1.65rem;
+				margin: -.92rem auto 0;
+				border-radius: 50%;
+				overflow: hidden;
+			}
 		}
 	}
 </style>

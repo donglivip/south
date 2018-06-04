@@ -11,14 +11,14 @@
 			<content>
 				<div class="box-group">
 					<div class="group">
-						<span>20110204</span>
-						<span>环卫工作者清理垃圾</span>
+						<span>{{mydata[0].createTime1}}</span>
+						<span>{{mydata[0].cworkTitle}}</span>
 					</div>
 				</div>
 				<div class="groupimg">
-					<img class="qlz" src="../../static/zgimg.png">
+					<img class="qlz" :src="mydata[0].cworkImg">
 				</div>
-
+<!--wy19960829-->
 			</content>
 		</div>
 	</div>
@@ -26,14 +26,25 @@
 
 <script>
 	export default {
-		name: 'index',
+		name: 'hworkdetail',
 		data() {
 			return {
-
+				mydata:''
 			}
 		},
 		mounted() {
-
+			var that=this
+			$.ajax({
+				type: "get",
+				url: that.service + "/queryCorkByCworkId",
+				dataType: 'json',
+				data: {
+					cworkId: that.windexid
+				},
+				success: function(res) {
+					console.log(res)
+				}
+			});
 		},
 		methods: {
 			opennew: function(target) {
@@ -41,26 +52,109 @@
 					name: target
 				})
 			},
-			back:function(){
+			back: function() {
 				this.$router.back()
+			}
+		},
+		computed: {
+			windexid() {
+				return this.$store.state.windexid
+			},
+			service() {
+				return this.$store.state.service
 			}
 		}
 	}
 </script>
 
 <style type="text/css" lang="scss">
-	html,body,.warpper{padding: 0px;margin: 0px; font-size:.2rem;width: 100%;height: 100%;}
-		.hwxq {background: rgb(238,238,238);}
-		.hwxq header {display: flex;justify-content: space-between;align-items: center;height:.7rem;color: #FFFFFF;background:rgb(30,129,214);font-size: .3rem;}
-		.hwxq header img{height: .3rem;}	
-		.hwxq header span{margin: 0 .2rem;}
-		.hwxq .group img{height: .35rem;}
-		.hwxq .groupimg{background:#FFFFFF;display: flex;align-items: center;justify-content: center;height: 5.6rem;}
-		.hwxq .qlz{height: 4.7rem;width: 6.8rem;}
-		.hwxq .box-group{background: #FFFFFF;box-shadow:0 0 0 1px  #aaa;}
-		.hwxq .box-group .group{  height:.8rem;display: flex;justify-content: space-between;margin:0 .35rem .2rem .35rem;align-items: center;}
-		.hwxq footer{background: #FFFFFF; position: absolute;bottom: 0px;width:100%;}
-		.hwxq .footerbox-group{border-top: 1px solid rgb(221,221,221);width:100%;display: flex;justify-content: space-around;align-items:center;height: 1rem;}
-		.hwxq .footergroup{display: flex; flex-direction: column;align-items:center;color:rgb(137,137,137)}
-		.hwxq .footergroup img{height: .4rem;margin-bottom:.1rem;}
+	html,
+	body,
+	.warpper {
+		padding: 0px;
+		margin: 0px;
+		font-size: .2rem;
+		width: 100%;
+		height: 100%;
+	}
+	
+	.hwxq {
+		background: rgb(238, 238, 238);
+	}
+	
+	.hwxq header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: .7rem;
+		color: #FFFFFF;
+		background: rgb(30, 129, 214);
+		font-size: .3rem;
+	}
+	
+	.hwxq header img {
+		height: .3rem;
+	}
+	
+	.hwxq header span {
+		margin: 0 .2rem;
+	}
+	
+	.hwxq .group img {
+		height: .35rem;
+	}
+	
+	.hwxq .groupimg {
+		background: #FFFFFF;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 5.6rem;
+	}
+	
+	.hwxq .qlz {
+		height: 4.7rem;
+		width: 6.8rem;
+	}
+	
+	.hwxq .box-group {
+		background: #FFFFFF;
+		box-shadow: 0 0 0 1px #aaa;
+	}
+	
+	.hwxq .box-group .group {
+		height: .8rem;
+		display: flex;
+		justify-content: space-between;
+		margin: 0 .35rem .2rem .35rem;
+		align-items: center;
+	}
+	
+	.hwxq footer {
+		background: #FFFFFF;
+		position: absolute;
+		bottom: 0px;
+		width: 100%;
+	}
+	
+	.hwxq .footerbox-group {
+		border-top: 1px solid rgb(221, 221, 221);
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		height: 1rem;
+	}
+	
+	.hwxq .footergroup {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		color: rgb(137, 137, 137)
+	}
+	
+	.hwxq .footergroup img {
+		height: .4rem;
+		margin-bottom: .1rem;
+	}
 </style>

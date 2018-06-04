@@ -18,55 +18,16 @@
 			<div id="main">
 				<div>
 					<div class="box-group">
-						<div class="group" @click="opennew('hworkdetail')">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
+							<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>{{val.createTime1}}</span>
+								</div>
+								<span class="text">{{val.cworkTitle}}</span>
+								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" />
 							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../../static/shanchu.png"/>
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../../static/shanchu.png"/>
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../../static/shanchu.png"/>
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle  width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../../static/shanchu.png"/>
-						</div>
-						<div class="group ">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../../static/shanchu.png"/>
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../../static/shanchu.png"/>
-						</div>
-					</div>			
+							<p v-if="workphoto.length==0">暂无数据</p>
+						</div>		
 				</div>
 				</div>
 
@@ -75,8 +36,8 @@
 						<div class="upload">
 							<img src="../../../static/upload02.png" id="img1" @click="upload('1')">
 							<div class="shangchuan">
-								<input class="sck" type="text" placeholder="请填写标题"></input>
-								<div class="sctext"><span>上传</span></div>
+								<input class="sck" type="text" placeholder="请填写标题" v-model="cworkTitle"></input>
+								<div class="sctext" @click="workupload"><span>上传</span></div>
 							</div>
 						</div>
 					</div>
@@ -96,20 +57,130 @@ export default {
       	uploadtarget: '',
 				server:'http://39.107.70.18/Transportation/uploadDriverImage',
 				files:[],
-				alertboo:false
+				alertboo:false,
+				workphoto:'',
+				cworkImg:'',
+				cworkTitle:''
     }
   },
   mounted(){
   	this.$store.state.tfoot=2
+  	this.server = this.service + '/uploadworkImage'
+  	this.myajax()
   },
   methods:{
+  	myajax: function() {
+				var that = this
+				$.ajax({
+					type: "get",
+					url: that.service + "/querAllCwork",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid')
+					},
+					success: function(res) {
+						that.workphoto = res.data
+					}
+				});
+			},
+  	workupload: function() {
+				var that = this
+				if(that.cworkTitle == '' || that.cworkImg == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请把信息填写完整！");
+						return false;
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/insertByCworkImg",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid'),
+						cworkTitle: that.cworkTitle,
+						cworkImg: that.cworkImg
+					},
+					success: function(res) {
+						if(res.status == 200) {
+							that.myajax()
+
+							function plusReady() {
+								// 显示自动消失的提示消息
+								plus.nativeUI.toast("上传完成！");
+							}
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
+						}
+					}
+				});
+			},
+  	workphotod: function(id) {
+				var that = this
+				var btnArray = [{
+					title: "删除"
+				}, ]; //选择按钮  1 2 3
+				plus.nativeUI.actionSheet({
+					title: "请选择",
+					cancel: "取消",
+					buttons: btnArray
+				}, function(e) {
+					var index = e.index;
+					switch(index) {
+						case 1:
+							$.ajax({
+								type: "post",
+								url: that.service + "/deleteCorkByCworkId",
+								dataType: 'json',
+								data: {
+									cworkId: id
+								},
+								success: function(res) {
+									if(res.status == 200) {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除完成！");
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+									} else {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除失败!");
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+
+									}
+								}
+							});
+							break;
+					}
+				});
+
+			},
   	alerttab:function(){
   		this.alertboo=!this.alertboo
   	},
-		opennew:function(target){
-			this.$router.push({
-				name:target
-			})
+		opennew:function(target,id){
+			this.$store.state.windexid = id
+				this.$router.push({
+					name: target
+				})
 		},
 		upload: function(target) {
 				var that = this
@@ -197,6 +268,7 @@ export default {
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
 							that.files = json.data;
+							that.cworkImg = that.files
 							wt.close();
 						} else {
 							alert("上传失败：" + status);
@@ -220,7 +292,14 @@ export default {
   computed:{
   	tfoot(){
   		return this.$store.state.tfoot
-  	}
+  	},
+  	service() {
+				return this.$store.state.service
+			},
+  	windexid() {
+				return this.$store.state.windexid
+			}
+  	
   },
   components:{
   	THead:resolve => require(['../tourists/thead'],resolve),
@@ -231,5 +310,9 @@ export default {
 
 <style type="text/css" lang="scss">
 	html,body,.warpper{padding: 0px;margin: 0px; font-size:.2rem;width: 100%;height: 100%;position: relative;}
-	.workcamera{overflow: hidden;}
+	.workcamera{overflow: hidden;
+	p{
+		text-align: center;
+		line-height: 1rem;
+	}}
 </style>

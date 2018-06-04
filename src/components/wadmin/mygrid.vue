@@ -8,20 +8,12 @@
 				<span></span>
 			</div>
     	<div id="main">
-    		<div class="grid">
+    		<div class="grid" v-for="val in mydata">
     			<div class="text">
-    				网格001
+    				{{val.cgridName}}
     			</div>
     			<div class="title">
-    				2018-05-15
-    			</div>
-    		</div>
-    		<div class="grid">
-    			<div class="text">
-    				网格001
-    			</div>
-    			<div class="title">
-    				2018-05-15
+    				{{val.createTime1}}
     			</div>
     		</div>
     	</div>
@@ -33,11 +25,23 @@ export default {
   name: 'mygrid',
   data () {
     return {
-      
+      mydata:''
     }
   },
   mounted(){
-  
+  	var that=this
+			$.ajax({
+				type: "get",
+				url: that.service + "/queryCgridByCuserIdNetWork",
+				dataType: 'json',
+				data: {
+					cuserId:localStorage.getItem('userid')
+				},
+				success: function(res) {
+					console.log(res)
+					that.mydata=res.data
+				}
+			});
   },
   methods:{
 		opennew:function(target){
@@ -50,8 +54,8 @@ export default {
 		}
   },
   computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
+  	service(){
+  		return this.$store.state.service
   	}
   },
   components:{
@@ -63,12 +67,12 @@ export default {
 <style type="text/css" lang="scss">
 	.mygrid{
 		.grid{
-			width: calc(100% - .4rem);
 			height: .7rem;
-			box-shadow: 0 0 10px .1rem gainsboro;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			margin:.2rem;
+			border-bottom: 1px solid #E3E3E3;
 		}
 	}
 </style>
