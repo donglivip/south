@@ -2,7 +2,7 @@
 	<div id="wrapper" class="user">
 		<t-head></t-head>
 		<div id="main">
-			<img :src="cuserHeadImg | myimg" class="avatar" id="img1" @click="upload('1')" />
+			<img :src="cuserHeadImg | myimg" class="avatar" id="img1"/>
 			<div class="name">
 				{{name}}
 			</div>

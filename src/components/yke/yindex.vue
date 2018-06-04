@@ -106,8 +106,6 @@
 		mounted() {
 			this.$store.state.tfoot = 1
 			this.server=this.service+'/uploadYkImage'
-			var that=this
-			
 		},
 		methods: {
 			submit:function(event){

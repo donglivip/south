@@ -74,7 +74,7 @@
 		data() {
 			return {
 				navtext: '选择分类',
-				mydata:'',
+				mydata:[],
 				cworkImg:'',
 				uploadtarget: '',
 				server:'',
@@ -132,6 +132,7 @@
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.toast("上传完成！");
+								that.cworkImg=''
 							}
 							if(window.plus) {
 								plusReady();
@@ -230,7 +231,6 @@
 							//上传文件的信息
 							that.files = json.data;
 							that.cworkImg = that.files
-							console.log(that.cworkImg)
 							wt.close();
 						} else {
 							alert("上传失败：" + status);

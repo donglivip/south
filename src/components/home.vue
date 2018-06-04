@@ -18,19 +18,19 @@
 					</div>
 				</transition>
 				<transition name='tran2'>
-					<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>环保</span><span>小卫士</span></div>
 					</div>
 				</transition>
 				<transition name='tran3'>
-					<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>志愿</span><span>督察员</span></div>
 					</div>
 				</transition>
 				<transition name='tran4'>
-					<div class="group width12" v-show="groupshow" @click="opennew('tindex')">
+					<div class="group width12" v-show="groupshow" @click="opennew('login')">
 						<img src="../../static/home_06.png">
 						<div class="name1"><span>社区</span><span>楼栋长</span></div>
 					</div>

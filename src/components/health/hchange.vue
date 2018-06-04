@@ -24,6 +24,17 @@
 				</div>
 			</div>
 		</div>
+		<footer>
+			<div class="box-upload workcamera">
+				<div class="upload">
+					<img src="../../../static/upload02.png" id="img1" @click="upload('1')">
+					<div class="shangchuan">
+						<input class="sck" type="text" placeholder="请填写标题" v-model="navtext" readonly="readonly" @click="navshow"></input>
+						<div class="sctext" @click="upmy()"><span>上传</span></div>
+					</div>
+				</div>
+			</div>
+		</footer>
 		<transition name='nav'>
 			<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
 		</transition>
@@ -43,15 +54,68 @@
 				navboo: false,
 				navtext: '分类',
 				navtype: 0,
-				changephoto: []
+				changephoto: [],
+				cfileStation:''
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 3
-			this.server=this.service+'/uploadworkImage'
+			this.server = this.service + '/uploadworkImage'
 			this.myajax()
 		},
 		methods: {
+			upmy: function() {
+				var that=this
+				function plusReady(){
+					plus.geolocation.getCurrentPosition(function(p){
+						that.cfileStation=''
+						that.cfileStation=p.coords.longitude+','+p.coords.latitude
+					}, function(e){
+						alert('Geolocation error: ' + e.message);
+					} );
+					}
+				if(window.plus){
+					plusReady();
+				}else{
+					document.addEventListener("plusready",plusReady,false);
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/insertCfileAndCuserAreadyRegister",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid'),
+						cfileDealPrevImg1:that.files,
+						ctypeTwoId:that.bottomtwoid,
+						cfileStation:that.cfileStation
+					},
+					success: function(res) {
+						if(res.status == 200) {
+							function plusReady() {
+								// 显示自动消失的提示消息
+								plus.nativeUI.toast("上传完成！");
+								that.myajax()
+							}
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
+						} else {
+							function plusReady() {
+								// 显示自动消失的提示消息
+								plus.nativeUI.toast("上传失败!");
+							}
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
+
+						}
+					}
+				});
+			},
 			filephotod: function(id) {
 				var that = this
 				var btnArray = [{
@@ -77,6 +141,7 @@
 										function plusReady() {
 											// 显示自动消失的提示消息
 											plus.nativeUI.toast("删除完成！");
+											that.myajax()
 										}
 										if(window.plus) {
 											plusReady();
@@ -116,7 +181,7 @@
 					dataType: 'json',
 					data: {
 						cuserId: localStorage.getItem('userid'),
-						cfileResult:that.navtype
+						cfileResult: that.navtype
 					},
 					success: function(res) {
 						console.log(res)
@@ -131,11 +196,6 @@
 			navshow: function(id) {
 				this.navboo = !this.navboo
 				this.navtext = id
-			},
-			opennew: function(target) {
-				this.$router.push({
-					name: target
-				})
 			},
 			upload: function(target) {
 				var that = this
@@ -249,6 +309,9 @@
 			},
 			service() {
 				return this.$store.state.service
+			},
+			bottomtwoid() {
+				return this.$store.state.bottomtwoid
 			}
 		},
 		components: {
@@ -287,7 +350,13 @@
 	}
 	
 	.hwzhenggai {
-		p{
+		.workcamera {
+			height: 2rem;
+			.upload {
+				height: 2rem;
+			}
+		}
+		p {
 			text-align: center;
 			line-height: 1rem;
 		}

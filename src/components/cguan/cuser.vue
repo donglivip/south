@@ -2,9 +2,9 @@
 	<div id="wrapper" class="user">
 		<t-head></t-head>
 		<div id="main">
-			<img src="../../../build/logo.png" class="avatar" />
+			<img :src="cuserHeadImg | myimg" class="avatar" id="img1"/>
 			<div class="name">
-				张三-环卫
+				{{name}}
 			</div>
 			<div class="menu">
 				<div class="submenu" @click="opennew('changepwd')">
@@ -35,21 +35,21 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('allanjuan')">
 					<img src="../../../static/user-tong.png" />
 					<span>
     					案卷查询
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('allgongzuo')">
 					<img src="../../../static/user-ren.png" />
 					<span>
     					工作照查询
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('allguiji')">
 					<img src="../../../static/user-wang.png" />
 					<span>
     					轨迹查询
@@ -72,7 +72,9 @@
 			return {
 				uploadtarget: '',
 				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
-				files: []
+				files: [],
+				cuserHeadImg:localStorage.getItem('cuserHeadImg'),
+				name:localStorage.getItem('username')
 			}
 		},
 		components: {

@@ -67,6 +67,7 @@ export default {
   	this.$store.state.tfoot=2
   	this.server = this.service + '/uploadworkImage'
   	this.myajax()
+  	
   },
   methods:{
   	myajax: function() {
@@ -148,6 +149,7 @@ export default {
 										function plusReady() {
 											// 显示自动消失的提示消息
 											plus.nativeUI.toast("删除完成！");
+											that.myajax()
 										}
 										if(window.plus) {
 											plusReady();

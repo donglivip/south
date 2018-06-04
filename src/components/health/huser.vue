@@ -2,7 +2,7 @@
 	<div id="wrapper" class="user">
 		<t-head></t-head>
 		<div id="main">
-			<img :src="cuserHeadImg" class="avatar" id="img1" @click="upload('1')" />
+			<img :src="cuserHeadImg" class="avatar" id="img1"/>
 			<div class="name">
 				{{name}}
 			</div>
@@ -28,7 +28,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="clear">
+				<div class="clear" @click="clear">
 					退出登录
 				</div>
 			</div>
