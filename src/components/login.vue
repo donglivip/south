@@ -67,7 +67,6 @@
 						cuserPassword: that.pwd
 					},
 					success: function(res) {
-						console.log(res)
 						if(res.status!=200){
 							alert(res.msg)
 							return false;
@@ -79,17 +78,17 @@
 							localStorage.setItem('sex',res.data.cuserSex)
 							localStorage.setItem('usercode',res.data.cuserIdentityId)
 							localStorage.setItem('username',res.data.cuserName)
-							if(res.data.cuserRole==0||res.data.cuserRole==1||res.data.cuserRole==2||res.data.cuserRole==3){
+//							if(res.data.cuserRole==0||res.data.cuserRole==1||res.data.cuserRole==2||res.data.cuserRole==3){
 								that.opennew('tindex')
-							}else if(res.data.cuserRole==4){
-								that.opennew('windex')
-							}else if(res.data.cuserRole==5){
-								that.opennew('hindex')
-							}else if(res.data.cuserRole==6||res.data.cuserRole==7){
-								that.opennew('cindex')
-							}else{
-								that.opennew('asearch')
-							}
+//							}else if(res.data.cuserRole==4){
+//								that.opennew('windex')
+//							}else if(res.data.cuserRole==5){
+//								that.opennew('hindex')
+//							}else if(res.data.cuserRole==6||res.data.cuserRole==7){
+//								that.opennew('cindex')
+//							}else{
+//								that.opennew('asearch')
+//							}
 						}
 						
 					}

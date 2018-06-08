@@ -151,6 +151,10 @@ export default new Router({
       name: 'staticuser',
       component:resolve => require(['@/components/staticuser'], resolve)
     },{
+      path: '/staticuser01',
+      name: 'staticuser01',
+      component:resolve => require(['@/components/staticuser01'], resolve)
+    },{
       path: '/mygrid',
       name: 'mygrid',
       component:resolve => require(['@/components/wadmin/mygrid'], resolve)

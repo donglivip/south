@@ -42,7 +42,7 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group" v-for="val in mydata">
+					<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cgridName}}
@@ -68,7 +68,7 @@
 					</p>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata">
+					<div class="select-group" v-for="(val,index) in mydata" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cgridName}}
@@ -81,8 +81,8 @@
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click="upload(index)"/>
-									<div class="state" @click="imgok(val.cfileId)">
+									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click.stop="upload(index)"/>
+									<div class="state" @click.stop="imgok(val.cfileId)">
 										上传图片
 									</div>
 								</div>
@@ -146,6 +146,12 @@
 			}
 		},
 		methods: {
+			opennew: function(target,id) {
+				this.$store.state.windexid=id
+				this.$router.push({
+					name: target
+				})
+			},
 			imgok:function(id){
 				var that=this
 				if(that.cfileDealAfterImg1==''){

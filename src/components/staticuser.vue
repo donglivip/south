@@ -21,21 +21,10 @@
 			<div>美丽南钢</div>
 			<span></span>
 		</div>
-		<div id="main">
+		<div id="main" style="height: calc(100% - .8rem);">
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box">
 				<div class="time-left">
-					<div class="left-box">
-						<div class="box" @click="navshow('0')">
-							{{community}}
-							<img src="../../static/arrbottom.png" />
-						</div>
-						<span class="hr"></span>
-						<div class="box" @click="navshow('1')">
-							{{grid}}
-							<img src="../../static/arrbottom.png" />
-						</div>
-					</div>
 					<div class="left-box">
 						<div class="box" @click="timeshow(0)">
 							{{starttime==''?'开始时间':starttime}}
@@ -43,22 +32,30 @@
 						</div>
 						<span class="hr"></span>
 						<div class="box" @click="timeshow(1)">
-							{{endtime==''?'结束时间':starttime}}
+							{{endtime==''?'结束时间':endtime}}
+							<img src="../../static/arrbottom.png" />
+						</div>
+						<span class="hr"></span>
+						<div class="box">
+							<input type="text" v-model="grid" placeholder="输入网格名"/>
 							<img src="../../static/arrbottom.png" />
 						</div>
 					</div>
+					<div class="left-box">
+						<div class="box box-go" @click="myajax">
+							搜索
+						</div>
+					</div>
 				</div>
-				<div class="box-go" @click="navshow('2')">
-					{{navtext}}
-				</div>
+				
 			</div>
 			<table>
 				<tr class="title">
-					<td>
+					<!--<td>
 						姓名
-					</td>
+					</td>-->
 					<td>
-						类别
+						网格名
 					</td>
 					<td>
 						上报数量
@@ -67,34 +64,25 @@
 						处理数量
 					</td>
 				</tr>
-				<tr>
+				<tr v-for="val in mydata[0]">
+					<!--<td>
+						{{val.cuserName==null?'无':val.count1}}
+					</td>-->
 					<td>
-						某某人
+						{{val.cgridName}}
 					</td>
 					<td>
-						游客
+						{{val.count1==null?'0':val.count1}}
 					</td>
 					<td>
-						5
-					</td>
-					<td>
-						6
+						{{val.count2==null?'0':val.count2}}
 					</td>
 				</tr>
 			</table>
-		</div>
-		<transition name='nav'>
-			<div class="bottom-nav" v-show="navboo" @click="navshow(0)">
-				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in navdata" @click.stop="navchange(val.name,index)" :class="navindex==index?'active':''">
-						{{val.name}}
-					</div>
-					<div class="sub-nav clear" @click.stop="gosearch">
-						搜索
-					</div>
-				</div>
-			</div>
-		</transition>	
+			<p v-if="mydata[0].length==0">
+				暂无数据
+			</p>
+		</div>	
 	</div>
 </template>
 
@@ -113,25 +101,55 @@
 				navboo: false,
 				navtext: '选择分类',
 				navindex: -1,
-				community:'选择社区',
-				grid:'选择网格',
-				texttype:'0'
+				grid:'',
+				texttype:'0',
+				mydata:[]
 			}
 		},
 		components: {
 			swiper,
-			swiperSlide,
-			BootomNav: resolve => require(['./bottom-nav'], resolve)
+			swiperSlide
 		},
 		mounted() {
-			
+			this.myajax()
 		},
 		computed: {
 			navdata() {
 				return this.$store.state.navdata
+			},
+			service() {
+				return this.$store.state.service
 			}
 		},
 		methods: {
+			myajax:function(){
+				var that=this;
+				var ajaxData={
+					createTime1:that.starttime,
+					handingTime1:that.endtime,
+					cgridName:that.grid
+				}
+				if(that.starttime==''){
+					delete ajaxData.createTime1
+				}
+				if(that.endtime==''){
+					delete ajaxData.handingTime1
+				}
+				if(that.grid==''){
+					delete ajaxData.cgridName
+				}
+				console.log(ajaxData)
+				$.ajax({
+					type:"get",
+					url:that.service+"/queryGridReportCountAndHandCount",
+					dataType:'json',
+					data:ajaxData,
+					success:function(res){
+						console.log(res)
+						that.mydata=res.data
+					}
+				});
+			},
 			back: function() {
 				this.$router.back()
 			},
@@ -173,6 +191,9 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
+		p{
+			text-align: center;
+		}
 		table{
 			width: 100%;
 			background: white;
@@ -196,6 +217,7 @@
 				display: flex;
 				align-items: center;
 				margin: .1rem 0;
+				justify-content: center;
 			}
 		}
 		.time-box{
@@ -365,11 +387,10 @@
 		.time-box {
 			display: flex;
 			align-items: center;
+			justify-content: center;
 			height: 1.1rem;
-			padding-left: .3rem;
 			.box {
 				height: .5rem;
-				width: 2rem;
 				border: 2px solid #1e81d2;
 				background: #FFFFFF;
 				display: flex;
@@ -380,16 +401,21 @@
 					height: .1rem;
 					margin-left: .2rem;
 				}
+				input{
+					width: 1.2rem;
+					height: 100%;
+					border: 0;
+					text-align: center;
+				}
 			}
 			.box-go {
-				width: 1.5rem;
 				height: .5rem;
 				background: #1e81d2;
 				color: #FFFFFF;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin: 0 .3rem 0 .4rem;
+				border-radius: .1rem;
 				img {
 					height: .28rem;
 					margin-right: .14rem;

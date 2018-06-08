@@ -3,24 +3,27 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tindex-top">
-				<div class="img-box" @click="upload('1')">
-					<img src="../../../static/creame.png" class="gocream"  v-show="!upimg"/>
-					<img :src="creamsrc" class="creamok" v-show="upimg" />
-				</div>
-				<div class="tindex-setting">
-					<div class="setting-group" @click="clear">
-						<img src="../../../static/reset.png" />
-						<span>
-    						 取消
-    					</span>
+					<div class="img-box" @click="upload('1')">
+						<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
+						<img :src="upsrc"  id="img1" v-show="upimg"/>
 					</div>
-					<div class="setting-group">
-						<img src="../../../static/upload.png" />
-						<span>
-    						 上传
-    					</span>
+					<div class="tindex-setting">
+						<div class="setting-group" @click="clear">
+							<img src="../../../static/reset.png" />
+							<span>
+	    						 取消
+	    					</span>
+						</div>
+						<div class="setting-group" @click="navshow('分类')">
+							{{navtext}}
+						</div>
+						<div class="setting-group" @click="submit">
+							<img src="../../../static/upload.png" />
+							<span>
+	    						 上传
+	    					</span>
+						</div>
 					</div>
-				</div>
 			</div>
 			<div class="tindex-bottom">
 				<div class="bottom-title">
@@ -64,6 +67,9 @@
 			</div>
 		</div>
 		<t-foot></t-foot>
+		<transition name='bottom'>
+			<bottom-nav v-show='bottomboo' @navshow='navshow'></bottom-nav>
+		</transition>
 	</div>
 </template>
 
@@ -73,20 +79,107 @@
 		data() {
 			return {
 				creamsrc: '',
-				server:'http://39.107.70.18/Transportation/uploadDriverImage',
-				files:[],
-				upimg:false,
-				upsrc:''
+				uploadtarget: '',
+				server: '',
+				files: [],
+				upimg: false,
+				upsrc: '',
+				navtext: '选择分类',
+				bottomboo: false,
+				cfileStation: '',
+				w: ''
 			}
 		},
 		components: {
 			THead: resolve => require(['../tourists/thead'], resolve),
-			TFoot: resolve => require(['./cfoot'], resolve)
+			TFoot: resolve => require(['./cfoot'], resolve),
+			bottomNav:resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
 			this.$store.state.tfoot = 3
+			this.server=this.service+'/uploadYhImage'
 		},
 		methods: {
+			submit: function(event) {
+				if(this.navtext == '选择分类') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请选择分类!");
+						return false;
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+				}
+				if(this.upsrc == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请上传图片!");
+						return false;
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+				}
+				var that = this
+				function plusReady() {
+					// 弹出系统等待对话框
+					that.w = plus.nativeUI.showWaiting("上传中...");
+					plus.geolocation.getCurrentPosition(function(p) {
+						console.log(localStorage.getItem('userid'))
+						console.log(that.files)
+						console.log(p.coords.longitude + ',' + p.coords.latitude)
+						console.log(that.bottomtwoid)
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCfileAndCuserAreadyRegister",
+							dataType: 'json',
+							data: {
+								cuserId:localStorage.getItem('userid'),
+								cfileDealPrevImg1:that.files,
+								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
+								ctypeTwoId:that.bottomtwoid
+							},
+							success: function(res) {
+								if(res.status != 200) {
+									alert(res.msg)
+								} else {
+									function plusReady() {
+										that.w.close()
+										plus.nativeUI.closeWaiting();
+										plus.nativeUI.toast("上传完成");
+										that.upimg = false
+										that.navtext = '选择分类'
+									}
+									if(window.plus) {
+										plusReady();
+									} else {
+										document.addEventListener("plusready", plusReady, false);
+									}
+								}
+							},error:function(err){
+								console.log(JSON.stringify(err))
+							}
+						});
+					}, function(e) {
+						alert('Geolocation error: ' + e.message);
+					});
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+
+			},
+			navshow:function(name){
+				this.navtext=name
+				this.bottomboo=!this.bottomboo
+			},
 			clear:function(){
 				this.files=[]
 				this.upimg=false
@@ -124,8 +217,8 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
-						that.upsrc = img_path
-						that.upimg = !that.upimg
+						that.upsrc=img_path
+						that.upimg=!that.upimg
 						that.upload_img(img_path);
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -141,8 +234,8 @@
 			album: function() {
 				var that = this
 				plus.gallery.pick(function(path) {
-					that.upsrc = path
-					that.upimg = !that.upimg
+					that.upsrc=path
+					that.upimg=!that.upimg
 					that.upload_img(path);
 				}, function(e) {
 					alert("取消选择图片");
@@ -198,12 +291,28 @@
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
+		},
+		computed:{
+			service(){
+				return this.$store.state.service
+			},
+			bottomtwoid(){
+				return this.$store.state.bottomtwoid
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
 	.tindex {
+		input[type=submit]{
+			border: 0;
+			background: none;
+			color: white;
+		}
+		#img1{
+			height: 100%;
+		}
 		.tindex-top {
 			height: 6.2rem;
 			width: 100%;
@@ -217,7 +326,7 @@
 				align-items: center;
 				margin: .7rem auto 1.2rem;
 				.gocream {
-					height: 1rem;
+					width: 1.4rem;
 				}
 				.creamok {
 					height: 2.9rem;

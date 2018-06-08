@@ -59,7 +59,6 @@ export default {
 				files:[],
 				alertboo:false,
 				workphoto:'',
-				cworkImg:'',
 				cworkTitle:''
     }
   },
@@ -86,7 +85,7 @@ export default {
 			},
   	workupload: function() {
 				var that = this
-				if(that.cworkTitle == '' || that.cworkImg == '') {
+				if(that.cworkTitle == '' || that.files == '') {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请把信息填写完整！");
@@ -105,7 +104,7 @@ export default {
 					data: {
 						cuserId: localStorage.getItem('userid'),
 						cworkTitle: that.cworkTitle,
-						cworkImg: that.cworkImg
+						cworkImg: that.files
 					},
 					success: function(res) {
 						if(res.status == 200) {
@@ -270,7 +269,6 @@ export default {
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
 							that.files = json.data;
-							that.cworkImg = that.files
 							wt.close();
 						} else {
 							alert("上传失败：" + status);

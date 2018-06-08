@@ -25,29 +25,14 @@
     			</div>
     		</div>
     		<div class="csearch-main">
-    			<div class="group" @click="opennew('cdetail')">
+    			 <!--@click="opennew('cdetail','cworkId')"-->
+    			<div class="group" v-for="val in mydata">
     				<div class="circle"></div>
     				<div class="name">
-    					张三
+    					{{val.cworkTitle}}
     				</div>
     				<div class="upnum">
-    					上报数: 76
-    				</div>
-    				<div class="oknum">
-    					处理数: 45
-    				</div>
-    				<img src="../../static/arrright.png"/>
-    			</div>
-    			<div class="group">
-    				<div class="circle"></div>
-    				<div class="name">
-    					张三
-    				</div>
-    				<div class="upnum">
-    					上报数: 76
-    				</div>
-    				<div class="oknum">
-    					处理数: 45
+    					{{val.createTime1}}
     				</div>
     				<img src="../../static/arrright.png"/>
     			</div>
@@ -65,14 +50,32 @@ export default {
   data () {
     return {
       navboo:false,
-      navtext:'人员分类'
+      navtext:'人员分类',
+      mydata:[]
     }
   },
   mounted(){
   	this.$store.state.tfoot=2
+  	this.myajax()
   },
   methods:{
-		opennew:function(target){
+  	myajax:function(){
+				var that=this
+				$.ajax({
+					type: "get",
+					url: that.service + "/querAllCwork",
+					dataType: 'json',
+					data: {
+						cuserId:localStorage.getItem('userid')
+					},
+					success: function(res) {
+						console.log(res)
+						that.mydata=res.data
+					}
+				});
+			},
+		opennew:function(target,id){
+			this.$store.state.searchid=id
 			this.$router.push({
 				name:target
 			})
@@ -86,8 +89,8 @@ export default {
 		}
   },
   computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
+  	service(){
+  		return this.$store.state.service
   	}
   },
   components:{
@@ -140,11 +143,12 @@ export default {
 				margin: 0 .22rem 0 .34rem;
 			}
 			.name{
-				width: 2.24rem;
+				flex: 1;
 			}
 			.upnum{
-				width: 2.1rem;
+				width: 2.5rem;
 				color: #848484;
+				white-space: nowrap;
 			}
 			.oknum{
 				width: 1.68rem;
@@ -152,6 +156,7 @@ export default {
 			}
 			img{
 				height: .25rem;
+				margin-right: .2rem;
 			}
 		}
 		.csearch-top{

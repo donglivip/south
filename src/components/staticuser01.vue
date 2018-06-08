@@ -21,10 +21,21 @@
 			<div>美丽南钢</div>
 			<span></span>
 		</div>
-		<div id="main" style="height: calc(100% - .7rem);">
+		<div id="main">
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box">
 				<div class="time-left">
+					<div class="left-box">
+						<div class="box">
+							<input type="text" v-model="uname" placeholder="请输入搜索姓名"/>
+							<img src="../../static/arrbottom.png" />
+						</div>
+						<span class="hr"></span>
+						<div class="box" @click="navshow('1')">
+							{{text}}
+							<img src="../../static/arrbottom.png" />
+						</div>
+					</div>
 					<div class="left-box">
 						<div class="box" @click="timeshow(0)">
 							{{starttime==''?'开始时间':starttime}}
@@ -32,58 +43,52 @@
 						</div>
 						<span class="hr"></span>
 						<div class="box" @click="timeshow(1)">
-							{{endtime==''?'结束时间':endtime}}
+							{{endtime==''?'结束时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 					</div>
 				</div>
-				<div class="box-go" style="visibility: hidden;"></div>
-			</div>
-			<div class="time-box">
-				<div class="time-left">
-					<div class="left-box">
-						<div class="box" style="width: 100%;">
-							<input type="text" placeholder="请输入搜索网格名称" v-model="cgridName"/>
-						</div>
-					</div>
-				</div>
-				<div class="box-go" @click="gosearch">
+				<div class="box-go" @click="myajax">
 					搜索
 				</div>
 			</div>
-			<div class="table-box">
-				<table style="flex: 1;">
-					<tr class="title">
-						<td>
-							网格区域
-						</td>
-						<td>
-							处理数量
-						</td>
-					</tr>
-					<tr v-for="(val,index) in mydata">
-						<td v-show="index!=0">
-						{{val.cgridName}}
-						</td>
-						<td v-show="index!=0">
-							{{val.count2}}
-						</td>
-					</tr>
-				</table>
-				<table	style="width: 25%;">
-					<tr class="title">
-						<td>
-							上报数量
-						</td>
-					</tr>
-					<tr v-for="(val,index) in mydata[0]">
-						<td>
-							{{val.count1}}
-						</td>
-					</tr>
-				</table>
-			</div>
+			<table>
+				<tr class="title">
+					<td>
+						姓名
+					</td>
+					<td>
+						类别
+					</td>
+					<td>
+						处理数量
+					</td>
+				</tr>
+				<tr v-for="val in mydata">
+					<td>
+						{{val.cuserName}}
+					</td>
+					<td>
+						{{val.cuserRole | role}}
+					</td>
+					<td>
+						{{val.count1==null?'0':val.count1}}
+					</td>
+				</tr>
+			</table>
 		</div>
+		<transition name='nav'>
+			<div class="bottom-nav" v-show="navboo" @click="navshow(0)">
+				<div class="nav-group">
+					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.text,val.id)" :class="navindex==index?'active':''">
+						{{val.text}}
+					</div>
+					<div class="sub-nav clear" @click="navshow()">
+						搜索
+					</div>
+				</div>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -99,12 +104,44 @@
 				startshow: false,
 				timety: 0,
 				alertboo: false,
+				navboo: false,
 				navindex: -1,
-				community:'选择社区',
-				grid:'选择网格',
-				texttype:'0',
-				cgridName:'',
-				mydata:''
+				uname: '',
+				texttype: '0',
+				text:'选择类别',
+				myid:'',
+				bottomdata: [
+					{
+						text:'居民',
+						id:0
+					},
+					{
+						text:'环保小卫士',
+						id:1
+					},{
+						text:'志愿督察员',
+						id:2
+					},{
+						text:'社区楼栋长',
+						id:3
+					},{
+						text:'社区网格员',
+						id:4
+					},{
+						text:'环卫工作者',
+						id:5
+					},{
+						text:'综合执法队',
+						id:6
+					},{
+						text:'城管中心',
+						id:7
+					},{
+						text:'街办管理员',
+						id:8
+					}
+				],
+				mydata:[]
 			}
 		},
 		components: {
@@ -121,27 +158,42 @@
 			}
 		},
 		methods: {
-			myajax:function(){
-				var that=this
-				var formData={
+			myajax: function() {
+				var that = this
+				var dataJson = {
 					createTime1: that.starttime,
 					handingTime1: that.endtime,
-					cgridName: that.cgridName
+					cuserName: that.uname,
+					cuserRole: that.myid
 				}
-				if(that.starttime==''){delete formData.createTime1}
-				if(that.endtime==''){delete formData.handingTime1}
-				if(that.cgridName==''){delete formData.cgridName}
-				console.log(formData)
+				if(that.starttime == '') {
+					delete dataJson.createTime1
+				}
+				if(that.endtime == '') {
+					delete dataJson.handingTime1
+				}
+				if(that.myid == '') {
+					delete dataJson.cuserRole
+				}
+				if(that.uname == '') {
+					delete dataJson.cuserName
+				}
 				$.ajax({
-					type: "get",
-					url: that.service + "/queryGridReportCountAndHandCount",
+					type: "post",
+					url: that.service + "/queryReportCountAndHandCount",
 					dataType: 'json',
-					data: formData,
+					data: dataJson,
 					success: function(res) {
+						that.mydata = res.data[0]
 						console.log(res)
-						that.mydata=res.data
 					}
 				});
+			},
+			navchange: function(id, index) {
+				this.navindex = index
+				this.text=id
+				this.myid=index
+				this.navshow()
 			},
 			back: function() {
 				this.$router.back()
@@ -152,8 +204,8 @@
 				})
 			},
 			navshow: function(num) {
+				var that = this
 				this.navboo = !this.navboo
-				this.texttype = num
 			},
 			startchang: function(date, formatDate) {
 				if(this.timety == 0) {
@@ -167,28 +219,54 @@
 				this.timety = type
 			},
 			gosearch: function() {
-				that.starttime='',
-				that.endtime='',
-				this.myajax()
+				if(this.starttime == '' || this.endtime == '') {
+					this.navshow('0')
+					this.alerttab()
+					return
+				}
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
+			}
+		},
+		filters:{
+			role:function(value){
+				if(value==0){
+					return '居民'
+				}
+				if(value==1){
+					return '环保小卫士'
+				}
+				if(value==2){
+					return '志愿督察员'
+				}
+				if(value==3){
+					return '社区楼栋长'
+				}
+				if(value==4){
+					return '社区网格员'
+				}
+				if(value==5){
+					return '环卫工作者'
+				}
+				if(value==6){
+					return '综合执法队'
+				}
+				if(value==7){
+					return '城管中心'
+				}
+				if(value==8){
+					return '街办管理员'
+				}
 			}
 		}
 	}
 </script>
 
 <style type="text/css" lang="scss">
-
 	.tselect {
 		background: #eeeeee;
-		.box input{
-			border: 0;
-			width:100% ;
-			height: 100%;
-			text-indent: .2rem;
-		}
-		.btn{
+		.btn {
 			position: absolute;
 			bottom: .2rem;
 			width: calc(100% - .4rem);
@@ -201,36 +279,34 @@
 			height: .8rem;
 			border-radius: .1rem;
 		}
-		.table-box{
-			display: flex;
-			table{
-				width: 100%;
-				background: white;
-				td{
-					height: .6rem;
-					line-height: .6rem;
-					font-size: .25rem;
-					border: 1px solid #ECECEC;
-					text-indent: .15rem;
-				}
-				tr:first-of-type{
-					font-weight: 600;
-					font-size: .25rem;
-				}
+		table {
+			width: 100%;
+			background: white;
+			td {
+				height: .6rem;
+				line-height: .6rem;
+				font-size: .25rem;
+				border: 1px solid #ECECEC;
+				text-indent: .15rem;
+			}
+			tr:first-of-type {
+				font-weight: 600;
+				font-size: .25rem;
 			}
 		}
-		.time-left{
+		.time-left {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
-			.left-box{
+			.left-box {
 				display: flex;
 				align-items: center;
 				margin: .1rem 0;
 			}
 		}
-		.time-box{
+		.time-box {
 			height: auto;
+			padding: .2rem 0;
 		}
 		.bottom-nav {
 			position: absolute;
@@ -395,6 +471,7 @@
 		.time-box {
 			display: flex;
 			align-items: center;
+			height: 1.1rem;
 			padding-left: .3rem;
 			.box {
 				height: .5rem;
@@ -408,6 +485,12 @@
 				img {
 					height: .1rem;
 					margin-left: .2rem;
+				}
+				input{
+					width: 100%;
+					height: 100%;
+					border: 0;
+					text-align: center;
 				}
 			}
 			.box-go {

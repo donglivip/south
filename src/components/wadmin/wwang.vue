@@ -55,7 +55,7 @@
 									<span>{{val.createTime1}}</span>
 								</div>
 								<span class="text">{{val.cgridName}}</span>
-								<img src="../../../static/shanchu.png" />
+								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)"/>
 							</div>
 						</div>
 					</div>
@@ -74,8 +74,8 @@
 									</div>
 								</div>
 								<div class="img-group" >
-									<img src="../../../static/uploadselect.png" :id='["img"+index]' />
-									<div class="state">
+									<img src="../../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)"/>
+									<div class="state" @click.stop="imgok">
 										<span class="upload">
 											待上传
 										</span>
@@ -133,7 +133,8 @@
 				navtext: '分类',
 				server: '',
 				files: [],
-				mydata:''
+				mydata:'',
+				cfileDealAfterImg1:''
 			}
 		},
 		components: {
@@ -159,6 +160,86 @@
 			}
 		},
 		methods: {
+			filephotod: function(id) {
+				var that = this
+				var btnArray = [{
+					title: "删除"
+				}, ]; //选择按钮  1 2 3
+				plus.nativeUI.actionSheet({
+					title: "请选择",
+					cancel: "取消",
+					buttons: btnArray
+				}, function(e) {
+					var index = e.index;
+					switch(index) {
+						case 1:
+							$.ajax({
+								type: "post",
+								url: that.service + "/deleteCorkByCfileId",
+								dataType: 'json',
+								data: {
+									cfileId: id
+								},
+								success: function(res) {
+									if(res.status == 200) {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除完成！");
+											that.myajax()
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+									} else {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除失败!");
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+
+									}
+								}
+							});
+							break;
+					}
+				});
+
+			},
+			imgok:function(id){
+				var that=this
+				if(that.cfileDealAfterImg1==''){
+					function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "请点击图片选择上传的图片后再上传");
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+					return false;
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/updateCfileAndCuserCase",
+					dataType: 'json',
+					data: {
+						userId: localStorage.getItem('userid'),
+						cfileId:id,
+						cfileDealAfterImg1:that.cfileDealAfterImg1
+					},
+					success: function(res) {
+						that.myajax(2)
+						that.toswiper(0)
+					}
+				});
+			},
 			myajax:function(){
 				var that=this
 				$.ajax({
@@ -209,7 +290,7 @@
 			},
 			upload: function(target) {
 				var that = this
-				that.files = []
+				that.files=[]
 				that.uploadtarget = target
 				var btnArray = [{
 					title: "照相机"
@@ -234,7 +315,6 @@
 				});
 			},
 			camera: function() {
-				console.log('相机')
 				var that = this
 				var cmr = plus.camera.getCamera();
 				cmr.captureImage(function(p) {
@@ -256,11 +336,11 @@
 				}); //  “_doc/camera/“  为保存文件名
 			},
 			album: function() {
-				console.log('相册')
 				var that = this
 				plus.gallery.pick(function(path) {
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
 					that.upload_img(path);
+					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
+					alert(path)
 				}, function(e) {
 					alert("取消选择图片");
 				}, {
@@ -270,7 +350,7 @@
 			upload_img: function(p) {
 				var that = this
 				var n = p.substr(p.lastIndexOf('/') + 1);
-				that.files.push({
+				this.files.push({
 					name: "uploadkey",
 					path: p
 				});
@@ -278,8 +358,8 @@
 				that.start_upload();
 			},
 			start_upload: function() {
-				var that = this
-				if(that.files.length <= 0) {
+				var that=this
+				if(this.files.length <= 0) {
 					plus.nativeUI.alert("没有添加上传文件！");
 					return;
 				}
@@ -296,6 +376,8 @@
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
 							that.files = json.data;
+							alert(that.files)
+							that.cfileDealAfterImg1=that.files
 							wt.close();
 						} else {
 							alert("上传失败：" + status);

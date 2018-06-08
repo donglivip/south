@@ -1,6 +1,6 @@
 <template>
-  <div class="workcamera" id="warpper">
-  	<transition name='alert'>
+	<div class="workcamera" id="warpper">
+		<transition name='alert'>
 			<div class="alert" v-show="alertboo" @click="alerttab">
 				<div class="alert-inner">
 					<div class="alert-text">
@@ -14,106 +14,52 @@
 				</div>
 			</div>
 		</transition>
-  	<div id="head">
-				<span @click="back">
+		<div id="head">
+			<span @click="back">
 					<img src="../../static/back.png"/>
 				</span>
-				<div>美丽南钢</div>
-				<span></span>
-			</div>
-			<div id="main" style="height: calc(100% - .7rem);">
-				<div>
-					<div class="box-group">
-						<div class="group" @click="opennew('hworkdetail')">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png"/>
+			<div>美丽南钢</div>
+			<span></span>
+		</div>
+		<div id="main" style="height: calc(100% - .7rem);">
+			<div>
+				<div class="box-group">
+					<div class="group" @click="opennew('hworkdetail',val.cworkId)" v-for="val in mydata">
+						<div class="riqi">
+							<div class="circle width12"></div>
+							<span>{{val.createTime1}}</span>
 						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png"/>
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png"/>
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle  width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png"/>
-						</div>
-						<div class="group ">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png"/>
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png"/>
-						</div>
-					</div>			
+						<span class="text">{{val.cworkTitle}}</span>
+						<img src="../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" />
+					</div>
 				</div>
 			</div>
-			</div>
 		</div>
+	</div>
+	</div>
 </template>
-
 <script>
-export default {
-  name: 'hwork',
-  data () {
-    return {
-      	uploadtarget: '',
-				server:'http://39.107.70.18/Transportation/uploadDriverImage',
-				files:[],
-				alertboo:false
-    }
-  },
-  mounted(){
-  	this.$store.state.tfoot=2
-  },
-  methods:{
-  	back:function(){
-				this.$router.back()
-			},
-  	alerttab:function(){
-  		this.alertboo=!this.alertboo
-  	},
-		opennew:function(target){
-			this.$router.push({
-				name:target
-			})
+	export default {
+		name: 'hwork',
+		data() {
+			return {
+				uploadtarget: '',
+				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
+				files: [],
+				alertboo: false,
+				mydata: []
+			}
 		},
-		upload: function(target) {
+		mounted() {
+			this.$store.state.tfoot = 2
+			this.myajax()
+		},
+		methods: {
+			workphotod: function() {
 				var that = this
-				that.files = []
-				that.uploadtarget = target
 				var btnArray = [{
-					title: "照相机"
-				}, {
-					title: "相册"
-				}]; //选择按钮  1 2 3
+					title: "删除"
+				}, ]; //选择按钮  1 2 3
 				plus.nativeUI.actionSheet({
 					title: "请选择",
 					cancel: "取消",
@@ -122,107 +68,93 @@ export default {
 					var index = e.index;
 					switch(index) {
 						case 1:
-							that.camera();
-							break;
-						case 2:
-							that.album();
+							$.ajax({
+								type: "post",
+								url: that.service + "/deleteCorkByCworkId",
+								dataType: 'json',
+								data: {
+									cworkId: id
+								},
+								success: function(res) {
+									if(res.status == 200) {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除完成！");
+											that.myajax()
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+									} else {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除失败!");
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+
+									}
+								}
+							});
 							break;
 					}
 				});
 			},
-			camera: function() {
+			myajax: function() {
 				var that = this
-				var cmr = plus.camera.getCamera();
-				cmr.captureImage(function(p) {
-					//成功
-					plus.io.resolveLocalFileSystemURL(p, function(entry) {
-						var img_name = entry.name;
-						var img_path = entry.toLocalURL();
-						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
-						that.upload_img(img_path);
-					}, function(e) {
-						alert("读取拍照文件错误：" + e.message);
-					});
-
-				}, function(e) {
-					alert("失败：" + e.message);
-				}, {
-					filename: '_doc/camera/',
-					index: 1
-				});
-			},
-			album: function() {
-				var that = this
-				plus.gallery.pick(function(path) {
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-					that.upload_img(path);
-				}, function(e) {
-					alert("取消选择图片");
-				}, {
-					filter: "image"
-				});
-			},
-			upload_img: function(p) {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				that.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				var that = this
-				if(that.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(that.server, {
-						method: "POST"
+				$.ajax({
+					type: "get",
+					url: that.service + "/querAllCwork",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid')
 					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							that.files = json.data;
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
-					});
-				task.addData("uid", that.getUid());
-				for(var i = 0; i < that.files.length; i++) {
-					var f = that.files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
-				}
-				task.start();
+					success: function(res) {
+						that.mydata = res.data
+					}
+				});
 			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
+			back: function() {
+				this.$router.back()
+			},
+			alerttab: function() {
+				this.alertboo = !this.alertboo
+			},
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
+				this.$router.push({
+					name: target
+				})
+			},
+		},
+		computed: {
+			tfoot() {
+				return this.$store.state.tfoot
+			},
+			service() {
+				return this.$store.state.service
 			}
-  },
-  computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
-  	}
-  },
-  components:{
-  	
-  }
-}
+		},
+		components: {
+
+		}
+	}
 </script>
 
 <style type="text/css" lang="scss">
-	html,body,.warpper{padding: 0px;margin: 0px; font-size:.2rem;width: 100%;height: 100%;position: relative;}
-		
+	html,
+	body,
+	.warpper {
+		padding: 0px;
+		margin: 0px;
+		font-size: .2rem;
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
 </style>

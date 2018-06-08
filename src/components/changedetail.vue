@@ -4,7 +4,7 @@
 			<span @click="back">
     			<img src="../../static/back.png"/>
     		</span>
-			<div>工作照详情</div>
+			<div>案卷详情</div>
 			<span></span>
 		</div>
 		<div id="main">
@@ -83,12 +83,13 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 4
-			this.server='http://27.54.248.14:8080/uploadworkImage'
+			this.server=this.service+'/uploadworkImage'
 			this.myajax()
 		},
 		methods: {
 			myajax:function(){
 				var that=this
+				console.log(that.windexid)
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",

@@ -2,7 +2,7 @@
 	<div class="warpper register">
 		<div class="main">
 			<div class="content">
-				<form @submit.prevent="submit($event)">
+				<form @submit.prevent="submit($event)" name="yForm">
 					<div class="box-group">
 						<div class="form-group">
 							<!--<i class="icon-user"></i>-->

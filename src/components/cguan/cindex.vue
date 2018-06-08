@@ -188,6 +188,7 @@
 										function plusReady() {
 											// 显示自动消失的提示消息
 											plus.nativeUI.toast("删除完成！");
+											that.myajax()
 										}
 										if(window.plus) {
 											plusReady();
@@ -238,6 +239,7 @@
 										function plusReady() {
 											// 显示自动消失的提示消息
 											plus.nativeUI.toast("删除完成！");
+											that.myajax()
 										}
 										if(window.plus) {
 											plusReady();
@@ -274,6 +276,7 @@
 					},
 					success: function(res) {
 						that.workphoto = res.data
+						console.log(that.workphoto)
 					}
 				});
 				$.ajax({
@@ -315,8 +318,7 @@
 				plus.geolocation.getCurrentPosition(function(p) {
 					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
 					that.map.setCenter(JSON.parse(that.mapcenter));
-					that.marker.setMap(that.map);
-					alert(that.service + "/insertCworkBytxt")
+					that.marker.setPosition(JSON.parse(that.mapcenter));
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCworkBytxt",
@@ -327,6 +329,9 @@
 						},
 						success: function(res) {
 							console.log('s' + res)
+						},
+						error:function(res){
+							console.log('e' + res)
 						}
 					});
 				}, function(e) {

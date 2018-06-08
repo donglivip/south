@@ -18,10 +18,10 @@
 		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					待处理案卷
+					已整改案卷
 				</div>
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
-					已处理案卷
+					未整改案卷
 				</div>
 			</div>
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
@@ -35,94 +35,68 @@
 					{{endtime==''?'结束时间':starttime}}
 					<img src="../../../static/arrbottom.png" />
 				</div>
-				<div class="box-go" @click="navshow">
-					{{navtext}}
+				<div class="box-go" @click="gosearch">
+					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group">
+					<div class="select-group" v-for="val in mydata">
 						<div class="group-inner">
 							<div class="group-title">
-								20110204案卷-育林社区1号网格
+								{{val.createTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改前</span>
+									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="state">
+										整改前
 									</div>
 								</div>
-								<div class="img-group" @click="upload('2')">
-									<img src="../../../static/uploadselect.png" id='img2' />
+								<div class="img-group">
+									<img :src="val.cfileDealAfterImg1 | myimg" />
 									<div class="state">
-										<span class="upload">
-											上传
-										</span>
+										整改后
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<p v-show='mydata.length==0'>
+						暂无案卷
+					</p>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group">
-						<div class="group-inner" @click="opennew('yidetail')">
-							<div class="group-title">
-								20110204案卷-育林社区1号网格
-							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改前</span>
-									</div>
-								</div>
-								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改后</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="select-group">
+					<div class="select-group" v-for="(val,index) in mydata">
 						<div class="group-inner">
 							<div class="group-title">
-								20110204案卷-育林社区1号网格
+								{{val.createTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改前</span>
+									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="state">
+										整改前
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改后</span>
+									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click="upload(index)"/>
+									<div class="state" @click="imgok(val.cfileId)">
+										上传图片
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<p v-show='mydata.length==0'>
+						暂无案卷
+					</p>
 				</swiper-slide>
 			</swiper>
 		</div>
 		<transition name='nav'>
-			<div class="bottom-nav" v-show="navboo">
-				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in navdata" @click="navchange(val,index)" :class="navindex==index?'active':''">
-						{{val}}
-					</div>
-					<div class="sub-nav clear" @click="gosearch">
-						搜索
-					</div>
-				</div>
-			</div>
+			<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
 		</transition>
 		<t-foot></t-foot>
 	</div>
@@ -131,7 +105,7 @@
 <script>
 	import { swiper, swiperSlide } from 'vue-awesome-swiper'
 	export default {
-		name: 'can',
+		name: 'tselect',
 		data() {
 			return {
 				swiperOption: {},
@@ -144,8 +118,11 @@
 				alertboo: false,
 				uploadtarget: '',
 				navboo: false,
-				navtext: '选择分类',
-				navindex:-1
+				navtext: '分类',
+				mydata: [],
+				server:'',
+				cfileDealAfterImg1:'',
+				files:[]
 			}
 		},
 		components: {
@@ -157,24 +134,64 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 4
+			this.myajax(2)
+			this.server=this.service+'/uploadRegisterImage'
 		},
 		computed: {
 			swiper() {
 				return this.$refs.mySwiper.swiper;
 			},
-			navdata(){
-		  		return this.$store.state.navdata
-		  	}
+			service() {
+				return this.$store.state.service;
+			}
 		},
 		methods: {
-			navchange:function(id,index){
-				this.navtext = id
-				this.navindex=index
+			imgok:function(id){
+				var that=this
+				if(that.cfileDealAfterImg1==''){
+					function plusReady(){
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast( "请点击图片选择上传的图片后再上传");
+					}
+					if(window.plus){
+						plusReady();
+					}else{
+						document.addEventListener("plusready",plusReady,false);
+					}
+					return false;
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/updateCfileAndCuserCase",
+					dataType: 'json',
+					data: {
+						userId: localStorage.getItem('userid'),
+						cfileId:id,
+						cfileDealAfterImg1:that.cfileDealAfterImg1
+					},
+					success: function(res) {
+						that.myajax(2)
+						that.toswiper(0)
+					}
+				});
 			},
-			opennew: function(target) {
-				this.$router.push({
-					name: target
-				})
+			myajax: function(type) {
+				var that = this
+				$.ajax({
+					type: "post",
+					url: that.service + "/queryByCfilePojoRegister",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid'),
+						cfileResult: type,
+						createTime1: that.starttime,
+						handingTime1: that.endtime
+					},
+					success: function(res) {
+						console.log(res)
+						that.mydata = res.data
+					}
+				});
 			},
 			navshow: function(id) {
 				this.navboo = !this.navboo
@@ -183,6 +200,11 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
+				if(index==0){
+					this.myajax(2)
+				}else{
+					this.myajax(0)
+				}
 			},
 			startchang: function(date, formatDate) {
 				if(this.timety == 0) {
@@ -197,8 +219,6 @@
 			},
 			gosearch: function() {
 				if(this.starttime == '' || this.endtime == '') {
-					this.navtext('选择分类')
-					this.navshow()
 					this.alerttab()
 					return
 				}
@@ -208,6 +228,7 @@
 			},
 			upload: function(target) {
 				var that = this
+				that.files=[]
 				that.uploadtarget = target
 				var btnArray = [{
 					title: "照相机"
@@ -239,7 +260,7 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name; //获得图片名称
 						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('a' + that.uploadtarget).setAttribute('src', img_path)
+						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
 						that.upload_img(img_path);
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -256,15 +277,14 @@
 				var that = this
 				plus.gallery.pick(function(path) {
 					that.upload_img(path);
-					document.getElementById('a' + that.uploadtarget).setAttribute('src', path)
-					alert(path)
+					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
 				}, function(e) {
 					alert("取消选择图片");
 				}, {
 					filter: "image"
 				});
 			},
-			upload_img: function() {
+			upload_img: function(p) {
 				var that = this
 				var n = p.substr(p.lastIndexOf('/') + 1);
 				this.files.push({
@@ -275,13 +295,14 @@
 				that.start_upload();
 			},
 			start_upload: function() {
+				var that=this
 				if(this.files.length <= 0) {
 					plus.nativeUI.alert("没有添加上传文件！");
 					return;
 				}
 				//原生的转圈等待框
 				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(server, {
+				var task = plus.uploader.createUpload(that.server, {
 						method: "POST"
 					},
 					function(t, status) { //上传完成
@@ -291,7 +312,9 @@
 							//转换成json
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
-							var files = json.data;
+							that.files = json.data;
+							alert(that.files)
+							that.cfileDealAfterImg1=that.files
 							wt.close();
 						} else {
 							alert("上传失败：" + status);
@@ -299,9 +322,9 @@
 							wt.close();
 						}
 					});
-				task.addData("uid", this.getUid());
-				for(var i = 0; i < this.files.length; i++) {
-					var f = files[i];
+				task.addData("uid", that.getUid());
+				for(var i = 0; i < that.files.length; i++) {
+					var f = that.files[i];
 					task.addFile(f.path, {
 						key: f.name
 					});
@@ -318,93 +341,8 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		.bottom-nav {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			top: 0;
-			left: 0;
-			background: rgba(0, 0, 0, .5);
-			z-index: 999;
-			.nav-group {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				background: white;
-				width: 100%;
-				.sub-nav {
-					width: 100%;
-					height: .7rem;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					border-bottom: 1px solid ghostwhite;
-				}
-				.clear {
-					background: #1e81d2;
-					color: white;
-					height: .8rem;
-				}
-				.active{
-					background: #1e81d2;
-					color: white;
-				}
-			}
-		}
-		.back-group {
-			background: white;
-			width: 100%;
-			margin-top: .15rem;
-			box-shadow: 0 2px 2px 2px gainsboro;
-			height: .95rem;
-			display: flex;
-			align-items: center;
-			font-size: .25rem;
-			.circle {
-				width: .2rem;
-				height: .2rem;
-				border-radius: 50%;
-				background: #00b7ee;
-				margin: 0 .22rem 0 .34rem;
-			}
-			.date {
-				width: 2rem;
-			}
-			&:nth-of-type(1n) .circle {
-				background: #00b7ee;
-			}
-			&:nth-of-type(2n) .circle {
-				background: #e39b00;
-			}
-			&:nth-of-type(3n) .circle {
-				background: #ff5c5c;
-			}
-			&:nth-of-type(4n) .circle {
-				background: #a8f247;
-			}
-			&:nth-of-type(5n) .circle {
-				background: #a264ff;
-			}
-			&:nth-of-type(6n) .circle {
-				background: #00b7ee;
-			}
-			&:nth-of-type(7n) .circle {
-				background: #ff6262;
-			}
-			&:nth-of-type(8n) .circle {
-				background: #b17dff;
-			}
-		}
-		.wwang {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			.grey {
-				color: #8a8a8a;
-				font-size: .2rem;
-				font-weight: 400;
-			}
+		p{
+			text-align: center;
 		}
 		.type {
 			display: flex;
@@ -503,15 +441,15 @@
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					font-size: .25rem;
-					font-weight: 600;
+					height: .5rem;
 				}
 				.upload {
 					background: #eeeeee;
-					padding: .05rem .25rem;
+					padding: 0 .25rem;
 					color: gray;
 					height: .35rem;
 					line-height: .35rem;
+					margin-left: .3rem;
 				}
 			}
 		}

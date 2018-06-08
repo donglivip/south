@@ -55,7 +55,7 @@
 				navtext: '分类',
 				navtype: 0,
 				changephoto: [],
-				cfileStation:''
+				cfileStation: ''
 			}
 		},
 		mounted() {
@@ -66,18 +66,32 @@
 		methods: {
 			upmy: function() {
 				var that=this
-				function plusReady(){
-					plus.geolocation.getCurrentPosition(function(p){
-						that.cfileStation=''
-						that.cfileStation=p.coords.longitude+','+p.coords.latitude
-					}, function(e){
-						alert('Geolocation error: ' + e.message);
-					} );
+				if(that.files == '' || that.bottomtwoid == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请把信息填写完整后重试！");
+						that.myajax()
 					}
-				if(window.plus){
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+				}
+				var that = this
+
+				function plusReady() {
+					plus.geolocation.getCurrentPosition(function(p) {
+						that.cfileStation = ''
+						that.cfileStation = p.coords.longitude + ',' + p.coords.latitude
+					}, function(e) {
+						alert('Geolocation error: ' + e.message);
+					});
+				}
+				if(window.plus) {
 					plusReady();
-				}else{
-					document.addEventListener("plusready",plusReady,false);
+				} else {
+					document.addEventListener("plusready", plusReady, false);
 				}
 				$.ajax({
 					type: "post",
@@ -85,9 +99,9 @@
 					dataType: 'json',
 					data: {
 						cuserId: localStorage.getItem('userid'),
-						cfileDealPrevImg1:that.files,
-						ctypeTwoId:that.bottomtwoid,
-						cfileStation:that.cfileStation
+						cfileDealPrevImg1: that.files,
+						ctypeTwoId: that.bottomtwoid,
+						cfileStation: that.cfileStation
 					},
 					success: function(res) {
 						if(res.status == 200) {

@@ -102,17 +102,18 @@
 				}
 			});
 			var cuserRole = localStorage.getItem('cuserRole')
-			if(cuserRole == 0 || cuserRole == 1 || cuserRole == 2 || cuserRole == 3) {
-				that.opennew('tindex', 1)
-			} else if(cuserRole == 4) {
-				that.opennew('windex')
-			} else if(cuserRole == 5) {
-				that.opennew('hindex')
-			} else if(cuserRole == 6 || cuserRole == 7) {
-				that.opennew('cindex')
-			} else if(cuserRole == 8) {
-				that.opennew('asearch')
-			}
+//			if(cuserRole == 0 || cuserRole == 1 || cuserRole == 2 || cuserRole == 3) {
+//				that.opennew('tindex', 1)
+//			} else if(cuserRole == 4) {
+//				that.opennew('windex')
+//			} else if(cuserRole == 5) {
+//				that.opennew('hindex')
+//			} else if(cuserRole == 6 || cuserRole == 7) {
+//				that.opennew('cindex')
+//			} else if(cuserRole == 8) {
+//				that.opennew('asearch')
+//			}
+			that.opennew('cindex')
 			function plusReady(){
 				that.$store.state.uuid=plus.device.uuid
 			}

@@ -24,34 +24,34 @@
 				</div>
 				<span class="hr"></span>
 				<div class="box" @click="timeshow(1)">
-					{{endtime==''?'结束时间':starttime}}
+					{{endtime==''?'结束时间':endtime}}
 					<img src="../../../static/arrbottom.png" />
 				</div>
 				<div class="box-go" @click="gosearch">
 					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
-					<div class="select-group" v-for="val in mydata">
-						<div class="group-inner">
-							<div class="group-title">
-								{{val.createTime1}}{{val.cgridName}}
+			<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
+				<div class="group-inner">
+					<div class="group-title">
+						{{val.createTime1}}{{val.cgridName}}
+					</div>
+					<div class="img-box">
+						<div class="img-group">
+							<img :src="val.cfileDealPrevImg1 | myimg" />
+							<div class="state">
+								整改前
 							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
-									<div class="state">
-										整改前
-									</div>
-								</div>
-								<div class="img-group">
-									<img src="../../../static/scimggrey.png"/>
-									<div class="state">
-										游客不可上传整改后照片
-									</div>
-								</div>
+						</div>
+						<div class="img-group">
+							<img src="../../../static/scimggrey.png" />
+							<div class="state">
+								游客不可上传整改后照片
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
 		</div>
 		<transition name='nav'>
 			<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
@@ -75,7 +75,7 @@
 				navboo: false,
 				navtext: '分类',
 				mydata: [],
-				cuserCode:''
+				cuserCode: ''
 			}
 		},
 		components: {
@@ -84,37 +84,60 @@
 			BootomNav: resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
-			var that=this
+			var that = this
 			this.$store.state.tfoot = 2
 			this.myajax(2)
-			
+
 		},
 		computed: {
 			service() {
 				return this.$store.state.service;
 			},
-			uuid(){
+			uuid() {
 				return this.$store.state.uuid
 			}
 		},
 		methods: {
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
+				this.$router.push({
+					name: target
+				})
+			},
 			myajax: function(type) {
 				var that = this
-				$.ajax({
-					type: "post",
-					url: that.service + "/queryByCfilePojo",
-					dataType: 'json',
-					data: {
-						cuserCode: '866341030793229,866341031793228',
+
+				function plusReady() {
+					var ajaxJson = {
+						cuserCode: that.uuid,
 						cfileResult: type,
 						createTime1: that.starttime,
 						handingTime1: that.endtime
-					},
-					success: function(res) {
-						console.log(res)
-						that.mydata = res.data
 					}
-				});
+					console.log(JSON.stringify(ajaxJson))
+					if(that.starttime==''){
+						delete ajaxJson.createTime1
+					}
+					if(that.endtime==''){
+						delete ajaxJson.handingTime1
+					}
+					$.ajax({
+						type: "post",
+						url: that.service + "/queryByCfilePojo",
+						dataType: 'json',
+						data: ajaxJson,
+						success: function(res) {
+							console.log(JSON.stringify(res))
+							that.mydata = res.data
+						}
+					});
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+
 			},
 			navshow: function(id) {
 				this.navboo = !this.navboo
@@ -123,9 +146,9 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
-				if(index==0){
+				if(index == 0) {
 					this.myajax(2)
-				}else{
+				} else {
 					this.myajax(0)
 				}
 			},
@@ -261,7 +284,7 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		p{
+		p {
 			text-align: center;
 		}
 		.type {

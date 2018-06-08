@@ -64,31 +64,47 @@
 						处理数量
 					</td>
 				</tr>
-				<tr>
+				<tr v-for="val in mydata">
 					<td>
-						一号网格
+						{{val.cgridName}}
 					</td>
 					<td>
-						5
+						{{val.count1==null?'0':val.count1}}
 					</td>
 					<td>
-						6
+						{{val.count2==null?'0':val.count2}}
 					</td>
 				</tr>
 			</table>
 		</div>
 		<transition name='nav'>
 			<div class="bottom-nav" v-show="navboo" @click="navshow(0)">
-				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in navdata" @click.stop="navchange(val.name,index)" :class="navindex==index?'active':''">
-						{{val.name}}
+				<div class="nav-group" v-if="texttype==2">
+					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.ctypeTitle,val.ctypeId)" :class="navindex==index?'active':''">
+						{{val.ctypeTitle}}
 					</div>
-					<div class="sub-nav clear" @click.stop="gosearch">
+					<div class="sub-nav clear" @click="myajax()">
+						搜索
+					</div>
+				</div>
+				<div class="nav-group" v-if="texttype==0">
+					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cmultipleCommunitiesName,val.cmultipleCommunitiesId)" :class="navindex==index?'active':''">
+						{{val.cmultipleCommunitiesName}}
+					</div>
+					<div class="sub-nav clear" @click="myajax()">
+						搜索
+					</div>
+				</div>
+				<div class="nav-group" v-if="texttype==1">
+					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cgridName,val.cgridId)" :class="navindex==index?'active':''">
+						{{val.cgridName}}
+					</div>
+					<div class="sub-nav clear" @click="myajax()">
 						搜索
 					</div>
 				</div>
 			</div>
-		</transition>	
+		</transition>
 		<div class="btn" @click="opennew('staticword')">
 			图表查询
 		</div>
@@ -110,9 +126,11 @@
 				navboo: false,
 				navtext: '选择分类',
 				navindex: -1,
-				community:'选择社区',
-				grid:'选择网格',
-				texttype:'0'
+				community: '选择社区',
+				grid: '选择网格',
+				texttype: '0',
+				bottomdata: [],
+				mydata:[]
 			}
 		},
 		components: {
@@ -121,16 +139,61 @@
 			BootomNav: resolve => require(['./bottom-nav'], resolve)
 		},
 		mounted() {
-			
+			this.myajax()
 		},
 		computed: {
-			navdata() {
-				return this.$store.state.navdata
+			service() {
+				return this.$store.state.service
 			}
 		},
 		methods: {
-			navchange:function(val,num){
-				this.navindex=num
+			myajax: function() {
+				var that = this
+				var dataJson = {
+					createTime1: that.starttime,
+					handingTime1: that.endtime,
+					ctypeId: that.navid,
+					cgridId: that.gridid,
+					cmultipleCommunitiesId: that.communityid
+				}
+				if(that.starttime == '') {
+					delete dataJson.createTime1
+				}
+				if(that.endtime == '') {
+					delete dataJson.handingTime1
+				}
+				if(that.navid == '') {
+					delete dataJson.ctypeId
+				}
+				if(that.gridid == '') {
+					delete dataJson.cgridId
+				}
+				if(that.communityid == '') {
+					delete dataJson.cmultipleCommunitiesId
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/queryAndGridAndCtypeIdReportCount",
+					dataType: 'json',
+					data: dataJson,
+					success: function(res) {
+						that.mydata = res.data
+					}
+				});
+			},
+			navchange: function(id, index) {
+				this.navindex = index
+				if(this.texttype == 0) {
+					this.community = id
+					this.communityid = index
+				} else if(this.texttype == 1) {
+					this.grid = id
+					this.gridid = index
+				} else {
+					this.navtext = id
+					this.navid = index
+				}
+				this.navshow()
 			},
 			back: function() {
 				this.$router.back()
@@ -141,6 +204,37 @@
 				})
 			},
 			navshow: function(num) {
+				var that = this
+				if(num == 2) {
+					$.ajax({
+						type: "post",
+						url: that.service + "/queryCtypeOne",
+						dataType: 'json',
+						success: function(res) {
+							that.bottomdata = res.data
+						}
+					});
+				} else if(num == 0) {
+					//					社区
+					$.ajax({
+						type: "post",
+						url: that.service + "/queryCmultipleCommunities",
+						dataType: 'json',
+						success: function(res) {
+							that.bottomdata = res.data
+						}
+					});
+				} else if(num == 1) {
+					//					网格
+					$.ajax({
+						type: "post",
+						url: that.service + "/queryCgrid",
+						dataType: 'json',
+						success: function(res) {
+							that.bottomdata = res.data
+						}
+					});
+				}
 				this.navboo = !this.navboo
 				this.texttype = num
 			},
@@ -172,7 +266,7 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		.btn{
+		.btn {
 			position: absolute;
 			bottom: .2rem;
 			width: calc(100% - .4rem);
@@ -185,32 +279,32 @@
 			height: .8rem;
 			border-radius: .1rem;
 		}
-		table{
+		table {
 			width: 100%;
 			background: white;
-			td{
+			td {
 				height: .6rem;
 				line-height: .6rem;
 				font-size: .25rem;
 				border: 1px solid #ECECEC;
 				text-indent: .15rem;
 			}
-			tr:first-of-type{
+			tr:first-of-type {
 				font-weight: 600;
 				font-size: .25rem;
 			}
 		}
-		.time-left{
+		.time-left {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
-			.left-box{
+			.left-box {
 				display: flex;
 				align-items: center;
 				margin: .1rem 0;
 			}
 		}
-		.time-box{
+		.time-box {
 			height: auto;
 			padding: .2rem 0;
 		}

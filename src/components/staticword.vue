@@ -23,8 +23,8 @@
 			}
 		},
 		mounted() {
-			let myChart = echarts.init(document.getElementById('myChart'))
-			myChart.setOption({
+
+			var chartoption = {
 				tooltip: {
 					trigger: 'axis',
 					axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -32,11 +32,11 @@
 					}
 				},
 				legend: {
-					data: ['已处理', '未处理']
+					data: ['上报数量', '处理数量']
 				},
 				xAxis: [{
 					type: 'category',
-					data: ['店铺001', '店铺002', '店铺003', '店铺004', '店铺005', '店铺006', '店铺007', '店铺001', '店铺002', '店铺003', '店铺004', '店铺005', '店铺006', '店铺007']
+					data: []
 				}],
 				yAxis: [{
 					type: 'value'
@@ -53,27 +53,46 @@
 					}
 				],
 				series: [{
-						name: '已处理',
+						name: '上报数量',
 						type: 'bar',
-						data: [862, 1018, 964, 1026, 1679, 1600, 1570, 862, 1018, 964, 1026, 1679, 1600, 1570],
-						 itemStyle:{
-                                    normal:{
-                                        color:'#1e81d2'
-                                    }
-                                }
+						data: [],
+						itemStyle: {
+							normal: {
+								color: '#1e81d2'
+							}
+						}
 					},
 					{
-						name: '未处理',
+						name: '处理数量',
 						type: 'bar',
-						data: [620, 732, 701, 734, 1090, 1130, 1120, 862, 1018, 964, 1026, 1679, 1600, 1570],
-												 itemStyle:{
-                                    normal:{
-                                        color:'#4ad2ff'
-                                    }
-                                }
+						data: [],
+						itemStyle: {
+							normal: {
+								color: '#4ad2ff'
+							}
+						}
 					},
 				]
-			})
+			}
+			var that=this
+			
+			$.ajax({
+				type: "post",
+				url: that.service + "/queryAndGridAndCtypeIdReportCount",
+				dataType: 'json',
+				asycn:false,
+				data: {},
+				success: function(res) {
+					for(var i=0;i<res.data[0].length;i++){
+						chartoption.xAxis[0].data.push(res.data[0][i].cmultipleCommunitiesName)
+						chartoption.series[0].data.push(res.data[0][i].count1)
+						chartoption.series[1].data.push(res.data[0][i].count2)
+					}
+					let myChart = echarts.init(document.getElementById('myChart'))
+					myChart.setOption(chartoption)
+				}
+			});
+			
 		},
 		methods: {
 			back: function() {
@@ -86,8 +105,8 @@
 			}
 		},
 		computed: {
-			tfoot() {
-				return this.$store.state.tfoot
+			service() {
+				return this.$store.state.service
 			}
 		},
 		components: {

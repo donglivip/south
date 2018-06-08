@@ -79,12 +79,12 @@ body,html,#wrapper,#app{height: 100%;width: 100%;position: relative;overflow: hi
 		.workcamera .box-group .group{background: #FFFFFF;margin-bottom: .2rem;height:.8rem;display: flex;align-items: center;box-shadow: 0 2px 2px 2px gainsboro;}
 		.workcamera .riqi{display: flex;align-items: center;margin: 0 .2rem 0 .34rem;}
 		.workcamera .width12{width:.17rem;height: .17rem;border-radius:50%; margin-right:.35rem;}
-		.workcamera .group:nth-of-type(1) .circle{background: blue;}
-		.workcamera .group:nth-of-type(2) .circle{background: yellow;}
-		.workcamera .group:nth-of-type(3) .circle{background: red;}
-		.workcamera .group:nth-of-type(4) .circle{background: pink;}
-		.workcamera .group:nth-of-type(5) .circle{background: peru;}
-		.workcamera .group:nth-of-type(6) .circle{background: green;}
+		.workcamera .group:nth-of-type(n) .circle{background: blue;}
+		.workcamera .group:nth-of-type(2n) .circle{background: yellow;}
+		.workcamera .group:nth-of-type(3n) .circle{background: red;}
+		.workcamera .group:nth-of-type(4n) .circle{background: pink;}
+		.workcamera .group:nth-of-type(5n) .circle{background: peru;}
+		.workcamera .group:nth-of-type(6n) .circle{background: green;}
 		.workcamera .box-upload{background: #FFFFFF;}
 		.workcamera footer{background: #FFFFFF; position: absolute;bottom: .85rem;width:100%;}
 		.workcamera .upload{margin:0 .35rem;height: 2rem;display: flex;align-items: center;justify-content: space-between;}
@@ -102,12 +102,12 @@ body,html,#wrapper,#app{height: 100%;width: 100%;position: relative;overflow: hi
 		.hwzhenggai .riqi{display: flex;align-items: center;margin: 0 .2rem 0 .34rem;}
 		.hwzhenggai .text{width: 4.4rem;}
 		.hwzhenggai .width12{width:.17rem;height: .17rem;border-radius:50%; margin-right:.35rem;}
-		.hwzhenggai .group:nth-of-type(1) .circle{background: blue;}
-		.hwzhenggai .group:nth-of-type(2) .circle{background: yellow;}
-		.hwzhenggai .group:nth-of-type(3) .circle{background: red;}
-		.hwzhenggai .group:nth-of-type(4) .circle{background: pink;}
-		.hwzhenggai .group:nth-of-type(5) .circle{background: peru;}
-		.hwzhenggai .group:nth-of-type(6) .circle{background: green;}
+		.hwzhenggai .group:nth-of-type(1n) .circle{background: blue;}
+		.hwzhenggai .group:nth-of-type(2n) .circle{background: yellow;}
+		.hwzhenggai .group:nth-of-type(3n) .circle{background: red;}
+		.hwzhenggai .group:nth-of-type(4n) .circle{background: pink;}
+		.hwzhenggai .group:nth-of-type(5n) .circle{background: peru;}
+		.hwzhenggai .group:nth-of-type(6n) .circle{background: green;}
 		.hwzhenggai .box-upload{background: #FFFFFF;}
 		.hwzhenggai .myfoot{background: #FFFFFF; position: absolute;bottom:.85rem;width:100%;}
 		.hwzhenggai .upload{height: 3rem;display: flex;align-items: center;justify-content: space-between;}
@@ -124,3 +124,5 @@ body,html,#wrapper,#app{height: 100%;width: 100%;position: relative;overflow: hi
 		.tindex-top #img1{height: 100%;}
 .workcamera .riqi span{width: 1.2rem;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 .hwzhenggai .group img{margin-right: .2rem;}
+.box-go{width: 1.5rem!important;}
+.big-main{height: calc(100% - .8rem)!important;}

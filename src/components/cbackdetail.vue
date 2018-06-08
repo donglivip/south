@@ -7,12 +7,12 @@
     		<div>退回案卷详情</div> 
     		<span></span>
     	</div>
-    	<div id="main">
+    	<div id="main" style="height: calc(100% - .8rem);">
     		<div class="detail-group">
     			<div class="detail-inner">
     				<img src="../../static/detail=adress.png"/>
     				<div class="detail-text">
-    					育林社区1号网格
+    					{{mydata[0].cgridName}}
     				</div>
     			</div>
     		</div>
@@ -20,55 +20,26 @@
     			<div class="detail-inner">
     				<img src="../../static/detail-time.png"/>
     				<div class="detail-text">
-    					上报时间：2017-09-09
+    					上报时间：{{mydata[0].createTime1}}
     				</div>
     			</div>
     			<div class="detail-inner">
     				<img src="../../static/detail-up.png"/>
     				<div class="detail-text">
-    					上报人：李四
+    					上报人：{{mydata[0].cuserName}}
     				</div>
     			</div>
     			<div class="detail-inner">
     				<img src="../../static/up-back.png"/>
     				<div class="detail-text">
-    					退回人：张三
+    					退回人：{{mydata[1].cuserName}}
     				</div>
     			</div>
     			<div class="detail-inner">
-    				<img src="../../static/prev.png" class="big-img"/>
+    				<img :src="mydata[0].cfileDealPrevImg1 | myimg" class="big-img"/>
     			</div>
     		</div>
-    		<div class="detail-group">
-    			<div class="detail-inner" @click="navshow(id)">
-    				<div class="detail-text">
-    					可选网格：
-    				</div>
-    				<div class="detail-arr">
-    					请选择
-    				</div>
-    				<img src="../../static/arrright.png" class="arrimg"/>
-    			</div>
-    			<div class="detail-inner" @click="navshow(id)">
-    				<div class="detail-text">
-    					案卷分类：
-    				</div>
-    				<div class="detail-arr">
-    					请选择
-    				</div>
-    				<img src="../../static/arrright.png" class="arrimg"/>
-    			</div>
-    			<div class="detail-inner" @click="navshow(id)">
-    				<div class="detail-text">
-    					案卷时限：
-    				</div>
-    				<div class="detail-arr">
-    					请选择
-    				</div>
-    				<img src="../../static/arrright.png" class="arrimg"/>
-    			</div>
-    		</div>
-    		<div class="godubmit">
+    		<div class="godubmit" @click="mysubmit">
     			确认分配
     		</div>
     	</div>
@@ -83,14 +54,48 @@ export default {
   name: 'cbackdetail',
   data () {
     return {
-      navboo:false
-      
+      navboo:false,
+      mydata:[]
     }
   },
   mounted(){
   	this.$store.state.tfoot=4
+  	this.myajax()
   },
   methods:{
+  	mysubmit:function(){
+  		var that=this
+  		$.ajax({
+					type: "post",
+					url: that.service + "/updateByPrimarykeyAndConfirmingAssignments",
+					dataType: 'json',
+					data: {
+						cfileId: that.windexid,
+						cuserIdNetwork:localStorage.getItem('userid'),
+						cgridId:that.mydata[0].cgridId,
+						cfileResult:0
+					},
+					success: function(res) {
+						console.log(res)
+						that.$router.back()
+					}
+				});
+  	},
+  	myajax:function(){
+  		console.log(this.windexid)
+				var that=this
+				$.ajax({
+					type: "get",
+					url: that.service + "/queryReturnFileById",
+					dataType: 'json',
+					data: {
+						cfileId: that.windexid
+					},
+					success: function(res) {
+						that.mydata=res.data
+					}
+				});
+			},
 		opennew:function(target){
 			this.$router.push({
 				name:target
@@ -106,7 +111,15 @@ export default {
   },
   components:{
   	BootomNav: resolve => require(['./bottom-nav'], resolve)
-  }
+  },
+  computed: {
+			windexid() {
+				return this.$store.state.windexid
+			},
+			service() {
+				return this.$store.state.service
+			}
+		}
 }
 </script>
 

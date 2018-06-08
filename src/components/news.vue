@@ -14,6 +14,9 @@
     				{{val.cmessageTitle}}
     			</div>
     		</div>
+    		<p v-if="mydata.length==0">
+    			您好没有消息呢，赶快活跃起来吧
+    		</p>
     	</div>
   </div>
 </template>
@@ -75,6 +78,10 @@ export default {
 <style type="text/css" lang="scss">
 	.news{
 		background: #ECECEC;
+		p{
+			text-align: center;
+			line-height: 1rem;
+		}
 		.group{
 			background: white;
 			padding: .15rem;

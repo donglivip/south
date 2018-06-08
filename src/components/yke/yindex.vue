@@ -3,15 +3,9 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tindex-top">
-				<form @submit.prevent="submit($event)">
-					<input type="text" id="imgfile" name="cfileDealPrevImg1" style="display: none;"/>
-					<input type="text" name="cuserCode" v-model="cuserCode" style="display: none;"/>
-					<input type="number" name="cuserRole" value="0" style="display: none;"/>
-					<input type="text" name="ctypeTwoId" v-model="bottomtwoid" style="display: none;"/>
-					<input type="text" name="cfileStation" v-model="cfileStation" style="display: none;"/>
 					<div class="img-box" @click="upload('1')">
-						<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
-						<img :src="upsrc"  id="img1" v-show="upimg"/>
+						<img src="../../../static/creame.png" class="gocream" v-show="!upimg" />
+						<img :src="upsrc" id="img1" v-show="upimg" />
 					</div>
 					<div class="tindex-setting">
 						<div class="setting-group" @click="clear">
@@ -23,14 +17,13 @@
 						<div class="setting-group" @click="navshow('分类')">
 							{{navtext}}
 						</div>
-						<div class="setting-group">
+						<div class="setting-group" @click="submit">
 							<img src="../../../static/upload.png" />
 							<span>
-	    						 <input type="submit"  value="上传" />
+	    						上传
 	    					</span>
 						</div>
 					</div>
-				</form>
 			</div>
 			<div class="tindex-bottom">
 				<div class="bottom-title">
@@ -82,109 +75,110 @@
 
 <script>
 	export default {
-		name: 'tindex',
+		name: 'yindex',
 		data() {
 			return {
 				creamsrc: '',
 				uploadtarget: '',
-				server:'',
-				files:[],
-				upimg:false,
-				upsrc:'',
-				navtext:'选择分类',
-				bottomboo:false,
-				cuserCode:'',
-				cuserRole:'',
-				cfileStation:''
+				server: '',
+				files: [],
+				upimg: false,
+				upsrc: '',
+				navtext: '选择分类',
+				bottomboo: false,
+				cfileStation: '',
+				w: ''
 			}
 		},
 		components: {
 			THead: resolve => require(['../tourists/head'], resolve),
 			TFoot: resolve => require(['./yfoot'], resolve),
-			bottomNav:resolve => require(['../bottom-nav'], resolve)
+			bottomNav: resolve => require(['../bottom-nav'], resolve)
 		},
 		mounted() {
+			var that = this
 			this.$store.state.tfoot = 1
-			this.server=this.service+'/uploadYkImage'
+			this.server = this.service + '/uploadYkImage'
 		},
 		methods: {
-			submit:function(event){
-				if(this.navtext=='选择分类'){
-					function plusReady(){
+			submit: function(event) {
+				if(this.navtext == '选择分类') {
+					function plusReady() {
 						// 显示自动消失的提示消息
-						plus.nativeUI.toast( "请选择分类!");
+						plus.nativeUI.toast("请选择分类!");
 						return false;
 					}
-					if(window.plus){
+					if(window.plus) {
 						plusReady();
-					}else{
-						document.addEventListener("plusready",plusReady,false);
+					} else {
+						document.addEventListener("plusready", plusReady, false);
 					}
 				}
-				if(this.upsrc==''){
-					function plusReady(){
+				if(this.upsrc == '') {
+					function plusReady() {
 						// 显示自动消失的提示消息
-						plus.nativeUI.toast( "请上传图片!");
+						plus.nativeUI.toast("请上传图片!");
 						return false;
 					}
-					if(window.plus){
+					if(window.plus) {
 						plusReady();
-					}else{
-						document.addEventListener("plusready",plusReady,false);
+					} else {
+						document.addEventListener("plusready", plusReady, false);
 					}
 				}
-				var that=this
-				function plusReady(){
+				var that = this
+				function plusReady() {
 					// 弹出系统等待对话框
-					var w = plus.nativeUI.showWaiting( "上传中..." );
-					that.cuserCode=plus.device.uuid
-					plus.geolocation.getCurrentPosition(function(p){
-						that.cfileStation=''
-						that.cfileStation=p.coords.longitude+','+p.coords.latitude
-					}, function(e){
+					that.w = plus.nativeUI.showWaiting("上传中...");
+					plus.geolocation.getCurrentPosition(function(p) {
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCfileAndCuser",
+							dataType: 'json',
+							data: {
+								cuserCode:plus.device.uuid,
+								cuserRole:0,
+								cfileDealPrevImg1:that.files,
+								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
+								ctypeTwoId:that.bottomtwoid
+							},
+							success: function(res) {
+								console.log(res)
+								if(res.status != 200) {
+									alert(res.msg)
+								} else {
+									function plusReady() {
+										that.w.close()
+										plus.nativeUI.toast("上传完成");
+										that.upimg = false
+										that.navtext = '选择分类'
+									}
+									if(window.plus) {
+										plusReady();
+									} else {
+										document.addEventListener("plusready", plusReady, false);
+									}
+								}
+							}
+						});
+					}, function(e) {
 						alert('Geolocation error: ' + e.message);
-					} );
-					}
-				if(window.plus){
-					plusReady();
-				}else{
-					document.addEventListener("plusready",plusReady,false);
+					});
 				}
-				var formData = new FormData(event.target);
-				$.ajax({
-					type: "post",
-					url: that.service + "/insertCfileAndCuser",
-					dataType: 'json',
-					contentType: false,
-					processData: false,
-					data: formData,
-					success: function(res) {
-						if(res.status != 200) {
-							alert(res.msg)
-							return false;
-						}else{
-							function plusReady(){
-								plus.nativeUI.closeWaiting();
-								plus.nativeUI.toast("上传完成");
-								that.upimg=false
-								that.navtext='选择分类'
-							}
-							if(window.plus){
-								plusReady();
-							}else{
-								document.addEventListener("plusready",plusReady,false);
-							}
-						}
-					}
-				});
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+
 			},
-			navshow:function(name){
-				this.navtext=name
-				this.bottomboo=!this.bottomboo
+			navshow: function(name) {
+				this.navtext = name
+				this.bottomboo = !this.bottomboo
 			},
-			clear:function(){
-				this.files=[]
-				this.upimg=false
+			clear: function() {
+				this.files = []
+				this.upimg = false
 			},
 			upload: function(target) {
 				var that = this
@@ -219,26 +213,20 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
-						that.upsrc=img_path
-						that.upimg=!that.upimg
+						that.upsrc = img_path
+						that.upimg = !that.upimg
 						that.upload_img(img_path);
-						var img = document.getElementByid("img");//通过ID获取IMG元素
- 
-						    var image = new Image();//new一个image对象
-						 
-						    image.src=img.src;
-						 
-						    //获取大小
-						 
-						    image.onreadystatechange = function ()
-							{	
-						       if (image.readyState == "complete")
-						       {
-						         initFileSize=image.fileSize;
-						         var fileSize=Math.ceil(initFileSize/1024);
-						         alert(fileSize+"k")
-						        }
-						    }
+						var img = document.getElementByid("img"); //通过ID获取IMG元素
+						var image = new Image(); //new一个image对象
+						image.src = img.src;
+						//获取大小
+						image.onreadystatechange = function() {
+							if(image.readyState == "complete") {
+								initFileSize = image.fileSize;
+								var fileSize = Math.ceil(initFileSize / 1024);
+								alert(fileSize + "k")
+							}
+						}
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
 					});
@@ -253,8 +241,8 @@
 			album: function() {
 				var that = this
 				plus.gallery.pick(function(path) {
-					that.upsrc=path
-					that.upimg=!that.upimg
+					that.upsrc = path
+					that.upimg = !that.upimg
 					that.upload_img(path);
 				}, function(e) {
 					alert("取消选择图片");
@@ -290,8 +278,7 @@
 							//转换成json
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
-							var files = json.data;
-							$("#imgfile").val(files)
+							that.files = json.data;
 							wt.close();
 						} else {
 							alert("上传失败：" + status);
@@ -312,11 +299,11 @@
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		},
-		computed:{
-			service(){
+		computed: {
+			service() {
 				return this.$store.state.service
 			},
-			bottomtwoid(){
+			bottomtwoid() {
 				return this.$store.state.bottomtwoid
 			}
 		}
@@ -325,12 +312,12 @@
 
 <style lang="scss">
 	.tindex {
-		input[type=submit]{
+		input[type=submit] {
 			border: 0;
 			background: none;
 			color: white;
 		}
-		#img1{
+		#img1 {
 			height: 100%;
 		}
 		.tindex-top {

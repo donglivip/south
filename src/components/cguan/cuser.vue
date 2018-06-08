@@ -28,7 +28,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('changepwd')">
+				<div class="submenu" @click="opennew('staticuser')">
 					<img src="../../../static/user-ren.png" />
 					<span>
     					处理记录
@@ -56,7 +56,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="clear">
+				<div class="clear" @click="clear">
 					退出登录
 				</div>
 			</div>
@@ -84,6 +84,10 @@
 			this.$store.state.tfoot = 5
 		},
 		methods: {
+			clear:function(){
+				localStorage.clear()
+				this.opennew('home')
+			},
 			opennew: function(target) {
 				this.$router.push({
 					name: target

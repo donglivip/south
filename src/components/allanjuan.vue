@@ -15,12 +15,12 @@
 			</div>
 		</transition>
 		<div id="head">
-				<span @click="back">
+			<span @click="back">
 					<img src="../../static/back.png"/>
 				</span>
-				<div>美丽南钢</div>
-				<span></span>
-			</div>
+			<div>美丽南钢</div>
+			<span></span>
+		</div>
 		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==3?'active':''" @click="toswiper(3)">
@@ -49,6 +49,9 @@
 							{{grid}}
 							<img src="../../static/arrbottom.png" />
 						</div>
+						<div class="box-go" @click="navshow('2')">
+							{{navtext}}
+						</div>
 					</div>
 					<div class="left-box">
 						<div class="box" @click="timeshow(0)">
@@ -57,130 +60,71 @@
 						</div>
 						<span class="hr"></span>
 						<div class="box" @click="timeshow(1)">
-							{{endtime==''?'结束时间':starttime}}
+							{{endtime==''?'结束时间':endtime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
+						<div class="box-go" @click="myajax">
+							搜索
+						</div>
 					</div>
+
 				</div>
-				<div class="box-go" @click="navshow('2')">
-					{{navtext}}
-				</div>
+
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="box-group">
-						<div class="group" @click="opennew('cbackdetail')">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
+					<div class="box-group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
 						<div class="group">
 							<div class="riqi">
 								<div class="circle width12"></div>
-								<span>20110204</span>
+								<span>{{val.createTime1}}</span>
 							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle  width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group ">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
+							<span class="text">{{val.cgridName}}</span>
+							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
 					</div>
 				</swiper-slide>
+				<!--未整改-->
 				<swiper-slide>
-					<div class="select-group">
+					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								20110204案卷-育林社区1号网格
+								{{val.createTime1}}案卷-{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img src="../../static/prev.png" />
+									<img :src="val.cfileDealPrevImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
-								<div class="img-group" @click="upload('2')">
-									<img src="../../static/uploadselect.png" id='img2' />
-									<div class="state">
-										<span class="upload">
-											上传
-										</span>
+								<div class="img-group">
+									<img src="../../static/uploadselect.png" :id='["img"+index]' @click="upload(index)" />
+									<div class="state" @click="imgok(val.cfileId)">
+										上传图片
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</swiper-slide>
+				<!--已整改-->
 				<swiper-slide>
 					<div class="select-group">
-						<div class="group-inner" @click="opennew('yidetail')">
+						<div class="group-inner"  @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
 							<div class="group-title">
-								20110204案卷-育林社区1号网格
+								{{val.createTime1}}案卷-{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img src="../../static/prev.png" />
+									<img :src="val.cfileDealPrevImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改后</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="select-group">
-						<div class="group-inner">
-							<div class="group-title">
-								20110204案卷-育林社区1号网格
-							</div>
-							<div class="img-box">
-								<div class="img-group">
-									<img src="../../static/prev.png" />
-									<div class="state wwang">
-										<span>整改前</span>
-									</div>
-								</div>
-								<div class="img-group">
-									<img src="../../static/prev.png" />
+									<img :src="val.cfileDealAfterImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改后</span>
 									</div>
@@ -189,55 +133,16 @@
 						</div>
 					</div>
 				</swiper-slide>
+				<!--未处理-->
 				<swiper-slide>
 					<div class="box-group">
-						<div class="group" @click="opennew('cbackdetail')">
+						<div class="group"  @click="opennew('cbackdetail',val.cfileId)"  v-for="val in mydata" v-if="val.cfileResult==3">
 							<div class="riqi">
 								<div class="circle width12"></div>
-								<span>20110204</span>
+								<span>{{val.createTime1}}</span>
 							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle  width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group ">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
-						</div>
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span>20110204</span>
-							</div>
-							<span class="text">环卫工作者清理垃圾</span>
-							<img src="../../static/shanchu.png" />
+							<span class="text">{{val.cgridName}}</span>
+							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
 					</div>
 				</swiper-slide>
@@ -245,12 +150,28 @@
 		</div>
 		<transition name='nav'>
 			<div class="bottom-nav" v-show="navboo" @click="navshow(0)">
-				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in navdata" @click.stop="navchange(val.name,index)" :class="navindex==index?'active':''">
-						{{val.name}}
+				<div class="nav-group" v-if="texttype==2">
+					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.ctypeTitle,val.ctypeId)" :class="navindex==index?'active':''">
+						{{val.ctypeTitle}}
 					</div>
-					<div class="sub-nav clear" @click.stop="gosearch">
-						搜索
+					<div class="sub-nav clear" @click.stop="navshow()">
+						取消
+					</div>
+				</div>
+				<div class="nav-group" v-if="texttype==0">
+					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cmultipleCommunitiesName,val.cmultipleCommunitiesId)" :class="navindex==index?'active':''">
+						{{val.cmultipleCommunitiesName}}
+					</div>
+					<div class="sub-nav clear" @click.stop="navshow()">
+						取消
+					</div>
+				</div>
+				<div class="nav-group" v-if="texttype==1">
+					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cgridName,val.cgridId)" :class="navindex==index?'active':''">
+						{{val.cgridName}}
+					</div>
+					<div class="sub-nav clear" @click.stop="navshow()">
+						取消
 					</div>
 				</div>
 			</div>
@@ -276,51 +197,209 @@
 				navboo: false,
 				navtext: '选择分类',
 				navindex: -1,
-				community:'选择社区',
-				grid:'选择网格',
-				texttype:'0'
+				community: '选择社区',
+				communityid: '',
+				grid: '选择网格',
+				gridid: '',
+				texttype: '0',
+				bottomdata: [],
+				mydata: [],
+				files: [],
+				cfileDealAfterImg1: ''
 			}
 		},
 		components: {
 			swiper,
-			swiperSlide,
-			BootomNav: resolve => require(['./bottom-nav'], resolve)
+			swiperSlide
 		},
 		mounted() {
 			this.$store.state.tfoot = 4
+			this.myajax()
+			this.server = this.service + '/uploadworkImage'
 		},
 		computed: {
 			swiper() {
 				return this.$refs.mySwiper.swiper;
 			},
-			navdata() {
-				return this.$store.state.navdata
+			service() {
+				return this.$store.state.service
+			},
+			bottomtwoid() {
+				return this.$store.state.bottomtwoid
 			}
 		},
 		methods: {
-			back:function(){
+			imgok: function(id) {
+				var that = this
+				if(that.cfileDealAfterImg1 == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请点击图片选择上传的图片后再上传");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+					return false;
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/updateCfileAndCuserCase",
+					dataType: 'json',
+					data: {
+						userId: localStorage.getItem('userid'),
+						cfileId: id,
+						cfileDealAfterImg1: that.cfileDealAfterImg1
+					},
+					success: function(res) {
+						that.myajax(2)
+						that.toswiper(0)
+					}
+				});
+			},
+			workphotod: function(id) {
+				var that = this
+				var btnArray = [{
+					title: "删除"
+				}, ]; //选择按钮  1 2 3
+				plus.nativeUI.actionSheet({
+					title: "请选择",
+					cancel: "取消",
+					buttons: btnArray
+				}, function(e) {
+					var index = e.index;
+					switch(index) {
+						case 1:
+							$.ajax({
+								type: "post",
+								url: that.service + "/deleteCorkByCfileId",
+								dataType: 'json',
+								data: {
+									cfileId: id
+								},
+								success: function(res) {
+									if(res.status == 200) {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除完成！");
+											that.myajax()
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+									} else {
+										function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.toast("删除失败!");
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
+
+									}
+								}
+							});
+							break;
+					}
+				});
+
+			},
+			myajax: function() {
+				var that = this
+				var dataJson = {
+					createTime1: that.starttime,
+					handingTime1: that.endtime,
+					ctypeId: that.navid,
+					cgridId: that.gridid,
+					cmultipleCommunitiesId: that.communityid
+				}
+				if(that.starttime == '') {
+					delete dataJson.createTime1
+				}
+				if(that.endtime == '') {
+					delete dataJson.handingTime1
+				}
+				if(that.navid == '') {
+					delete dataJson.ctypeId
+				}
+				if(that.gridid == '') {
+					delete dataJson.cgridId
+				}
+				if(that.communityid == '') {
+					delete dataJson.cmultipleCommunitiesId
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/queryReturnFile",
+					dataType: 'json',
+					data: dataJson,
+					success: function(res) {
+						that.mydata = res.data
+					}
+				});
+			},
+			back: function() {
 				this.$router.back()
 			},
 			navchange: function(id, index) {
-				console.log(this.texttype)
 				this.navindex = index
-				if(this.texttype==0){
-					this.community=id
-				}else if(this.texttype==1){
-					this.grid=id
-				}else{
+				if(this.texttype == 0) {
+					this.community = id
+					this.communityid = index
+				} else if(this.texttype == 1) {
+					this.grid = id
+					this.gridid = index
+				} else {
 					this.navtext = id
+					this.navid = index
 				}
+				this.navshow()
 			},
-			opennew: function(target) {
+			opennew: function(target,id) {
+				this.$store.state.windexid=id
 				this.$router.push({
 					name: target
 				})
 			},
 			navshow: function(num) {
+				var that = this
+				if(num == 2) {
+					$.ajax({
+						type: "post",
+						url: that.service + "/queryCtypeOne",
+						dataType: 'json',
+						success: function(res) {
+							that.bottomdata = res.data
+						}
+					});
+				} else if(num == 0) {
+					//					社区
+					$.ajax({
+						type: "post",
+						url: that.service + "/queryCmultipleCommunities",
+						dataType: 'json',
+						success: function(res) {
+							that.bottomdata = res.data
+						}
+					});
+				} else if(num == 1) {
+					//					网格
+					$.ajax({
+						type: "post",
+						url: that.service + "/queryCgrid",
+						dataType: 'json',
+						success: function(res) {
+							that.bottomdata = res.data
+						}
+					});
+				}
 				this.navboo = !this.navboo
 				this.texttype = num
-				console.log(num)
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
@@ -337,18 +416,13 @@
 				this.startshow = true
 				this.timety = type
 			},
-			gosearch: function() {
-				if(this.starttime == '' || this.endtime == '') {
-					this.navshow('0')
-					this.alerttab()
-					return
-				}
-			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
 			},
 			upload: function(target) {
+				alert(target)
 				var that = this
+				that.files = []
 				that.uploadtarget = target
 				var btnArray = [{
 					title: "照相机"
@@ -380,7 +454,7 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name; //获得图片名称
 						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('a' + that.uploadtarget).setAttribute('src', img_path)
+						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
 						that.upload_img(img_path);
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -397,7 +471,7 @@
 				var that = this
 				plus.gallery.pick(function(path) {
 					that.upload_img(path);
-					document.getElementById('a' + that.uploadtarget).setAttribute('src', path)
+					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
 					alert(path)
 				}, function(e) {
 					alert("取消选择图片");
@@ -405,7 +479,7 @@
 					filter: "image"
 				});
 			},
-			upload_img: function() {
+			upload_img: function(p) {
 				var that = this
 				var n = p.substr(p.lastIndexOf('/') + 1);
 				this.files.push({
@@ -416,13 +490,14 @@
 				that.start_upload();
 			},
 			start_upload: function() {
+				var that = this
 				if(this.files.length <= 0) {
 					plus.nativeUI.alert("没有添加上传文件！");
 					return;
 				}
 				//原生的转圈等待框
 				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(server, {
+				var task = plus.uploader.createUpload(that.server, {
 						method: "POST"
 					},
 					function(t, status) { //上传完成
@@ -432,7 +507,8 @@
 							//转换成json
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
-							var files = json.data;
+							that.files = json.data;
+							that.cfileDealAfterImg1 = that.files
 							wt.close();
 						} else {
 							alert("上传失败：" + status);
@@ -440,9 +516,9 @@
 							wt.close();
 						}
 					});
-				task.addData("uid", this.getUid());
-				for(var i = 0; i < this.files.length; i++) {
-					var f = files[i];
+				task.addData("uid", that.getUid());
+				for(var i = 0; i < that.files.length; i++) {
+					var f = that.files[i];
 					task.addFile(f.path, {
 						key: f.name
 					});
@@ -458,21 +534,24 @@
 
 <style type="text/css" lang="scss">
 	.tselect {
+		.group img {
+			margin-right: .2rem;
+		}
 		background: #eeeeee;
-		#main{
+		#main {
 			height: calc(100% - .7rem);
 		}
-		.time-left{
+		.time-left {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
-			.left-box{
+			.left-box {
 				display: flex;
 				align-items: center;
 				margin: .1rem 0;
 			}
 		}
-		.time-box{
+		.time-box {
 			height: auto;
 			padding: .2rem 0;
 		}

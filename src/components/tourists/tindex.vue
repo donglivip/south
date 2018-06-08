@@ -2,12 +2,7 @@
 	<div id="wrapper" class="tindex">
 		<t-head></t-head>
 		<div id="main">
-			<div class="tindex-top">
-				<form @submit.prevent="submit($event)">
-					<input type="text" id="imgfile" name="cfileDealPrevImg1" style="display: none;"/>
-					<input type="text" name="ctypeTwoId" v-model="bottomtwoid" style="display: none;"/>
-					<input type="text" name="cfileStation" v-model="cfileStation" style="display: none;"/>
-					<input type="text" name="cuserId" v-model="cuserCode" style="display: none;"/>
+			<div class="tindex-top">、
 					<div class="img-box" @click="upload('1')">
 						<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
 						<img :src="upsrc"  id="img1" v-show="upimg"/>
@@ -22,14 +17,13 @@
 						<div class="setting-group" @click="navshow('分类')">
 							{{navtext}}
 						</div>
-						<div class="setting-group">
+						<div class="setting-group" @click="submit">
 							<img src="../../../static/upload.png" />
 							<span>
-	    						 <input type="submit"  value="上传" />
+	    						 上传
 	    					</span>
 						</div>
-					</div>
-				</form>
+					</div>、
 			</div>
 			<div class="tindex-bottom">
 				<div class="bottom-title">
@@ -86,15 +80,14 @@
 			return {
 				creamsrc: '',
 				uploadtarget: '',
-				server:'',
-				files:[],
-				upimg:false,
-				upsrc:'',
-				navtext:'选择分类',
-				bottomboo:false,
-				cuserCode:'',
-				cuserRole:'',
-				cfileStation:''
+				server: '',
+				files: [],
+				upimg: false,
+				upsrc: '',
+				navtext: '选择分类',
+				bottomboo: false,
+				cfileStation: '',
+				w: ''
 			}
 		},
 		components: {
@@ -106,83 +99,84 @@
 			this.$store.state.tfoot = 1
 			this.server=this.service+'/uploadYhImage'
 			var that=this
-			function plusReady(){
-				
-			}
-			if(window.plus){
-				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
-			}
 		},
 		methods: {
-			submit:function(event){
-				if($("#imgfile").val()==''){
-					function plusReady(){
+			submit: function(event) {
+				if(this.navtext == '选择分类') {
+					function plusReady() {
 						// 显示自动消失的提示消息
-						plus.nativeUI.toast( "请选择图片后重试!");
+						plus.nativeUI.toast("请选择分类!");
+						return false;
 					}
-					if(window.plus){
+					if(window.plus) {
 						plusReady();
-					}else{
-						document.addEventListener("plusready",plusReady,false);
+					} else {
+						document.addEventListener("plusready", plusReady, false);
 					}
 				}
-				if(that.bottomtwoid==''){
-					function plusReady(){
+				if(this.upsrc == '') {
+					function plusReady() {
 						// 显示自动消失的提示消息
-						plus.nativeUI.toast( "请选择分类后重试!");
+						plus.nativeUI.toast("请上传图片!");
+						return false;
 					}
-					if(window.plus){
+					if(window.plus) {
 						plusReady();
-					}else{
-						document.addEventListener("plusready",plusReady,false);
+					} else {
+						document.addEventListener("plusready", plusReady, false);
 					}
 				}
-				var that=this
-				function plusReady(){
+				var that = this
+				function plusReady() {
 					// 弹出系统等待对话框
-					var w = plus.nativeUI.showWaiting( "上传中..." );
-					that.cuserCode=localStorage.getItem('userid')
-					plus.geolocation.getCurrentPosition(function(p){
-						that.cfileStation=''
-						that.cfileStation=p.coords.longitude+','+p.coords.latitude
-					}, function(e){
+					that.w = plus.nativeUI.showWaiting("上传中...");
+					plus.geolocation.getCurrentPosition(function(p) {
+						console.log(localStorage.getItem('userid'))
+						console.log(that.files)
+						console.log(p.coords.longitude + ',' + p.coords.latitude)
+						console.log(that.bottomtwoid)
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCfileAndCuserAreadyRegister",
+							dataType: 'json',
+							data: {
+								cuserId:localStorage.getItem('userid'),
+								cfileDealPrevImg1:that.files,
+								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
+								ctypeTwoId:that.bottomtwoid
+							},
+							success: function(res) {
+								console.log(res)
+								if(res.status != 200) {
+									alert(res.msg)
+								} else {
+									function plusReady() {
+										that.w.close()
+										plus.nativeUI.closeWaiting();
+										plus.nativeUI.toast("上传完成");
+										that.upimg = false
+										that.navtext = '选择分类'
+									}
+									if(window.plus) {
+										plusReady();
+									} else {
+										document.addEventListener("plusready", plusReady, false);
+									}
+								}
+							},error:function(err){
+								console.log(JSON.stringify(err))
+							}
+						});
+					}, function(e) {
 						alert('Geolocation error: ' + e.message);
-					} );
+					});
 				}
-				if(window.plus){
+				if(window.plus) {
 					plusReady();
-				}else{
-					document.addEventListener("plusready",plusReady,false);
+				} else {
+					document.addEventListener("plusready", plusReady, false);
 				}
-				var formData = new FormData(event.target);
-				$.ajax({
-					type: "post",
-					url: that.service + "/insertCfileAndCuserAreadyRegister",
-					dataType: 'json',
-					contentType: false,
-					processData: false,
-					data: formData,
-					success: function(res) {
-						if(res.status != 200) {
-							alert(res.msg)
-							return false;
-						}else{
-							function plusReady(){
-								plus.nativeUI.closeWaiting();
-								plus.nativeUI.toast("上传完成");
-								that.upimg=false
-								that.navtext='选择分类'
-							}
-							if(window.plus){
-								plusReady();
-							}else{
-								document.addEventListener("plusready",plusReady,false);
-							}
-						}
-					}
-				});
+
 			},
 			navshow:function(name){
 				this.navtext=name
@@ -279,8 +273,7 @@
 							//转换成json
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
-							var files = json.data;
-							$("#imgfile").val(files)
+							that.files = json.data;
 							wt.close();
 						} else {
 							alert("上传失败：" + status);

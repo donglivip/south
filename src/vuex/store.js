@@ -17,7 +17,8 @@ const store = new Vuex.Store({
 		newid:'',
 		newstwoid:'',
 		uuid:'',
-		windexid:''
+		windexid:'',
+		searchid:''
 	}
 })
 
