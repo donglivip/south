@@ -2,7 +2,8 @@
 	<div id="wrapper" class="user">
 		<t-head></t-head>
 		<div id="main">
-			<img :src="cuserHeadImg" class="avatar" id="img1"/>
+			<img :src="cuserHeadImg | myimg" class="avatar" id="img1" v-if="cuserHeadImg!='null'"/>
+			<img src="../../../static/detail-up.png" class="avatar"v-if=" cuserHeadImg=='null'">
 			<div class="name">
 				{{name}}
 			</div>
@@ -45,7 +46,7 @@
 				uploadtarget: '',
 				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
 				files: [],
-				cuserHeadImg:require('../../../static/creame.png'),
+				cuserHeadImg:localStorage.getItem('cuserHeadImg'),
 				name:localStorage.getItem('username')
 			}
 		},

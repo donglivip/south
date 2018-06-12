@@ -24,7 +24,7 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img :src="mydata.cfileDealPrevImg1 | myimg" class="big-img" />
+					<img :src="mydata[0].cfileDealPrevImg1 | myimg" class="big-img" />
 				</div>
 			</div>
 			<div class="detail-group">
@@ -156,7 +156,7 @@
 						dataType: 'json',
 						data: ajaxdata,
 						success: function(res) {
-							this.$router.back()
+							that.$router.back()
 						}
 					});
 			},

@@ -26,17 +26,17 @@
 			<div class="time-box">
 				<div class="time-left">
 					<div class="left-box">
-						<div class="box" @click="timeshow(0)">
+						<div class="box" @click="timeshow(0)" style="width: 2rem;">
 							{{starttime==''?'开始时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
-						<div class="box" @click="timeshow(1)">
+						<div class="box" @click="timeshow(1)" style="width: 2rem;">
 							{{endtime==''?'结束时间':endtime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
-						<div class="box">
+						<div class="box" style="width: 2rem;">
 							<input type="text" v-model="grid" placeholder="输入网格名"/>
 							<img src="../../static/arrbottom.png" />
 						</div>
@@ -112,6 +112,15 @@
 		},
 		mounted() {
 			this.myajax()
+			function plusReady(){
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting( "加载中..." );
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
 		computed: {
 			navdata() {
@@ -145,7 +154,15 @@
 					dataType:'json',
 					data:ajaxData,
 					success:function(res){
-						console.log(res)
+						function plusReady(){
+				// 弹出系统等待对话框
+				plus.nativeUI.closeWaiting();
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 						that.mydata=res.data
 					}
 				});
@@ -402,7 +419,7 @@
 					margin-left: .2rem;
 				}
 				input{
-					width: 1.2rem;
+					width: 1rem!important;
 					height: 100%;
 					border: 0;
 					text-align: center;

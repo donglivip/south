@@ -136,14 +136,13 @@
 							url: that.service + "/insertCfileAndCuser",
 							dataType: 'json',
 							data: {
-								cuserCode:plus.device.uuid,
+								cuserCode:that.uuid,
 								cuserRole:0,
 								cfileDealPrevImg1:that.files,
 								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
 								ctypeTwoId:that.bottomtwoid
 							},
 							success: function(res) {
-								console.log(res)
 								if(res.status != 200) {
 									alert(res.msg)
 								} else {
@@ -305,6 +304,9 @@
 			},
 			bottomtwoid() {
 				return this.$store.state.bottomtwoid
+			},
+			uuid() {
+				return this.$store.state.uuid
 			}
 		}
 	}

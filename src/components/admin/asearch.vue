@@ -117,7 +117,6 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata=res.data[0]
-						console.log(res)
 					}
 				});
 			},

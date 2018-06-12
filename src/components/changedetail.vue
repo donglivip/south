@@ -33,7 +33,7 @@
 					<img :src="mydata[0].cfileDealPrevImg1 | myimg" class="big-img" />
 				</div>
 			</div>
-			<div class="detail-group" v-if="mydata[1]!=null">
+			<div class="detail-group" v-if="mydata[1]!=null&&userid!=null">
 				<div class="detail-inner">
 					<img src="../../static/detail-time.png" />
 					<div class="detail-text">
@@ -50,7 +50,7 @@
 					<img :src="mydata[1].cfileDealAfterImg1 | myimg" class="big-img" />
 				</div>
 			</div>
-			<div class="detail-group" v-if="mydata[1]==null">
+			<div class="detail-group" v-if="mydata[1]==null&&userid!=null">
 				<div class="detail-inner">
 					<img src="../../static/detail-time.png" />
 					<div class="detail-text">
@@ -78,7 +78,8 @@
 				cworkImg:'',
 				uploadtarget: '',
 				server:'',
-				files:[]
+				files:[],
+				userid:localStorage.getItem('userid')
 			}
 		},
 		mounted() {

@@ -29,6 +29,7 @@ export default {
 		navchange:function(name,id){
 			this.$emit('navshow',name)
 			this.$store.state.bottomtwoid=id
+			this.navindex=0
 		},
 		havetwo:function(id){
 			var that=this
@@ -42,7 +43,6 @@ export default {
 					ctypeId:id
 				},
 				success: function(res) {
-					console.log(res)
 					for (var i=0;i<res.data.length;i++) {
 						var myjson={name:''+res.data[i].ctypeTwoTitle+'',id:''+res.data[i].ctypeTwoId+''}
 						mynav.push(myjson)

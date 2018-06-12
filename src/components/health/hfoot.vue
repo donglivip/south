@@ -22,8 +22,8 @@
 	    	</span>
 			</div>
 			<div class="foot-nav" :class="tfoot==4?'fthis':''" @click="opennew('huser')">
-				<img src="../../../static/user-user.png" class="factive" />
-				<img src="../../../static/huan-wo.png" class="fdefault" />
+				<img src="../../../static/index03-active.png" class="factive" />
+				<img src="../../../static/index03.png" class="fdefault" />
 				<span>
 	    			我的
 	    	</span>

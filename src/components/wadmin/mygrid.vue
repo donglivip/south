@@ -16,6 +16,9 @@
     				{{val.createTime1}}
     			</div>
     		</div>
+    		<p v-if="mydata.length==0">
+    			暂无网格
+    		</p>
     	</div>
   </div>
 </template>
@@ -66,6 +69,10 @@ export default {
 
 <style type="text/css" lang="scss">
 	.mygrid{
+		p{
+			text-align: center;
+			line-height: 1rem;
+		}
 		.grid{
 			height: .7rem;
 			display: flex;

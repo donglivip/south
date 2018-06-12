@@ -284,7 +284,6 @@
 				plus.gallery.pick(function(path) {
 					that.upload_img(path);
 					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-					alert(path)
 				}, function(e) {
 					alert("取消选择图片");
 				}, {
@@ -320,7 +319,6 @@
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
 							that.files = json.data;
-							alert(that.files)
 							that.cfileDealAfterImg1=that.files
 							wt.close();
 						} else {

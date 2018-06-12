@@ -17,10 +17,6 @@
 					<div class="denglucon" @click="submit">
 						<span>立即登录</span>
 					</div>
-					<div class="zhuce" @click="opennew('register')">
-						<span>已经有账号，去注册</span>
-						<img class="jiantou" src="../../static/jiantou2.png">
-					</div>
 				</div>
 			</div>
 			<div class="footer">
@@ -52,10 +48,10 @@
 					alert('账号或密码不能为空！')
 					return
 				}
-				if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.phone))){ 
-				  alert("不是完整的11位手机号或者正确的手机号前七位"); 
-				  return false; 
-				 } 
+//				if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.phone))){ 
+//				  alert("不是完整的11位手机号或者正确的手机号前七位"); 
+//				  return false; 
+//				 } 
 				var that = this
 				$.ajax({
 					type: "get",
@@ -78,17 +74,17 @@
 							localStorage.setItem('sex',res.data.cuserSex)
 							localStorage.setItem('usercode',res.data.cuserIdentityId)
 							localStorage.setItem('username',res.data.cuserName)
-//							if(res.data.cuserRole==0||res.data.cuserRole==1||res.data.cuserRole==2||res.data.cuserRole==3){
+							if(res.data.cuserRole==0||res.data.cuserRole==1||res.data.cuserRole==2||res.data.cuserRole==3){
 								that.opennew('tindex')
-//							}else if(res.data.cuserRole==4){
-//								that.opennew('windex')
-//							}else if(res.data.cuserRole==5){
-//								that.opennew('hindex')
-//							}else if(res.data.cuserRole==6||res.data.cuserRole==7){
-//								that.opennew('cindex')
-//							}else{
-//								that.opennew('asearch')
-//							}
+							}else if(res.data.cuserRole==4){
+								that.opennew('windex')
+							}else if(res.data.cuserRole==5){
+								that.opennew('hindex')
+							}else if(res.data.cuserRole==6||res.data.cuserRole==7){
+								that.opennew('cindex')
+							}else{
+								that.opennew('asearch')
+							}
 						}
 						
 					}

@@ -140,6 +140,15 @@
 		},
 		mounted() {
 			this.myajax()
+			function plusReady(){
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting( "加载中..." );
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
 		computed: {
 			service() {
@@ -178,6 +187,15 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata = res.data
+						function plusReady(){
+				// 弹出系统等待对话框
+				plus.nativeUI.closeWaiting();
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 					}
 				});
 			},

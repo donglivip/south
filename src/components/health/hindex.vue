@@ -85,7 +85,6 @@
 					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
 					that.map.setCenter(JSON.parse(that.mapcenter));
 					that.marker.setPosition(JSON.parse(that.mapcenter));
-					alert(that.service + "/insertCworkBytxt")
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCworkBytxt",

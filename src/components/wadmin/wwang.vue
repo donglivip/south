@@ -68,14 +68,14 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="mydata.fileDealPrevImg1 | myimg" />
+									<img :src="val.cfileDealPrevImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group" >
-									<img src="../../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)"/>
-									<div class="state" @click.stop="imgok">
+									<img src="../../../static/uploadselect.png"/>
+									<div class="state">
 										<span class="upload">
 											待上传
 										</span>
@@ -93,13 +93,13 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="mydata.fileDealPrevImg1 | myimg" />
+									<img :src="val.cfileDealPrevImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
-									<img :src="mydata.cfileDealAfterImg1 | myimg" />
+									<img :src="val.cfileDealAfterImg1 | myimg" />
 									<div class="state wwang">
 										<span>整改后</span>
 									</div>
@@ -211,35 +211,6 @@
 				});
 
 			},
-			imgok:function(id){
-				var that=this
-				if(that.cfileDealAfterImg1==''){
-					function plusReady(){
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast( "请点击图片选择上传的图片后再上传");
-					}
-					if(window.plus){
-						plusReady();
-					}else{
-						document.addEventListener("plusready",plusReady,false);
-					}
-					return false;
-				}
-				$.ajax({
-					type: "post",
-					url: that.service + "/updateCfileAndCuserCase",
-					dataType: 'json',
-					data: {
-						userId: localStorage.getItem('userid'),
-						cfileId:id,
-						cfileDealAfterImg1:that.cfileDealAfterImg1
-					},
-					success: function(res) {
-						that.myajax(2)
-						that.toswiper(0)
-					}
-				});
-			},
 			myajax:function(){
 				var that=this
 				$.ajax({
@@ -287,115 +258,6 @@
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
-			},
-			upload: function(target) {
-				var that = this
-				that.files=[]
-				that.uploadtarget = target
-				var btnArray = [{
-					title: "照相机"
-				}, {
-					title: "相册"
-				}]; //选择按钮  1 2 3
-				plus.nativeUI.actionSheet({
-					title: "请选择",
-					cancel: "取消", // 0
-					buttons: btnArray
-				}, function(e) {
-					var index = e.index; // 
-					switch(index) {
-						case 1:
-							//写自己的逻辑
-							that.camera();
-							break;
-						case 2:
-							that.album();
-							break;
-					}
-				});
-			},
-			camera: function() {
-				var that = this
-				var cmr = plus.camera.getCamera();
-				cmr.captureImage(function(p) {
-					//成功
-					plus.io.resolveLocalFileSystemURL(p, function(entry) {
-						var img_name = entry.name; //获得图片名称
-						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
-						that.upload_img(img_path);
-					}, function(e) {
-						alert("读取拍照文件错误：" + e.message);
-					});
-
-				}, function(e) {
-					alert("失败：" + e.message);
-				}, {
-					filename: '_doc/camera/',
-					index: 1
-				}); //  “_doc/camera/“  为保存文件名
-			},
-			album: function() {
-				var that = this
-				plus.gallery.pick(function(path) {
-					that.upload_img(path);
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-					alert(path)
-				}, function(e) {
-					alert("取消选择图片");
-				}, {
-					filter: "image"
-				});
-			},
-			upload_img: function(p) {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				this.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				var that=this
-				if(this.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(that.server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							that.files = json.data;
-							alert(that.files)
-							that.cfileDealAfterImg1=that.files
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
-					});
-				task.addData("uid", that.getUid());
-				for(var i = 0; i < that.files.length; i++) {
-					var f = that.files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
-				}
-				task.start();
-			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		}
 	}
@@ -508,7 +370,6 @@
 				}
 				.state {
 					line-height: .4rem;
-					height: .8rem;
 					text-align: center;
 					border: 1px solid #b8b8b8;
 					border-top: 0;

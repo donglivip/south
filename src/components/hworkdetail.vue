@@ -8,6 +8,18 @@
 				<span>美丽南钢</span>
 				<span></span>
 			</header>
+			<content>
+				<div class="box-group">
+					<div class="group">
+						<span>{{mydata.createTime1}}</span>
+						<span>{{mydata.cworkTitle}}</span>
+					</div>
+				</div>
+				<div class="groupimg">
+					<img class="qlz" :src="mydata.cworkImg | myimg">
+				</div>
+
+			</content>
 		</div>
 	</div>
 </template>
@@ -17,24 +29,23 @@
 		name: 'hworkdetail',
 		data() {
 			return {
-				mydata:''
+				mydata: ''
 			}
 		},
 		mounted() {
-			var that=this
-			console.log(that.windexid)
+			var that = this
 			$.ajax({
 				type: "get",
 				url: that.service + "/queryCorkByCworkId",
 				dataType: 'json',
 				data: {
-					cworkId: '6c21882f-6ab9-11e8-90d9-00155dc504d0'
+					cworkId: that.windexid
 				},
 				success: function(res) {
-					that.mydata=res.data
+					that.mydata = res.data[0]
 					console.log(res)
 				},
-				error:function(res){
+				error: function(res) {
 					console.log(res)
 				}
 			});

@@ -65,12 +65,13 @@
 		},
 		methods: {
 			upmy: function() {
-				var that=this
+				var that = this
 				if(that.files == '' || that.bottomtwoid == '') {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请把信息填写完整后重试！");
 						that.myajax()
+						return false;
 					}
 					if(window.plus) {
 						plusReady();
@@ -78,8 +79,6 @@
 						document.addEventListener("plusready", plusReady, false);
 					}
 				}
-				var that = this
-
 				function plusReady() {
 					plus.geolocation.getCurrentPosition(function(p) {
 						that.cfileStation = ''
@@ -104,10 +103,11 @@
 						cfileStation: that.cfileStation
 					},
 					success: function(res) {
+						console.log(JSON.stringify(res))
 						if(res.status == 200) {
 							function plusReady() {
 								// 显示自动消失的提示消息
-								plus.nativeUI.toast("上传完成！");
+								plus.nativeUI.toast('上传完成')
 								that.myajax()
 							}
 							if(window.plus) {

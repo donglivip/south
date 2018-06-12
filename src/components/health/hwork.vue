@@ -29,8 +29,7 @@
 							<p v-if="workphoto.length==0">暂无数据</p>
 						</div>		
 				</div>
-				</div>
-
+			</div>
 				<footer>
 					<div class="box-upload">
 						<div class="upload">
@@ -42,9 +41,7 @@
 						</div>
 					</div>
 				</footer>
-					<t-foot></t-foot>
-			
-					
+				<t-foot></t-foot>
 			</div>
 		</div>
 </template>
@@ -97,6 +94,15 @@ export default {
 						document.addEventListener("plusready", plusReady, false);
 					}
 				}
+				function plusReady() {
+								// 显示自动消失的提示消息
+								plus.nativeUI.showWaiting('上传中');
+							}
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
 				$.ajax({
 					type: "post",
 					url: that.service + "/insertByCworkImg",
@@ -109,10 +115,10 @@ export default {
 					success: function(res) {
 						if(res.status == 200) {
 							that.myajax()
-
 							function plusReady() {
 								// 显示自动消失的提示消息
-								plus.nativeUI.toast("上传完成！");
+								plus.nativeUI.closeWaiting();
+								that.cworkTitle=''
 							}
 							if(window.plus) {
 								plusReady();

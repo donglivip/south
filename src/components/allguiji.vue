@@ -57,6 +57,15 @@ export default {
   mounted(){
   	this.$store.state.tfoot=2
   	this.myajax()
+  	function plusReady(){
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting( "加载中..." );
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
   },
   methods:{
   	myajax:function(){
@@ -69,7 +78,16 @@ export default {
 						cuserId:localStorage.getItem('userid')
 					},
 					success: function(res) {
-						console.log(res)
+						function plusReady() {
+											// 显示自动消失的提示消息
+											plus.nativeUI.closeWaiting();
+											that.myajax()
+										}
+										if(window.plus) {
+											plusReady();
+										} else {
+											document.addEventListener("plusready", plusReady, false);
+										}
 						that.mydata=res.data
 					}
 				});

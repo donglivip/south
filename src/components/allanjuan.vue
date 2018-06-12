@@ -100,8 +100,8 @@
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../static/uploadselect.png" :id='["img"+index]' @click="upload(index)" />
-									<div class="state" @click="imgok(val.cfileId)">
+									<img src="../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)" />
+									<div class="state" @click.stop="imgok(val.cfileId)">
 										上传图片
 									</div>
 								</div>
@@ -216,6 +216,15 @@
 			this.$store.state.tfoot = 4
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
+			function plusReady(){
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting( "加载中..." );
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
 		computed: {
 			swiper() {
@@ -340,6 +349,15 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata = res.data
+						function plusReady(){
+							// 弹出系统等待对话框
+							plus.nativeUI.closeWaiting();
+						}
+						if(window.plus){
+							plusReady();
+						}else{
+							document.addEventListener("plusready",plusReady,false);
+						}
 					}
 				});
 			},
@@ -420,7 +438,6 @@
 				this.alertboo = !this.alertboo
 			},
 			upload: function(target) {
-				alert(target)
 				var that = this
 				that.files = []
 				that.uploadtarget = target
@@ -472,7 +489,6 @@
 				plus.gallery.pick(function(path) {
 					that.upload_img(path);
 					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-					alert(path)
 				}, function(e) {
 					alert("取消选择图片");
 				}, {

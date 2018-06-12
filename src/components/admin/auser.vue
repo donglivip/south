@@ -2,7 +2,8 @@
 	<div id="wrapper" class="user">
 		<t-head></t-head>
 		<div id="main">
-			<img :src="cuserHeadImg | myimg" class="avatar" id="img1"/>
+			<img :src="cuserHeadImg | myimg" class="avatar" id="img1" v-if="cuserHeadImg!='null'"/>
+			<img src="../../../static/detail-up.png" class="avatar"v-if=" cuserHeadImg=='null'">
 			<div class="name">
 				{{name}}
 			</div>
@@ -92,7 +93,7 @@
 			}
 		},
 		components: {
-
+			
 		},
 		mounted() {
 			this.$store.state.tfoot = 5

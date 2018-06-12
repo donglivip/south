@@ -1,5 +1,10 @@
 <template>
   <div class="warpper revise">
+  	<div id="head">
+			<span @click="back"><img src="../../static/back.png"/></span>
+			<div>修改密码</div> 
+			<span></span>
+		</div>
 		<div class="main">
 			<div class="title"><img src="../../static/title.png"></div>
 			<div class="content">
@@ -14,11 +19,11 @@
 					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
-						<input type="text" class="form-control" placeholder="请设置密码" name="cuserPassword" v-model="cuserPassword">
+						<input type="text" class="form-control" placeholder="请输入密码" name="cuserPassword" v-model="cuserPassword">
 					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
-						<input type="text" class="form-control" placeholder="请设置密码" v-model="pwd">
+						<input type="text" class="form-control" placeholder="请再次输入密码" v-model="pwd">
 					</div>
 					
 				</div>
@@ -26,11 +31,6 @@
 				<div class="denglu" @click="myajax">
 					<div class="denglucon">
 						<span>立即修改</span>
-					</div>
-					
-					<div class="zhuce" @click="back">
-						<img class="jiantou" src="../../static/jiantou2.png"> 
-						<span>返回</span>
 					</div>
 				</div>
 			</div>
@@ -150,4 +150,5 @@ export default {
 		.revise .icon-user{background: url(../../static/phone.png) no-repeat;background-size: cover;}
 		.revise .icon-mima{background: url(../../static/mima.png) no-repeat;background-size: cover;}
 		.revise .icon-yz{background: url(../../static/yanzhengma.png) no-repeat;background-size: cover;}
+		.revise #head{border-bottom: 1px solid white;}
 </style>

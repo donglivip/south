@@ -34,7 +34,7 @@
 				mydate:'请选择日期',
 				startshow: false,
 				defaultDate: new Date(),
-				mydata:''
+				mydata:[]
 			}
 		},
 		mounted() {
@@ -44,7 +44,7 @@
 			myajax:function(){
 				var that=this
 				var dataJson={
-					cuserId:localStorage.getItem('userid'),
+					cuserId:that.searchid,
 					createTime1:that.mydate
 				}
 				if(that.mydate=='请选择日期'){
@@ -56,13 +56,33 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata=res.data[0]
-//						that.mylocation()
+						var array1=res.data[0].split("],")
+						array1.pop()
+						for(var i=0;i<array1.length;i++){
+							array1[i]=array1[i]+']'
+//							 if (i % 2 == 1) {  
+						        that.mydata.push(JSON.parse(array1[i]));  
+//						   }  
+
+					}
 						console.log(res)
+//					if (that.mydata.length==0) {
+//						function plusReady(){
+//							// 显示自动消失的提示消息
+//							plus.nativeUI.toast( "该员工暂无轨迹!");
+//						}
+//						if(window.plus){
+//							plusReady();
+//						}else{
+//							document.addEventListener("plusready",plusReady,false);
+//						}
+//					}
+//					that.mylocation()
 					}
 				});
 			},
 			mylocation: function() {
+				var that=this
 				var map = new AMap.Map('map-container', {
 					zoom: 15,
 					center: [116.39, 39.9]
@@ -110,7 +130,7 @@
 					//这里构建两条简单的轨迹，仅作示例
 					pathSimplifierIns.setData([{
 						name: '轨迹名称',
-						path: [that.mydata]
+						path: that.mydata
 					}]);
 
 					//创建一个巡航器
@@ -158,7 +178,11 @@
 		computed: {
 			service() {
 				return this.$store.state.service
-			}
+			},
+			searchid() {
+				return this.$store.state.searchid
+			},
+			
 		},
 		components: {
 			THead: resolve => require(['../tourists/thead'], resolve)

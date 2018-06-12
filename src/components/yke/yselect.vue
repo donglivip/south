@@ -44,7 +44,7 @@
 							</div>
 						</div>
 						<div class="img-group">
-							<img src="../../../static/scimggrey.png" />
+							<img src="../../../static/photo.png" />
 							<div class="state">
 								游客不可上传整改后照片
 							</div>
@@ -52,6 +52,9 @@
 					</div>
 				</div>
 			</div>
+			<p v-if="mydata.length==0">
+				暂无案卷
+			</p>
 		</div>
 		<transition name='nav'>
 			<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
@@ -86,8 +89,16 @@
 		mounted() {
 			var that = this
 			this.$store.state.tfoot = 2
-			this.myajax(2)
-
+			this.myajax(0)
+			function plusReady(){
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting( "加载中..." );
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
 		computed: {
 			service() {
@@ -106,7 +117,6 @@
 			},
 			myajax: function(type) {
 				var that = this
-
 				function plusReady() {
 					var ajaxJson = {
 						cuserCode: that.uuid,
@@ -114,7 +124,6 @@
 						createTime1: that.starttime,
 						handingTime1: that.endtime
 					}
-					console.log(JSON.stringify(ajaxJson))
 					if(that.starttime==''){
 						delete ajaxJson.createTime1
 					}
@@ -127,8 +136,16 @@
 						dataType: 'json',
 						data: ajaxJson,
 						success: function(res) {
-							console.log(JSON.stringify(res))
 							that.mydata = res.data
+							function plusReady(){
+								// 弹出系统等待对话框
+								 plus.nativeUI.closeWaiting();
+							}
+							if(window.plus){
+								plusReady();
+							}else{
+								document.addEventListener("plusready",plusReady,false);
+							}
 						}
 					});
 				}
@@ -168,6 +185,7 @@
 					this.alerttab()
 					return
 				}
+				this.myajax()
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo

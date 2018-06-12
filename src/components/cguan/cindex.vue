@@ -137,6 +137,15 @@
 						document.addEventListener("plusready", plusReady, false);
 					}
 				}
+				function plusReady() {
+								// 显示自动消失的提示消息
+								plus.nativeUI.showWaiting('上传中');
+							}
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
 				$.ajax({
 					type: "post",
 					url: that.service + "/insertByCworkImg",
@@ -152,7 +161,7 @@
 
 							function plusReady() {
 								// 显示自动消失的提示消息
-								plus.nativeUI.toast("上传完成！");
+								plus.nativeUI.closeWaiting();
 							}
 							if(window.plus) {
 								plusReady();
