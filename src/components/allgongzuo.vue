@@ -1,5 +1,5 @@
 <template>
-	<div class="workcamera" id="warpper">
+	<div class="workcamera" id="warpper"style="height: calc(100%);">
 		<transition name='alert'>
 			<div class="alert" v-show="alertboo" @click="alerttab">
 				<div class="alert-inner">
@@ -22,7 +22,6 @@
 			<span></span>
 		</div>
 		<div id="main" style="height: calc(100% - .7rem);">
-			<div>
 				<div class="box-group">
 					<div class="group" @click="opennew('hworkdetail',val.cworkId)" v-for="val in mydata">
 						<div class="riqi">
@@ -32,8 +31,10 @@
 						<span class="text">{{val.cworkTitle}}</span>
 						<img src="../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" />
 					</div>
+					<p v-if="mydata.length==0" style="text-align: center;line-height: 1rem;">
+						暂无工作照
+					</p>
 				</div>
-			</div>
 		</div>
 	</div>
 	</div>

@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail')" v-for="val in mydata">
+				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata">
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName}}
@@ -120,7 +120,8 @@
 					}
 				});
 			},
-			opennew: function(target) {
+			opennew: function(target,id) {
+				this.$store.state.searchid=id
 				this.$router.push({
 					name: target
 				})

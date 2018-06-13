@@ -115,7 +115,6 @@
 			}
 			function plusReady(){
 				that.$store.state.uuid=plus.device.uuid
-				console.log(plus.device.uuid)
 			}
 			if(window.plus){
 				plusReady();

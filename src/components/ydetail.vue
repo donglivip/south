@@ -192,7 +192,6 @@
 						},
 						success: function(res) {
 							that.noway = res.data
-							console.log(that.noway)
 						}
 					});
 				} else if(type == 1) {
@@ -202,7 +201,6 @@
 						dataType: 'json',
 						success: function(res) {
 							that.noway = res.data
-							console.log(that.noway)
 						}
 					});
 				}else{
@@ -212,7 +210,6 @@
 						dataType: 'json',
 						success: function(res) {
 							that.noway = res.data
-							console.log(that.noway)
 						}
 					});
 				}

@@ -57,6 +57,9 @@
 								<span class="text">{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)"/>
 							</div>
+							<p v-if='mydata.length==0'>
+								暂无案卷
+							</p>
 						</div>
 					</div>
 				</swiper-slide>
@@ -84,6 +87,9 @@
 							</div>
 						</div>
 					</div>
+					<p v-if='mydata.length==0'>
+								暂无案卷
+							</p>
 				</swiper-slide>
 				<swiper-slide>
 					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==2" @click="opennew('changedetail',val.cfileId)">
@@ -107,6 +113,9 @@
 							</div>
 						</div>
 					</div>
+					<p v-if='mydata.length==0'>
+								暂无案卷
+							</p>
 				</swiper-slide>
 			</swiper>
 		</div>
@@ -266,6 +275,10 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
+		p{
+			text-align: center;
+			line-height: 1rem;
+		}
 		.swiper-container{
 			margin-top: .2rem;
 		}

@@ -136,6 +136,15 @@
 			this.$store.state.tfoot = 4
 			this.myajax(2)
 			this.server=this.service+'/uploadRegisterImage'
+			function plusReady(){
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting( "加载中..." );
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
 		computed: {
 			swiper() {
@@ -194,8 +203,17 @@
 						handingTime1: that.endtime
 					},
 					success: function(res) {
-						console.log(res)
 						that.mydata = res.data
+						function plusReady(){
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus){
+							plusReady();
+						}else{
+							document.addEventListener("plusready",plusReady,false);
+						}
+						
 					}
 				});
 			},
@@ -319,7 +337,6 @@
 							var json = eval('(' + responseText + ')');
 							//上传文件的信息
 							that.files = json.data;
-							alert(that.files)
 							that.cfileDealAfterImg1=that.files
 							wt.close();
 						} else {

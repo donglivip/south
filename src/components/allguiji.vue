@@ -36,6 +36,9 @@
     				</div>
     				<img src="../../static/arrright.png"/>
     			</div>
+    			<p v-if="mydata.length==0">
+    				暂无轨迹
+    			</p>
     		</div>
     	</div>
     	<transition name='nav'>
@@ -121,6 +124,10 @@ export default {
 <style type="text/css" lang="scss">
 	.csearch{
 		background: #EEEEEE;
+		p{
+			text-align: center;
+			line-height: 1rem;
+		}
 		.group{
 			width: 100%;
 			height: .95rem;

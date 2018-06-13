@@ -9,8 +9,8 @@
 		</div>
 		<div id="main">
 			<div class="user-group">
-				<img :src="cfileDealAfterImg1 | myimg" class="avatar" id="img1" @click="upload('1')"v-if="cuserHeadImg!='null'"/>
-			<img src="../../static/detail-up.png" class="avatar" v-if="cuserHeadImg=='null'">
+				<img :src="cfileDealAfterImg1 | myimg" class="avatar" id="img1" @click="upload('1')" v-if="cuserHeadImg!='null'"/>
+				<img src="../../static/detail-up.png" class="avatar" v-if="cuserHeadImg=='null'">
 			</div>
 			<div class="user-group">
 				<div class="inform-group">
@@ -113,7 +113,7 @@
 						} else {
 							function plusReady(){
 								// 显示自动消失的提示消息
-								plus.nativeUI.toast( "修改成功！");
+								plus.nativeUI.toast( "修改成功，将在下次重启后生效！");
 							}
 							if(window.plus){
 								plusReady();
@@ -152,7 +152,6 @@
 				});
 			},
 			camera: function() {
-				alert('相机')
 				var that = this
 				var cmr = plus.camera.getCamera();
 				cmr.captureImage(function(p) {
@@ -165,7 +164,6 @@
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
 					});
-
 				}, function(e) {
 					alert("失败：" + e.message);
 				}, {
@@ -174,7 +172,6 @@
 				}); //  “_doc/camera/“  为保存文件名
 			},
 			album: function() {
-				alert('相册')
 				var that = this
 				plus.gallery.pick(function(path) {
 					that.upload_img(path);

@@ -2,17 +2,17 @@
 	<div id="wrapper" class="cdetail">
 		<div id="head">
 			<span @click="back"><img src="../../../static/back.png"/></span>
-			<div>轨迹详情</div> 
+			<div>轨迹详情</div>
 			<span style=""></span>
 		</div>
-		<div id="main"class="big-main">
+		<div id="main" class="big-main" style="overflow: hidden;">
 			<div class="csearch-top">
 				<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 				<div class="csearch-inner">
 					<div class="csearch-group" @click="timeshow">
 						<img src="../../../static/date.png" />
-						<input type="text" placeholder="请选择日期" v-model="mydate"/>
-						<img src="../../../static/xiaxia.png" style="height: .15rem;width: .27rem;"/>
+						<input type="text" placeholder="请选择日期" v-model="mydate" />
+						<img src="../../../static/xiaxia.png" style="height: .15rem;width: .27rem;" />
 					</div>
 					<div class="go-search flexc">
 						查询
@@ -31,23 +31,23 @@
 		name: 'index',
 		data() {
 			return {
-				mydate:'请选择日期',
+				mydate: '请选择日期',
 				startshow: false,
 				defaultDate: new Date(),
-				mydata:[]
+				mydata: []
 			}
 		},
 		mounted() {
 			this.myajax()
 		},
 		methods: {
-			myajax:function(){
-				var that=this
-				var dataJson={
-					cuserId:that.searchid,
-					createTime1:that.mydate
+			myajax: function() {
+				var that = this
+				var dataJson = {
+					cuserId: that.searchid,
+					createTime1: that.mydate
 				}
-				if(that.mydate=='请选择日期'){
+				if(that.mydate == '请选择日期') {
 					delete dataJson.createTime1
 				}
 				$.ajax({
@@ -56,33 +56,34 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						var array1=res.data[0].split("],")
-						array1.pop()
-						for(var i=0;i<array1.length;i++){
-							array1[i]=array1[i]+']'
-//							 if (i % 2 == 1) {  
-						        that.mydata.push(JSON.parse(array1[i]));  
-//						   }  
+						if(res.data[0] == null) {
+							function plusReady() {
+								// 显示自动消失的提示消息
+								plus.nativeUI.toast("该员工暂无轨迹!");
+							}
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
+						} else {
+							var array1 = res.data[0].split("],")
+							array1.pop()
+							for(var i = 0; i < array1.length; i++) {
+								array1[i] = array1[i] + ']'
+								if(i % 2 == 1) {
+									that.mydata.push(JSON.parse(array1[i]));
+								}
 
-					}
-						console.log(res)
-//					if (that.mydata.length==0) {
-//						function plusReady(){
-//							// 显示自动消失的提示消息
-//							plus.nativeUI.toast( "该员工暂无轨迹!");
-//						}
-//						if(window.plus){
-//							plusReady();
-//						}else{
-//							document.addEventListener("plusready",plusReady,false);
-//						}
-//					}
-//					that.mylocation()
+							}
+							console.log(that.mydata)
+							that.mylocation()
+						}
 					}
 				});
 			},
 			mylocation: function() {
-				var that=this
+				var that = this
 				var map = new AMap.Map('map-container', {
 					zoom: 15,
 					center: [116.39, 39.9]
@@ -137,12 +138,12 @@
 					var navg0 = pathSimplifierIns.createPathNavigator(0, //关联第1条轨迹
 						{
 							loop: true, //循环播放
-							speed: 1000000,
+							speed: 500,
 							pathNavigatorStyle: {
 								width: 24,
 								height: 24,
 								//使用图片
-								content: PathSimplifier.Render.Canvas.getImageContent('./img/plane.png', onload, onerror),
+								content: PathSimplifier.Render.Canvas.getImageContent('../../../static/plane.png', onload, onerror),
 								strokeStyle: null,
 								fillStyle: null,
 								//经过路径的样式
@@ -160,7 +161,7 @@
 					navg0.start();
 				}
 			},
-			back:function(){
+			back: function() {
 				this.$router.back()
 			},
 			timeshow: function(type) {
@@ -182,7 +183,7 @@
 			searchid() {
 				return this.$store.state.searchid
 			},
-			
+
 		},
 		components: {
 			THead: resolve => require(['../tourists/thead'], resolve)
@@ -193,37 +194,37 @@
 <style type="text/css" lang="scss">
 	.cdetail {
 		.map {
-		width: 100%;
-		height: 100%;
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		#map-container {
 			width: 100%;
-			flex: 1;
-			border-bottom: 1px solid #d5d4d3;
-		}
-		img {
-			display: block;
-			width: 1.65rem;
-			height: 1.65rem;
-		}
-		h1 {
-			font-size: .35rem;
-			text-align: center;
-			font-weight: 600;
-			margin: .4rem 0;
-		}
-		.img-box {
-			z-index: 555;
+			height: 100%;
 			position: relative;
-			width: 1.65rem;
-			height: 1.65rem;
-			margin: -.92rem auto 0;
-			border-radius: 50%;
-			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			#map-container {
+				width: 100%;
+				flex: 1;
+				border-bottom: 1px solid #d5d4d3;
+			}
+			img {
+				display: block;
+				width: 1.65rem;
+				height: 1.65rem;
+			}
+			h1 {
+				font-size: .35rem;
+				text-align: center;
+				font-weight: 600;
+				margin: .4rem 0;
+			}
+			.img-box {
+				z-index: 555;
+				position: relative;
+				width: 1.65rem;
+				height: 1.65rem;
+				margin: -.92rem auto 0;
+				border-radius: 50%;
+				overflow: hidden;
+			}
 		}
-	}
 		background: #EEEEEE;
 		.csearch-top {
 			background: white;

@@ -1,27 +1,27 @@
 <template>
   <div id="foot">
-			<div class="foot-nav" :class="tfoot==2?'fthis':''" @click="opennew('asearch')">
+			<div class="foot-nav" :class="tfoot==2?'fthis':''" @click="opennew('asearch',2)">
 				<img src="../../../static/c-ji-active.png" class="factive" />
 				<img src="../../../static/c-ji.png" class="fdefault" />
 				<span>
 	    			轨迹查询
 	    	</span>
 			</div>
-			<div class="foot-nav" :class="tfoot==3?'fthis':''" @click="opennew('ajuan')">
+			<div class="foot-nav" :class="tfoot==3?'fthis':''" @click="opennew('ajuan',3)">
 				<img src="../../../static/c-pai-active.png" class="factive" />
 				<img src="../../../static/c-pai.png" class="fdefault" />
 				<span>
 	    			案卷派发
 	    	</span>
 			</div>
-			<div class="foot-nav" :class="tfoot==4?'fthis':''" @click="opennew('acan')">
+			<div class="foot-nav" :class="tfoot==4?'fthis':''" @click="opennew('acan',4)">
 				<img src="../../../static/c-pai-active.png" class="factive" />
 				<img src="../../../static/c-pai.png" class="fdefault" />
 				<span>
 	    			案卷查询
 	    	</span>
 			</div>
-			<div class="foot-nav" :class="tfoot==5?'fthis':''" @click="opennew('auser')">
+			<div class="foot-nav" :class="tfoot==5?'fthis':''" @click="opennew('auser',5)">
 				<img src="../../../static/index03-active.png" class="factive" />
 				<img src="../../../static/index03.png" class="fdefault" />
 				<span>
@@ -46,7 +46,8 @@ export default {
   
   },
   methods:{
-	opennew:function(target){
+	opennew:function(target,index){
+		this.$store.state.tfoot=index
 		this.$router.push({
 			name:target
 		})

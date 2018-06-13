@@ -83,9 +83,17 @@
 			}
 		},
 		mounted() {
-			this.$store.state.tfoot = 4
 			this.server=this.service+'/uploadworkImage'
 			this.myajax()
+			function plusReady(){
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting( "加载中..." );
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 		},
 		methods: {
 			myajax:function(){
@@ -100,7 +108,15 @@
 					},
 					success: function(res) {
 						that.mydata=res.data
-						console.log(that.mydata)	
+						function plusReady(){
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus){
+							plusReady();
+						}else{
+							document.addEventListener("plusready",plusReady,false);
+						}
 					}
 				});
 			},

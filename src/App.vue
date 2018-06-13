@@ -1,7 +1,12 @@
 <template>
 	<div id="app">
 		<transition :name="transitionName">
-			<router-view class="child-view"></router-view>
+			<div class="wrapper">
+				<keep-alive>
+					<router-view v-if="$route.meta.keepAlive" class="child-view"></router-view>
+				</keep-alive>
+				<router-view v-if="!$route.meta.keepAlive" class="child-view"></router-view>  
+			</div>
 		</transition>
 	</div>
 </template>

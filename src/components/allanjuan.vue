@@ -213,7 +213,6 @@
 			swiperSlide
 		},
 		mounted() {
-			this.$store.state.tfoot = 4
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
 			function plusReady(){
