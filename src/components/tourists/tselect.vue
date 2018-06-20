@@ -49,13 +49,17 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+										<img :src="val.cfileDealPrevImg1 | myimg" />
+									</div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
-									<img :src="val.cfileDealAfterImg1 | myimg" />
+									<div class="myimg-box">
+										<img :src="val.cfileDealAfterImg1 | myimg" />
+									</div>
 									<div class="state">
 										整改后
 									</div>
@@ -75,13 +79,15 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click.stop="upload(index)"/>
+									<div class="myimg-box">
+									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click.stop="upload(index)"/></div>
 									<div class="state" @click.stop="imgok(val.cfileId)">
 										上传图片
 									</div>
@@ -183,16 +189,24 @@
 			},
 			myajax: function(type) {
 				var that = this
+				var ajaxJson={
+					cuserId: localStorage.getItem('userid'),
+					cfileResult: type,
+					createTime1: that.starttime,
+					handingTime1: that.endtime
+				}
+				if(this.starttime==''){
+					delete ajaxJson.createTime1
+				}
+				if(this.endtime==''){
+					delete ajaxJson.handingTime1
+				}
+				console.log(ajaxJson)
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
-					data: {
-						cuserId: localStorage.getItem('userid'),
-						cfileResult: type,
-						createTime1: that.starttime,
-						handingTime1: that.endtime
-					},
+					data:ajaxJson,
 					success: function(res) {
 						console.log(res)
 						that.mydata = res.data
@@ -224,9 +238,10 @@
 				this.timety = type
 			},
 			gosearch: function() {
-				if(this.starttime == '' || this.endtime == '') {
-					this.alerttab()
-					return
+				if(this.swiperindex==0){
+					this.myajax(2)
+				}else{
+					this.myajax(0)
 				}
 			},
 			alerttab: function() {
@@ -432,11 +447,6 @@
 			.img-box {
 				display: flex;
 				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
 				.state {
 					line-height: .5rem;
 					text-align: center;

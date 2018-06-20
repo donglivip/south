@@ -35,6 +35,9 @@
 							{{grid}}
 							<img src="../../static/arrbottom.png" />
 						</div>
+						<div class="box-go" @click="navshow('2')">
+							{{navtext}}
+						</div>
 					</div>
 					<div class="left-box">
 						<div class="box" @click="timeshow(0)">
@@ -46,11 +49,12 @@
 							{{endtime==''?'结束时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
+						<div class="box-go" @click="myajax">
+							搜索
+						</div>
 					</div>
 				</div>
-				<div class="box-go" @click="navshow('2')">
-					{{navtext}}
-				</div>
+				
 			</div>
 			<table>
 				<tr class="title">
@@ -64,7 +68,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata">
+				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=null">
 					<td>
 						{{val.cgridName}}
 					</td>
@@ -186,7 +190,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata = res.data
+						that.mydata = res.data[0]
 						function plusReady(){
 				// 弹出系统等待对话框
 				plus.nativeUI.closeWaiting();

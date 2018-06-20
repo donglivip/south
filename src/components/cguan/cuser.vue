@@ -29,7 +29,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('staticuser')">
+				<div class="submenu" @click="opennew('allchuli')">
 					<img src="../../../static/user-ren.png" />
 					<span>
     					处理记录

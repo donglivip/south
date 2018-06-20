@@ -5,7 +5,7 @@
 				<keep-alive>
 					<router-view v-if="$route.meta.keepAlive" class="child-view"></router-view>
 				</keep-alive>
-				<router-view v-if="!$route.meta.keepAlive" class="child-view"></router-view>  
+				<router-view v-if="!$route.meta.keepAlive" class="child-view"></router-view>
 			</div>
 		</transition>
 	</div>
@@ -37,6 +37,20 @@
 					this.transitionName = 'slide-left';
 				}
 			}
+		},
+		mounted() {
+			var tht=this
+			function plusReady(){
+				plus.key.addEventListener("backbutton", function() {
+					that.$router.back()
+				})
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
+			
 		}
 	}
 </script>

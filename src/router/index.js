@@ -230,6 +230,11 @@ export default new Router({
       name: 'allchuli',
       component:resolve => require(['@/components/allchuli'], resolve),
       meta: { keepAlive: false}  
+    },{
+      path: '/adetail',
+      name: 'adetail',
+      component:resolve => require(['@/components/admin/adetail'], resolve),
+      meta: { keepAlive: false}  
     }
   ]
 })

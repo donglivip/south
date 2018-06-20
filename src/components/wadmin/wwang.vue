@@ -71,13 +71,15 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group" >
-									<img src="../../../static/uploadselect.png"/>
+									<div class="myimg-box">
+									<img src="../../../static/uploadselect.png"/></div>
 									<div class="state">
 										<span class="upload">
 											待上传
@@ -99,13 +101,15 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
-									<img :src="val.cfileDealAfterImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealAfterImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改后</span>
 									</div>

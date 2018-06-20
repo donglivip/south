@@ -1,16 +1,23 @@
 <template>
 	<div class="wrapper login">
+		<div id="head">
+			<span @click="back">
+    			<img src="../../static/back.png"/>
+    		</span>
+			<div>登录</div>
+			<span></span>
+		</div>
 		<div class="main">
 			<div class="title"><img src="../../static/title.png"></div>
 			<div class="content">
 				<div class="box-group">
 					<div class="form-group">
 						<i class="icon-user"></i>
-						<input type="text" class="form-control" placeholder="请输入手机号码" v-model="phone">
+						<input type="text" class="form-control" placeholder="请输入手机号码" v-model="phone" @focus="myfocus" @blur="myfocus">
 					</div>
 					<div class="form-group">
 						<i class="icon-mima"></i>
-						<input type="password" class="form-control" placeholder="请输入密码" v-model="pwd">
+						<input type="password" class="form-control" placeholder="请输入密码" v-model="pwd" @focus="myfocus" @blur="myfocus">
 					</div>
 				</div>
 				<div class="denglu">
@@ -19,7 +26,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="footer">
+			<div class="footer" v-if="fot">
 				<span>版权所有：南昌市青山湖区南钢街道办事处</span>
 			</div>
 		</div>
@@ -31,7 +38,8 @@
 		data() {
 			return {
 				phone: '',
-				pwd: ''
+				pwd: '',
+				fot:true
 			}
 		},
 		mounted() {
@@ -44,14 +52,14 @@
 				})
 			},
 			submit: function() {
-				if(this.phone==''||this.pwd==''){
+				if(this.phone == '' || this.pwd == '') {
 					alert('账号或密码不能为空！')
 					return
 				}
-//				if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.phone))){ 
-//				  alert("不是完整的11位手机号或者正确的手机号前七位"); 
-//				  return false; 
-//				 } 
+				//				if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.phone))){ 
+				//				  alert("不是完整的11位手机号或者正确的手机号前七位"); 
+				//				  return false; 
+				//				 } 
 				var that = this
 				$.ajax({
 					type: "get",
@@ -63,32 +71,38 @@
 						cuserPassword: that.pwd
 					},
 					success: function(res) {
-						if(res.status!=200){
+						if(res.status != 200) {
 							alert(res.msg)
 							return false;
-						}else{
-							localStorage.setItem('userid',res.data.cuserId)
-							localStorage.setItem('cuserRole',res.data.cuserRole)
-							localStorage.setItem('cuserHeadImg',res.data.cuserHeadImg)
-							localStorage.setItem('phone',res.data.cuserPhone)
-							localStorage.setItem('sex',res.data.cuserSex)
-							localStorage.setItem('usercode',res.data.cuserIdentityId)
-							localStorage.setItem('username',res.data.cuserName)
-							if(res.data.cuserRole==0||res.data.cuserRole==1||res.data.cuserRole==2||res.data.cuserRole==3){
+						} else {
+							localStorage.setItem('userid', res.data.cuserId)
+							localStorage.setItem('cuserRole', res.data.cuserRole)
+							localStorage.setItem('cuserHeadImg', res.data.cuserHeadImg)
+							localStorage.setItem('phone', res.data.cuserPhone)
+							localStorage.setItem('sex', res.data.cuserSex)
+							localStorage.setItem('usercode', res.data.cuserIdentityId)
+							localStorage.setItem('username', res.data.cuserName)
+							if(res.data.cuserRole == 0 || res.data.cuserRole == 1 || res.data.cuserRole == 2 || res.data.cuserRole == 3) {
 								that.opennew('tindex')
-							}else if(res.data.cuserRole==4){
+							} else if(res.data.cuserRole == 4) {
 								that.opennew('windex')
-							}else if(res.data.cuserRole==5){
+							} else if(res.data.cuserRole == 5) {
 								that.opennew('hindex')
-							}else if(res.data.cuserRole==6||res.data.cuserRole==7){
+							} else if(res.data.cuserRole == 6 || res.data.cuserRole == 7) {
 								that.opennew('cindex')
-							}else{
+							} else {
 								that.opennew('asearch')
 							}
 						}
-						
+
 					}
 				});
+			},
+			back: function() {
+				this.$router.back()
+			},
+			myfocus:function() {
+				this.fot=!this.fot
 			}
 		},
 		computed: {

@@ -12,7 +12,7 @@
 				<div class="detail-inner">
 					<img src="../../static/detail=adress.png" />
 					<div class="detail-text">
-						{{mydata[0].cgridName}}
+						{{mydata[0].cmultipleCommunitiesName}} - {{mydata[0].cgridName}}
 					</div>
 				</div>
 			</div>
@@ -98,7 +98,6 @@
 		methods: {
 			myajax:function(){
 				var that=this
-				console.log(that.windexid)
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",
@@ -107,6 +106,7 @@
 						cfileId: that.windexid
 					},
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
 						function plusReady(){
 							// 弹出系统等待对话框

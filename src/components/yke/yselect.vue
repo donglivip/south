@@ -4,7 +4,7 @@
 			<div class="alert" v-show="alertboo" @click="alerttab">
 				<div class="alert-inner">
 					<div class="alert-text">
-						日期填写不完整
+						至少输入开始时间
 					</div>
 					<div class="alert-setting">
 						<div class="setting-group">
@@ -27,7 +27,7 @@
 					{{endtime==''?'结束时间':endtime}}
 					<img src="../../../static/arrbottom.png" />
 				</div>
-				<div class="box-go" @click="gosearch">
+				<div class="box-go" @click="myajax(0)">
 					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
@@ -38,13 +38,15 @@
 					</div>
 					<div class="img-box">
 						<div class="img-group">
-							<img :src="val.cfileDealPrevImg1 | myimg" />
+							<div class="myimg-box">
+							<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 							<div class="state">
 								整改前
 							</div>
 						</div>
 						<div class="img-group">
-							<img src="../../../static/photo.png" />
+							<div class="myimg-box">
+							<img src="../../../static/photo.png" /></div>
 							<div class="state">
 								游客不可上传整改后照片
 							</div>
@@ -130,12 +132,14 @@
 					if(that.endtime==''){
 						delete ajaxJson.handingTime1
 					}
+					console.log(JSON.stringify(ajaxJson))
 					$.ajax({
 						type: "post",
 						url: that.service + "/queryByCfilePojo",
 						dataType: 'json',
 						data: ajaxJson,
 						success: function(res) {
+							console.log(JSON.stringify(res))
 							that.mydata = res.data
 							function plusReady(){
 								// 弹出系统等待对话框
@@ -170,22 +174,39 @@
 				}
 			},
 			startchang: function(date, formatDate) {
-				if(this.timety == 0) {
-					this.starttime = formatDate
-				} else {
-					this.endtime = formatDate
+				var date = new Date();
+		        var seperator1 = "-";
+		        var year = date.getFullYear();
+		        var month = date.getMonth() + 1;
+		        var strDate = date.getDate();
+		        if (month >= 1 && month <= 9) {
+		            month = "0" + month;
+		        }
+		        if (strDate >= 0 && strDate <= 9) {
+		            strDate = "0" + strDate;
+		        }
+		        var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate!=formatDate){
+					if(this.timety == 0) {
+						this.starttime = formatDate
+					} else {
+						this.endtime = formatDate
+					}
+				}else{
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("不可选择当前日期!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
 				}
 			},
 			timeshow: function(type) {
 				this.startshow = true
 				this.timety = type
-			},
-			gosearch: function() {
-				if(this.starttime == '' || this.endtime == '') {
-					this.alerttab()
-					return
-				}
-				this.myajax()
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo

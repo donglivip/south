@@ -1,16 +1,23 @@
 <template>
 	<div class="warpper register">
+		<div id="head">
+			<span @click="back">
+    			<img src="../../static/back.png"/>
+    		</span>
+			<div>注册</div>
+			<span></span>
+		</div>
 		<div class="main">
 			<div class="content">
 				<form @submit.prevent="submit($event)" name="yForm">
 					<div class="box-group">
 						<div class="form-group">
 							<!--<i class="icon-user"></i>-->
-							<input type="text" class="form-control" placeholder="请输入姓名" v-model="inputdata.cuserName" name="cuserName">
+							<input type="text" class="form-control" placeholder="请输入姓名" v-model="inputdata.cuserName" name="cuserName" @focus="myfocus" @blur="myfocus">
 						</div>
 						<div class="form-group">
 							<!--<i class="icon-user"></i>-->
-							<input type="text" class="form-control" placeholder="请输入身份证号" v-model="inputdata.cuserIdentityId" name="cuserIdentityId">
+							<input type="text" class="form-control" placeholder="请输入身份证号" v-model="inputdata.cuserIdentityId" name="cuserIdentityId" @focus="myfocus" @blur="myfocus">
 						</div>
 						<div class="form-group">
 							<!--<i class="icon-mima"></i>-->
@@ -20,23 +27,23 @@
 						</div>
 						<div class="form-group">
 							<!--<i class="icon-user"></i>-->
-							<input type="text" class="form-control" placeholder="请输入现住址" v-model="inputdata.cuserAddress" name="cuserAddress">
+							<input type="text" class="form-control" placeholder="请输入现住址" v-model="inputdata.cuserAddress" name="cuserAddress" @focus="myfocus" @blur="myfocus">
 						</div>
 						<div class="form-group">
 							<!--<i class="icon-user"></i>-->
-							<input type="text" class="form-control" placeholder="请输入手机号码" v-model="inputdata.cuserPhone" name="cuserPhone">
+							<input type="text" class="form-control" placeholder="请输入手机号码" v-model="inputdata.cuserPhone" name="cuserPhone" @focus="myfocus" @blur="myfocus">
 						</div>
 						<div class="form-group">
 							<!--<i class="icon-mima"></i>-->
-							<input type="password" class="form-control" placeholder="请设置密码" v-model="inputdata.cuserPassword" name="cuserPassword">
+							<input type="password" class="form-control" placeholder="请设置密码" v-model="inputdata.cuserPassword" name="cuserPassword" @focus="myfocus" @blur="myfocus">
 						</div>
 						<div class="form-group">
 							<!--<i class="icon-mima"></i>-->
-							<input type="password" class="form-control" placeholder="请再次设置密码" v-model="pwd02">
+							<input type="password" class="form-control" placeholder="请再次设置密码" v-model="pwd02" @focus="myfocus" @blur="myfocus">
 						</div>
 						<div class="form-group" style="display: none;">
 							<!--<i class="icon-mima"></i>-->
-							<input type="number" class="form-control" value="0" name="cuserRole">
+							<input type="number" class="form-control" value="0" name="cuserRole" @focus="myfocus" @blur="myfocus">
 						</div>
 						<div class="form-group">
 							<!--<i class="icon-mima"></i>-->
@@ -61,7 +68,7 @@
 					</div>
 				</form>
 			</div>
-			<div class="footer">
+			<div class="footer" v-if="fot">
 				<span>版权所有：南昌市青山湖区南钢街道办事处</span>
 			</div>
 		</div>
@@ -84,7 +91,8 @@
 					picPath: require('../../static/creame.png'),
 				},
 				pwd02: '',
-				fileimg:'请选择您的头像'
+				fileimg:'请选择您的头像',
+				fot:true
 			}
 		},
 		mounted() {
@@ -187,6 +195,12 @@
 						that.opennew('login')
 					}
 				});
+			},
+			back: function() {
+				this.$router.back()
+			},
+			myfocus:function() {
+				this.fot=!this.fot
 			}
 		},
 		computed: {

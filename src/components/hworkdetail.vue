@@ -117,7 +117,6 @@
 	}
 	
 	.hwxq .qlz {
-		height: 4.7rem;
 		width: 6.8rem;
 	}
 	

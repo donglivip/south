@@ -90,12 +90,16 @@
 					text: '街办管理员',
 					id: 8
 				}, ],
-				mydata:[]
+				mydata: []
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 2
 			this.myajax()
+			var that = this
+			setInterval(function() {
+				that.mynews()
+			}, 3000)
 		},
 		methods: {
 			myajax: function() {
@@ -104,10 +108,10 @@
 					cuserName: that.uname,
 					cuserRole: that.navid
 				}
-				if(that.uname==''){
+				if(that.uname == '') {
 					delete dataJson.cuserName
 				}
-				if(that.navid==''){
+				if(that.navid == '') {
 					delete dataJson.cuserRole
 				}
 				$.ajax({
@@ -116,12 +120,12 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata=res.data[0]
+						that.mydata = res.data[0]
 					}
 				});
 			},
-			opennew: function(target,id) {
-				this.$store.state.searchid=id
+			opennew: function(target, id) {
+				this.$store.state.searchid = id
 				this.$router.push({
 					name: target
 				})
@@ -130,6 +134,43 @@
 				this.navboo = !this.navboo
 				this.navtext = text
 				this.navid = id
+			},
+			mynews: function() {
+				var that = this;
+				$.ajax({
+					type: "get",
+					url: that.service + "/queryCuserMessagePojoByCuserId",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid')
+					},
+					success: function(res) {
+						if(res.data.length > 0) {
+							for(var i = 0; i < res.data.length; i++) {
+								if(res.data[i].stystemSatus == 1) {
+									that.mypush(res.data[i].cmessageId,res.data[i].cuserCmessageId)
+								}
+							}
+						}
+					}
+				});
+			},
+			mypush:function(newid,newstwoid){
+				var info = plus.push.getClientInfo();
+				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
+				var that=this
+				$.ajax({
+					type:"post",
+					url:that.service+"/updateCuserCmessageByPrimaryKeySelective",
+					dataType:'json',
+					data:{
+						cmessageId:newid,
+						cuserCmessageId:newstwoid
+					},
+					success:function(res){
+						console.log(JSON.stringify(res))
+					}
+				});
 			}
 		},
 		computed: {
@@ -150,7 +191,7 @@
 
 <style type="text/css" lang="scss">
 	.csearch {
-		p{
+		p {
 			text-align: center;
 			line-height: 1rem;
 		}

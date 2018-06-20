@@ -12,7 +12,7 @@
 				<div class="detail-inner">
 					<img src="../../static/detail=adress.png" />
 					<div class="detail-text">
-						{{mydata[0].cgridName}}
+						{{mydata[0].cmultipleCommunitiesName}} - {{mydata[0].cgridName}}
 					</div>
 				</div>
 			</div>
@@ -51,7 +51,7 @@
 						</div>
 					</div>
 				</div>
-				<div v-if="radioboo==3">
+				<!--<div v-if="radioboo==3">-->
 					<div class="detail-inner" @click="bottomshow(0)">
 						<div class="detail-text">
 							不受理原因：
@@ -79,7 +79,7 @@
 						</div>
 						<img src="../../static/arrright.png" class="arrimg" />
 					</div>
-				</div>
+				<!--</div>-->
 			</div>
 			<div class="godubmit" @click="godubmit">
 				提交
@@ -114,74 +114,83 @@
 				radioboo: 1,
 				mydata: '',
 				noway: [],
-				type:'',
-				cnotAdmissibleReasontext:'请选择不受理原因',
-				cnotAdmissibleReason:'',
-				cfinisedtext:'请选择完成时限',
-				cfinisedId:'',
-				bottomboo:false,
-				navtext:'请选择案卷分类'
+				type: '',
+				cnotAdmissibleReasontext: '请选择不受理原因',
+				cnotAdmissibleReason: '',
+				cfinisedtext: '请选择完成时限',
+				cfinisedId: '',
+				bottomboo: false,
+				navtext: '请选择案卷分类'
 			}
 		},
 		mounted() {
-			this.$store.state.tfoot = 4
 			this.myajax()
+
+			function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("加载中...");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
 		},
 		methods: {
-			godubmit:function(){
-				var that=this
-				var ajaxdata={
-							cfileId: that.windexid,
-							cfileResult:that.radioboo,
-							cnotAdmissibleReason:that.cnotAdmissibleReason,
-							cfinisedId:that.cfinisedId,
-							ctypeTwoId:that.bottomtwoid
+			godubmit: function() {
+				var that = this
+				var ajaxdata = {
+					cfileId: that.windexid,
+					cfileResult: that.radioboo,
+					cnotAdmissibleReason: that.cnotAdmissibleReason,
+					cfinisedId: that.cfinisedId,
+					ctypeTwoId: that.bottomtwoid,
+					ctypeTitle:that.navtext
+//					cuserIdNetwork: that.mydata[0].cuserIdNetwork,
+//					cgridId: that.mydata[0].cgridId
 				}
-				if(that.radioboo==''){
+				if(that.radioboo == '') {
 					delete ajaxdata.cfileResult
 				}
-				if(that.cnotAdmissibleReason==''){
+				if(that.cnotAdmissibleReason == '') {
 					delete ajaxdata.cnotAdmissibleReason
 				}
-				if(that.cfinisedId==''){
+				if(that.cfinisedId == '') {
 					delete ajaxdata.cfinisedId
 				}
-				if(that.bottomtwoid==''){
+				if(that.bottomtwoid == '') {
 					delete ajaxdata.ctypeTwoId
 				}
-				
 				$.ajax({
-						type: "post",
-						url: that.service + "/updateBycfilePreCase",
-						dataType: 'json',
-						data: ajaxdata,
-						success: function(res) {
-							that.$router.back()
-						}
-					});
+					type: "post",
+					url: that.service + "/updateBycfilePreCase",
+					dataType: 'json',
+					data: ajaxdata,
+					success: function(res) {
+						that.$router.back()
+					}
+				});
 			},
-			bottomnav:function(val){
-				if(this.type==0){
-					this.cnotAdmissibleReasontext=val.creasonContent
-					this.cnotAdmissibleReason=val.creasonId
-				}else if(this.type==1){
-//					this.cfinisedId=val.
-				}else{
-					this.cfinisedtext=val.cfinisedTime
-					this.cfinisedId=val.cfinisedId
+			bottomnav: function(val) {
+				if(this.type == 0) {
+					this.cnotAdmissibleReasontext = val.creasonContent
+					this.cnotAdmissibleReason = val.creasonId
+				} else if(this.type == 1) {
+					//					this.cfinisedId=val.
+				} else {
+					this.cfinisedtext = val.cfinisedTime
+					this.cfinisedId = val.cfinisedId
 				}
 			},
-			navshow:function(name){
-				this.navtext=name
-				this.bottomboo=!this.bottomboo
+			navshow: function(name) {
+				this.navtext = name
+				this.bottomboo = !this.bottomboo
 			},
-			bottomfalse:function(){
+			bottomfalse: function() {
 				this.navboo = !this.navboo
 			},
 			bottomshow: function(type) {
-				var that=this
-				this.type=type
-				this.navboo = !this.navboo
+				var that = this
 				if(type == 0) {
 					$.ajax({
 						type: "get",
@@ -203,7 +212,7 @@
 							that.noway = res.data
 						}
 					});
-				}else{
+				} else {
 					$.ajax({
 						type: "get",
 						url: that.service + "/queryListCfinished",
@@ -213,6 +222,8 @@
 						}
 					});
 				}
+				this.type = type
+				this.navboo = !this.navboo
 			},
 			myajax: function() {
 				var that = this
@@ -224,8 +235,18 @@
 						cfileId: that.windexid
 					},
 					success: function(res) {
+						console.log(res)
 						that.mydata = res.data
-						
+
+						function plusReady() {
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 					}
 				});
 
@@ -240,7 +261,7 @@
 			},
 			back: function() {
 				this.$router.back()
-			},
+			}
 		},
 		components: {
 			BottomNav: resolve => require(['./bottom-nav'], resolve)
@@ -252,7 +273,7 @@
 			service() {
 				return this.$store.state.service;
 			},
-			bottomtwoid(){
+			bottomtwoid() {
 				return this.$store.state.bottomtwoid
 			}
 		}
@@ -325,7 +346,7 @@
 				}
 				.big-img {
 					width: 3.8rem;
-					height: 2.6rem;
+					height: auto;
 					display: block;
 					margin: .25rem auto;
 				}

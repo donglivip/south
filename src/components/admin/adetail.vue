@@ -28,7 +28,7 @@
 
 <script>
 	export default {
-		name: 'index',
+		name: 'adetail',
 		data() {
 			return {
 				mydate: '请选择日期',
@@ -44,15 +44,14 @@
 			myajax: function() {
 				var that = this
 				var dataJson = {
-					cuserId: that.searchid,
-					createTime1: that.mydate
+					cuserId: that.searchid
 				}
 				if(that.mydate == '请选择日期') {
 					delete dataJson.createTime1
 				}
 				$.ajax({
 					type: "get",
-					url: that.service + "/queryAllWorkByCreateTime",
+					url: that.service + "/queryCorkByCworkId",
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {

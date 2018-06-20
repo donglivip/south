@@ -3,27 +3,27 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tindex-top">
-					<div class="img-box" @click="upload('1')">
-						<img src="../../../static/creame.png" class="gocream" v-show="!upimg" />
-						<img :src="upsrc" id="img1" v-show="upimg" />
-					</div>
-					<div class="tindex-setting">
-						<div class="setting-group" @click="clear">
-							<img src="../../../static/reset.png" />
-							<span>
+				<div class="img-box" @click="upload('1')">
+					<img src="../../../static/creame.png" class="gocream" v-show="!upimg" />
+					<img :src="upsrc" id="img1" v-show="upimg" />
+				</div>
+				<div class="tindex-setting">
+					<div class="setting-group" @click="clear" v-if="upsrc!=''">
+						<img src="../../../static/reset.png" />
+						<span>
 	    						 取消
 	    					</span>
-						</div>
-						<div class="setting-group" @click="navshow('分类')">
-							{{navtext}}
-						</div>
-						<div class="setting-group" @click="submit">
-							<img src="../../../static/upload.png" />
-							<span>
+					</div>
+					<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
+						{{navtext}}
+					</div>
+					<div class="setting-group" @click="submit">
+						<img src="../../../static/upload.png" />
+						<span>
 	    						上传
 	    					</span>
-						</div>
 					</div>
+				</div>
 			</div>
 			<div class="tindex-bottom">
 				<div class="bottom-title">
@@ -106,28 +106,28 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-						return false;
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 				if(this.upsrc == '') {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请上传图片!");
-						return false;
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 				var that = this
-				function plusReady() {
+
 					// 弹出系统等待对话框
 					that.w = plus.nativeUI.showWaiting("上传中...");
 					plus.geolocation.getCurrentPosition(function(p) {
@@ -136,21 +136,28 @@
 							url: that.service + "/insertCfileAndCuser",
 							dataType: 'json',
 							data: {
-								cuserCode:that.uuid,
-								cuserRole:0,
-								cfileDealPrevImg1:that.files,
-								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
-								ctypeTwoId:that.bottomtwoid
+								cuserCode: that.uuid,
+								cuserRole: 0,
+								cfileDealPrevImg1: that.files,
+								cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+								ctypeTwoId: that.bottomtwoid
 							},
 							success: function(res) {
+								that.w.close()
+								that.upimg = false
+								that.navtext = '选择分类'
 								if(res.status != 200) {
-									alert(res.msg)
+									function plusReady() {
+										plus.nativeUI.toast(res.msg)
+									}
+									if(window.plus) {
+										plusReady();
+									} else {
+										document.addEventListener("plusready", plusReady, false);
+									}
 								} else {
 									function plusReady() {
-										that.w.close()
 										plus.nativeUI.toast("上传完成");
-										that.upimg = false
-										that.navtext = '选择分类'
 									}
 									if(window.plus) {
 										plusReady();
@@ -163,12 +170,6 @@
 					}, function(e) {
 						alert('Geolocation error: ' + e.message);
 					});
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
 
 			},
 			navshow: function(name) {
@@ -346,7 +347,7 @@
 				display: flex;
 				font-size: .25rem;
 				color: white;
-				justify-content: space-between;
+				justify-content: space-around;
 				margin: 0 1.6rem;
 				.setting-group {
 					display: flex;

@@ -94,13 +94,15 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)" />
+									<div class="myimg-box">
+									<img src="../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)" /></div>
 									<div class="state" @click.stop="imgok(val.cfileId)">
 										上传图片
 									</div>
@@ -118,13 +120,17 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+										<img :src="val.cfileDealPrevImg1 | myimg" />
+									</div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
-									<img :src="val.cfileDealAfterImg1 | myimg" />
+									<div class="myimg-box">
+										<img :src="val.cfileDealAfterImg1 | myimg" />
+									</div>
 									<div class="state wwang">
 										<span>整改后</span>
 									</div>
@@ -784,11 +790,6 @@
 			.img-box {
 				display: flex;
 				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
 				.state {
 					line-height: .5rem;
 					text-align: center;

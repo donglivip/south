@@ -21,7 +21,7 @@
 			<div>美丽南钢</div>
 			<span></span>
 		</div>
-		<div id="main">
+		<div id="main" style="height: calc(100% - .8rem);">
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box">
 				<div class="time-left">
@@ -47,10 +47,11 @@
 							<img src="../../static/arrbottom.png" />
 						</div>
 					</div>
-				</div>
-				<div class="box-go" @click="myajax">
+					<div class="box-go left-box" @click="myajax" style="width: 6.5rem!important;">
 					搜索
 				</div>
+				</div>
+				
 			</div>
 			<table>
 				<tr class="title">
@@ -61,10 +62,13 @@
 						类别
 					</td>
 					<td>
+						上传数量
+					</td>
+					<td>
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata">
+				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=null">
 					<td>
 						{{val.cuserName}}
 					</td>
@@ -72,7 +76,10 @@
 						{{val.cuserRole | role}}
 					</td>
 					<td>
-						{{val.count1==null?'0':val.count1}}
+						{{val.count1==0?'0':val.count1}}
+					</td>
+					<td>
+						{{val.count2==null?'0':val.count2}}
 					</td>
 				</tr>
 			</table>
@@ -194,6 +201,7 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata = res.data[0]
+						console.log(that.mydata)
 						function plusReady(){
 				// 弹出系统等待对话框
 				plus.nativeUI.closeWaiting();
@@ -488,11 +496,10 @@
 		.time-box {
 			display: flex;
 			align-items: center;
-			height: 1.1rem;
 			padding-left: .3rem;
 			.box {
 				height: .5rem;
-				width: 2rem;
+				width: 3rem;
 				border: 2px solid #1e81d2;
 				background: #FFFFFF;
 				display: flex;
@@ -511,14 +518,13 @@
 				}
 			}
 			.box-go {
-				width: 1.5rem;
+				
 				height: .5rem;
 				background: #1e81d2;
 				color: #FFFFFF;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				margin: 0 .3rem 0 .4rem;
 				img {
 					height: .28rem;
 					margin-right: .14rem;

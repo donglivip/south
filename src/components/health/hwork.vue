@@ -15,7 +15,7 @@
 			</div>
 		</transition>
   	<t-head></t-head>
-			<div id="main">
+			<div id="main" style="position: relative;">
 				<div>
 					<div class="box-group">
 							<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">

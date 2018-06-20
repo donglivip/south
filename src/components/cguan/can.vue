@@ -49,13 +49,15 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
-									<img :src="val.cfileDealAfterImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealAfterImg1 | myimg" /></div>
 									<div class="state">
 										整改后
 									</div>
@@ -75,13 +77,15 @@
 							</div>
 							<div class="img-box">
 								<div class="img-group">
-									<img :src="val.cfileDealPrevImg1 | myimg" />
+									<div class="myimg-box">
+									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
-									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click.stop="upload(index)"/>
+									<div class="myimg-box">
+									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click.stop="upload(index)"/></div>
 									<div class="state" @click.stop="imgok(val.cfileId)">
 										上传图片
 									</div>
@@ -203,6 +207,7 @@
 						handingTime1: that.endtime
 					},
 					success: function(res) {
+						console.log(res)
 						that.mydata = res.data
 						function plusReady(){
 							// 弹出系统等待对话框
@@ -242,9 +247,10 @@
 				this.timety = type
 			},
 			gosearch: function() {
-				if(this.starttime == '' || this.endtime == '') {
-					this.alerttab()
-					return
+				if(this.swiperindex==0){
+					this.myajax(2)
+				}else{
+					this.myajax(0)
 				}
 			},
 			alerttab: function() {

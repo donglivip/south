@@ -8,13 +8,13 @@
 						<img :src="upsrc"  id="img1" v-show="upimg"/>
 					</div>
 					<div class="tindex-setting">
-						<div class="setting-group" @click="clear">
+						<div class="setting-group" @click="clear" v-if="upsrc!=''">
 							<img src="../../../static/reset.png" />
 							<span>
 	    						 取消
 	    					</span>
 						</div>
-						<div class="setting-group" @click="navshow('分类')">
+						<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
 							{{navtext}}
 						</div>
 						<div class="setting-group" @click="submit">
@@ -105,25 +105,27 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-						return false;
+						
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 				if(this.upsrc == '') {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请上传图片!");
-						return false;
+						
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 				var that = this
 				function plusReady() {
@@ -337,7 +339,7 @@
 				display: flex;
 				font-size: .25rem;
 				color: white;
-				justify-content: space-between;
+				justify-content: space-around;
 				margin: 0 1.6rem;
 				.setting-group {
 					display: flex;

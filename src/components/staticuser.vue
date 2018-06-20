@@ -26,28 +26,28 @@
 			<div class="time-box">
 				<div class="time-left">
 					<div class="left-box">
-						<div class="box" @click="timeshow(0)" style="width: 2rem;">
+						<div class="box" @click="timeshow(0)" style="width: 40%;">
 							{{starttime==''?'开始时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
-						<div class="box" @click="timeshow(1)" style="width: 2rem;">
+						<div class="box" @click="timeshow(1)" style="width: 40%;">
 							{{endtime==''?'结束时间':endtime}}
-							<img src="../../static/arrbottom.png" />
-						</div>
-						<span class="hr"></span>
-						<div class="box" style="width: 2rem;">
-							<input type="text" v-model="grid" placeholder="输入网格名"/>
 							<img src="../../static/arrbottom.png" />
 						</div>
 					</div>
 					<div class="left-box">
-						<div class="box box-go" @click="myajax">
+						<div class="box" style="width: 40%;">
+							<input type="text" v-model="grid" placeholder="请输入网格名称" />
+							<img src="../../static/arrbottom.png" />
+						</div>
+						<span class="hr"></span>
+						<div class="box box-go" @click="myajax" style="width: 40%!important;">
 							搜索
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 			<table>
 				<tr class="title">
@@ -64,7 +64,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata[0]">
+				<tr v-for="val in mydata[0]" v-if="val.count1!=0||val.count2!=null">
 					<!--<td>
 						{{val.cuserName==null?'无':val.count1}}
 					</td>-->
@@ -82,7 +82,7 @@
 			<p v-if="mydata[0].length==0">
 				暂无数据
 			</p>
-		</div>	
+		</div>
 	</div>
 </template>
 
@@ -101,9 +101,9 @@
 				navboo: false,
 				navtext: '选择分类',
 				navindex: -1,
-				grid:'',
-				texttype:'0',
-				mydata:[]
+				grid: '',
+				texttype: '0',
+				mydata: []
 			}
 		},
 		components: {
@@ -112,14 +112,15 @@
 		},
 		mounted() {
 			this.myajax()
-			function plusReady(){
+
+			function plusReady() {
 				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting( "加载中..." );
+				var w = plus.nativeUI.showWaiting("加载中...");
 			}
-			if(window.plus){
+			if(window.plus) {
 				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
+			} else {
+				document.addEventListener("plusready", plusReady, false);
 			}
 		},
 		computed: {
@@ -131,39 +132,39 @@
 			}
 		},
 		methods: {
-			myajax:function(){
-				var that=this;
-				var ajaxData={
-					createTime1:that.starttime,
-					handingTime1:that.endtime,
-					cgridName:that.grid
+			myajax: function() {
+				var that = this;
+				var ajaxData = {
+					createTime1: that.starttime,
+					handingTime1: that.endtime,
+					cgridName: that.grid
 				}
-				if(that.starttime==''){
+				if(that.starttime == '') {
 					delete ajaxData.createTime1
 				}
-				if(that.endtime==''){
+				if(that.endtime == '') {
 					delete ajaxData.handingTime1
 				}
-				if(that.grid==''){
+				if(that.grid == '') {
 					delete ajaxData.cgridName
 				}
-				console.log(ajaxData)
 				$.ajax({
-					type:"get",
-					url:that.service+"/queryGridReportCountAndHandCount",
-					dataType:'json',
-					data:ajaxData,
-					success:function(res){
-						function plusReady(){
-				// 弹出系统等待对话框
-				plus.nativeUI.closeWaiting();
-			}
-			if(window.plus){
-				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
-			}
-						that.mydata=res.data
+					type: "get",
+					url: that.service + "/queryGridReportCountAndHandCount",
+					dataType: 'json',
+					data: ajaxData,
+					success: function(res) {
+						console.log(res)
+						function plusReady() {
+							// 弹出系统等待对话框
+							plus.nativeUI.closeWaiting();
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
+						that.mydata = res.data
 					}
 				});
 			},
@@ -208,36 +209,36 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		p{
+		p {
 			text-align: center;
 		}
-		table{
+		table {
 			width: 100%;
 			background: white;
-			td{
+			td {
 				height: .6rem;
 				line-height: .6rem;
 				font-size: .25rem;
 				border: 1px solid #ECECEC;
 				text-indent: .15rem;
 			}
-			tr:first-of-type{
+			tr:first-of-type {
 				font-weight: 600;
 				font-size: .25rem;
 			}
 		}
-		.time-left{
+		.time-left {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
-			.left-box{
+			.left-box {
 				display: flex;
 				align-items: center;
 				margin: .1rem 0;
 				justify-content: center;
 			}
 		}
-		.time-box{
+		.time-box {
 			height: auto;
 			padding: .2rem 0;
 		}
@@ -418,8 +419,8 @@
 					height: .1rem;
 					margin-left: .2rem;
 				}
-				input{
-					width: 1rem!important;
+				input {
+					width: 2rem!important;
 					height: 100%;
 					border: 0;
 					text-align: center;

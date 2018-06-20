@@ -62,19 +62,8 @@
 				navtext: '人员分类',
 				uname: '',
 				navid: '',
-				bottomone: [{
-					text: '居民',
-					id: 0
-				}, {
-					text: '环保小卫士',
-					id: 1
-				}, {
-					text: '志愿督察员',
-					id: 2
-				}, {
-					text: '社区楼栋长',
-					id: 3
-				}, {
+				bottomone: [
+				{
 					text: '社区网格员',
 					id: 4
 				}, {

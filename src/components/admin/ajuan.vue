@@ -8,13 +8,13 @@
 						<img :src="upsrc"  id="img1" v-show="upimg"/>
 					</div>
 					<div class="tindex-setting">
-						<div class="setting-group" @click="clear">
+						<div class="setting-group" @click="clear" v-if="upsrc!=''">
 							<img src="../../../static/reset.png" />
 							<span>
 	    						 取消
 	    					</span>
 						</div>
-						<div class="setting-group" @click="navshow('分类')">
+						<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
 							{{navtext}}
 						</div>
 						<div class="setting-group" @click="submit">
@@ -106,35 +106,33 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-						return false;
+						
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 				if(this.upsrc == '') {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请上传图片!");
-						return false;
+						
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 				var that = this
 				function plusReady() {
 					// 弹出系统等待对话框
 					that.w = plus.nativeUI.showWaiting("上传中...");
 					plus.geolocation.getCurrentPosition(function(p) {
-						console.log(localStorage.getItem('userid'))
-						console.log(that.files)
-						console.log(p.coords.longitude + ',' + p.coords.latitude)
-						console.log(that.bottomtwoid)
 						$.ajax({
 							type: "post",
 							url: that.service + "/insertCfileAndCuserAreadyRegister",
@@ -143,7 +141,8 @@
 								cuserId:localStorage.getItem('userid'),
 								cfileDealPrevImg1:that.files,
 								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
-								ctypeTwoId:that.bottomtwoid
+								ctypeTwoId:that.bottomtwoid,
+								
 							},
 							success: function(res) {
 								console.log(JSON.stringify(res))
@@ -339,7 +338,7 @@
 				display: flex;
 				font-size: .25rem;
 				color: white;
-				justify-content: space-between;
+				justify-content: space-around;
 				margin: 0 1.6rem;
 				.setting-group {
 					display: flex;

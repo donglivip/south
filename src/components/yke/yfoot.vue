@@ -1,13 +1,13 @@
 <template>
 	<div id="foot">
-		<div class="foot-nav" :class="tfoot==1?'fthis':''" @click="opennew('yindex')">
+		<div class="foot-nav" :class="tfoot==1?'fthis':''" @click="opennew('yindex',1)">
 			<img src="../../../static/index01-active.png" class="factive" />
 			<img src="../../../static/index01.png" class="fdefault" />
 			<span>
     				首页
     			</span>
 		</div>
-		<div class="foot-nav" :class="tfoot==2?'fthis':''" @click="opennew('yselect')">
+		<div class="foot-nav" :class="tfoot==2?'fthis':''" @click="opennew('yselect',2)">
 			<img src="../../../static/index02-active.png" class="factive" />
 			<img src="../../../static/index02.png" class="fdefault" />
 			<span>
@@ -33,7 +33,8 @@
 
 		},
 		methods: {
-			opennew:function(target) {
+			opennew:function(target,index) {
+				this.$store.state.tfoot=index
 				this.$router.push({
 					name: target
 				})

@@ -26,12 +26,12 @@
 			<div class="time-box">
 				<div class="time-left">
 					<div class="left-box">
-						<div class="box" @click="timeshow(0)">
+						<div class="box" @click="timeshow(0)" style="width: 3.05rem;">
 							{{starttime==''?'开始时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
-						<div class="box" @click="timeshow(1)">
+						<div class="box" @click="timeshow(1)" style="width: 3.05rem;">
 							{{endtime==''?'结束时间':endtime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
@@ -58,27 +58,21 @@
 							网格区域
 						</td>
 						<td>
+							上报数量
+						</td>
+						<td>
 							处理数量
 						</td>
 					</tr>
-					<tr v-for="(val,index) in mydata">
-						<td v-show="index!=0">
-						{{val.cgridName}}
-						</td>
-						<td v-show="index!=0">
-							{{val.count2}}
-						</td>
-					</tr>
-				</table>
-				<table	style="width: 25%;">
-					<tr class="title">
+					<tr v-for="(val,index) in mydata" v-if="val.count1!=0||val.count2!=null">
 						<td>
-							上报数量
+							{{val.cgridName}}
 						</td>
-					</tr>
-					<tr v-for="(val,index) in mydata[0]">
 						<td>
 							{{val.count1}}
+						</td>
+						<td>
+							{{val.count2==null?'0':val.count2}}
 						</td>
 					</tr>
 				</table>
@@ -140,7 +134,6 @@
 				if(that.starttime==''){delete formData.createTime1}
 				if(that.endtime==''){delete formData.handingTime1}
 				if(that.cgridName==''){delete formData.cgridName}
-				console.log(formData)
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryGridReportCountAndHandCount",
@@ -156,7 +149,7 @@
 						}else{
 							document.addEventListener("plusready",plusReady,false);
 						}
-						that.mydata=res.data
+						that.mydata=res.data[0]
 					}
 				});
 			},
@@ -184,8 +177,6 @@
 				this.timety = type
 			},
 			gosearch: function() {
-				that.starttime='',
-				that.endtime='',
 				this.myajax()
 			},
 			alerttab: function() {
