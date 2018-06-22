@@ -24,7 +24,7 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img :src="mydata[0].cfileDealPrevImg1 | myimg" class="big-img" />
+					<img :src="mydata[0].cfileDealPrevImg1" class="big-img" />
 				</div>
 			</div>
 			<div class="detail-group">

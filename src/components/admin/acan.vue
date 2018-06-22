@@ -89,14 +89,14 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
+										<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img src="../../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)" /></div>
+										<img src="../../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)" /></div>
 									<div class="state" @click.stop="imgok(val.cfileId)">
 										上传图片
 									</div>
@@ -108,14 +108,14 @@
 				<!--已整改-->
 				<swiper-slide>
 					<div class="select-group">
-						<div class="group-inner"  @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
+						<div class="group-inner" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1 | myimg" />
+										<img :src="val.cfileDealPrevImg1" />
 									</div>
 									<div class="state wwang">
 										<span>整改前</span>
@@ -123,7 +123,7 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealAfterImg1 | myimg" />
+										<img :src="val.cfileDealAfterImg1" />
 									</div>
 									<div class="state wwang">
 										<span>整改后</span>
@@ -136,7 +136,7 @@
 				<!--未处理-->
 				<swiper-slide>
 					<div class="box-group">
-						<div class="group"  @click="opennew('cbackdetail',val.cfileId)"  v-for="val in mydata" v-if="val.cfileResult==3">
+						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==3">
 							<div class="riqi">
 								<div class="circle width12"></div>
 								<span>{{val.createTime1}}</span>
@@ -218,14 +218,15 @@
 		mounted() {
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
-			function plusReady(){
+
+			function plusReady() {
 				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting( "加载中..." );
+				var w = plus.nativeUI.showWaiting("加载中...");
 			}
-			if(window.plus){
+			if(window.plus) {
 				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
+			} else {
+				document.addEventListener("plusready", plusReady, false);
 			}
 		},
 		computed: {
@@ -350,15 +351,19 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata = res.data
-						function plusReady(){
+						for (var i=0;i<res.data[0].length;i++) {
+							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
+							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						}
+						that.mydata.push(res.data[0])
+						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
 						}
-						if(window.plus){
+						if(window.plus) {
 							plusReady();
-						}else{
-							document.addEventListener("plusready",plusReady,false);
+						} else {
+							document.addEventListener("plusready", plusReady, false);
 						}
 					}
 				});
@@ -378,10 +383,10 @@
 					this.navtext = id
 					this.navid = index
 				}
-				this.navshow()
+				this.navboo = !this.navboo
 			},
-			opennew: function(target,id) {
-				this.$store.state.windexid=id
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
@@ -395,6 +400,8 @@
 						dataType: 'json',
 						success: function(res) {
 							that.bottomdata = res.data
+							that.navboo = !that.navboo
+							that.texttype = num
 						}
 					});
 				} else if(num == 0) {
@@ -405,31 +412,66 @@
 						dataType: 'json',
 						success: function(res) {
 							that.bottomdata = res.data
+							that.navboo = !that.navboo
+							that.texttype = num
 						}
 					});
 				} else if(num == 1) {
+					if(that.communityid == '') {
+						plus.nativeUI.toast("请先选择社区!");
+						return false;
+					}
 					//					网格
 					$.ajax({
 						type: "post",
-						url: that.service + "/queryCgrid",
+						url: that.service + "/queryByCmultipleCommunitiesId",
 						dataType: 'json',
+						data: {
+							cmultipleCommunitiesId: that.communityid
+						},
 						success: function(res) {
+							console.log(res)
 							that.bottomdata = res.data
+							that.navboo = !that.navboo
+							that.texttype = num
 						}
 					});
 				}
-				this.navboo = !this.navboo
-				this.texttype = num
+				
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
 			},
 			startchang: function(date, formatDate) {
-				if(this.timety == 0) {
-					this.starttime = formatDate
+				var date = new Date();
+				var seperator1 = "-";
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if(month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if(strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate != formatDate) {
+					if(this.timety == 0) {
+						this.starttime = formatDate
+					} else {
+						this.endtime = formatDate
+					}
 				} else {
-					this.endtime = formatDate
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("不可选择当前日期!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
 				}
 			},
 			timeshow: function(type) {

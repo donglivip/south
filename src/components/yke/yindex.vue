@@ -98,7 +98,6 @@
 		mounted() {
 			var that = this
 			this.$store.state.tfoot = 1
-			this.server = this.service + '/uploadYkImage'
 		},
 		methods: {
 			submit: function(event) {
@@ -128,48 +127,50 @@
 				}
 				var that = this
 
-					// 弹出系统等待对话框
-					that.w = plus.nativeUI.showWaiting("上传中...");
-					plus.geolocation.getCurrentPosition(function(p) {
-						$.ajax({
-							type: "post",
-							url: that.service + "/insertCfileAndCuser",
-							dataType: 'json',
-							data: {
-								cuserCode: that.uuid,
-								cuserRole: 0,
-								cfileDealPrevImg1: that.files,
-								cfileStation: p.coords.longitude + ',' + p.coords.latitude,
-								ctypeTwoId: that.bottomtwoid
-							},
-							success: function(res) {
-								that.w.close()
-								that.upimg = false
-								that.navtext = '选择分类'
-								if(res.status != 200) {
-									function plusReady() {
-										plus.nativeUI.toast(res.msg)
-									}
-									if(window.plus) {
-										plusReady();
-									} else {
-										document.addEventListener("plusready", plusReady, false);
-									}
+				// 弹出系统等待对话框
+				that.w = plus.nativeUI.showWaiting("上传中...");
+				plus.geolocation.getCurrentPosition(function(p) {
+					$.ajax({
+						type: "post",
+						url: that.service + "/insertCfileAndCuser",
+						dataType: 'json',
+						data: {
+							cuserCode: that.uuid,
+							cuserRole: 0,
+							cfileDealPrevImg1: that.files,
+							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+							ctypeTwoId: that.bottomtwoid
+						},
+						success: function(res) {
+							console.log(that.files)
+							console.log(JSON.stringify(res))
+							that.w.close()
+							that.upimg = false
+							that.navtext = '选择分类'
+							if(res.status != 200) {
+								function plusReady() {
+									plus.nativeUI.toast(res.msg)
+								}
+								if(window.plus) {
+									plusReady();
 								} else {
-									function plusReady() {
-										plus.nativeUI.toast("上传完成");
-									}
-									if(window.plus) {
-										plusReady();
-									} else {
-										document.addEventListener("plusready", plusReady, false);
-									}
+									document.addEventListener("plusready", plusReady, false);
+								}
+							} else {
+								function plusReady() {
+									plus.nativeUI.toast("上传完成");
+								}
+								if(window.plus) {
+									plusReady();
+								} else {
+									document.addEventListener("plusready", plusReady, false);
 								}
 							}
-						});
-					}, function(e) {
-						alert('Geolocation error: ' + e.message);
+						}
 					});
+				}, function(e) {
+					alert('Geolocation error: ' + e.message);
+				});
 
 			},
 			navshow: function(name) {
@@ -179,6 +180,7 @@
 			clear: function() {
 				this.files = []
 				this.upimg = false
+				this.upsrc=''
 			},
 			upload: function(target) {
 				var that = this
@@ -206,6 +208,7 @@
 				});
 			},
 			camera: function() {
+				//				相机
 				var that = this
 				var cmr = plus.camera.getCamera();
 				cmr.captureImage(function(p) {
@@ -213,7 +216,7 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
-						that.upsrc = img_path
+//						that.upsrc = img_path
 						that.upimg = !that.upimg
 						that.upload_img(img_path);
 						var img = document.getElementByid("img"); //通过ID获取IMG元素
@@ -239,9 +242,10 @@
 				});
 			},
 			album: function() {
+				//				相册
 				var that = this
 				plus.gallery.pick(function(path) {
-					that.upsrc = path
+//					that.upsrc = path
 					that.upimg = !that.upimg
 					that.upload_img(path);
 				}, function(e) {
@@ -251,52 +255,29 @@
 				});
 			},
 			upload_img: function(p) {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				that.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				var that = this
-				if(that.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(that.server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							that.files = json.data;
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
+				var thats = this
+				var img = new Image();
+				img.src = p; // 传过来的图片路径在这里用。
+				img.onload = function() {
+					var that = this;
+					//生成比例 
+					var w = that.width,
+						h = that.height,
+						scale = w / h;
+					w = 100 || w; //480  你想压缩到多大，改这里
+					h = w / scale;
+
+					//生成canvas
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					$(canvas).attr({
+						width: w,
+						height: h
 					});
-				task.addData("uid", that.getUid());
-				for(var i = 0; i < that.files.length; i++) {
-					var f = that.files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
+					ctx.drawImage(that, 0, 0, w, h);
+					thats.upsrc=canvas.toDataURL('image/jpeg', 1 || 0.8)
+					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
 				}
-				task.start();
-			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		},
 		computed: {

@@ -102,6 +102,15 @@
 				}
 			});
 			var cuserRole = localStorage.getItem('cuserRole')
+			function plusReady(){
+				that.$store.state.uuid=plus.device.uuid
+				console.log(JSON.stringify(that.$store.state.uuid))
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
 			if(cuserRole == 0 || cuserRole == 1 || cuserRole == 2 || cuserRole == 3) {
 				that.opennew('tindex', 1)
 			} else if(cuserRole == 4) {
@@ -113,14 +122,7 @@
 			} else if(cuserRole == 8) {
 				that.opennew('asearch')
 			}
-			function plusReady(){
-				that.$store.state.uuid=plus.device.uuid
-			}
-			if(window.plus){
-				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
-			}
+			
 		},
 		methods: {
 			opennew: function(target, type) {

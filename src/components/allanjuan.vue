@@ -95,7 +95,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
+									<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
@@ -121,7 +121,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1 | myimg" />
+										<img :src="val.cfileDealPrevImg1" />
 									</div>
 									<div class="state wwang">
 										<span>整改前</span>
@@ -129,7 +129,7 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealAfterImg1 | myimg" />
+										<img :src="val.cfileDealAfterImg1" />
 									</div>
 									<div class="state wwang">
 										<span>整改后</span>
@@ -353,7 +353,11 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata = res.data
+						for (var i=0;i<res.data[0].length;i++) {
+							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
+							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						}
+						that.mydata.push(res.data[0])
 						function plusReady(){
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
@@ -381,7 +385,7 @@
 					this.navtext = id
 					this.navid = index
 				}
-				this.navshow()
+				this.navboo = !this.navboo
 			},
 			opennew: function(target,id) {
 				this.$store.state.windexid=id
@@ -398,6 +402,8 @@
 						dataType: 'json',
 						success: function(res) {
 							that.bottomdata = res.data
+							that.navboo = !that.navboo
+							that.texttype = num
 						}
 					});
 				} else if(num == 0) {
@@ -408,31 +414,64 @@
 						dataType: 'json',
 						success: function(res) {
 							that.bottomdata = res.data
+							that.navboo = !that.navboo
+							that.texttype = num
 						}
 					});
 				} else if(num == 1) {
+					if(that.communityid == '') {
+						plus.nativeUI.toast("请先选择社区!");
+						return false;
+					}
 					//					网格
 					$.ajax({
 						type: "post",
-						url: that.service + "/queryCgrid",
+						url: that.service + "/queryByCmultipleCommunitiesId",
 						dataType: 'json',
+						data: {
+							cmultipleCommunitiesId: that.communityid
+						},
 						success: function(res) {
 							that.bottomdata = res.data
+							that.navboo = !that.navboo
+							that.texttype = num
 						}
 					});
 				}
-				this.navboo = !this.navboo
-				this.texttype = num
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
 			},
 			startchang: function(date, formatDate) {
-				if(this.timety == 0) {
-					this.starttime = formatDate
-				} else {
-					this.endtime = formatDate
+				var date = new Date();
+		        var seperator1 = "-";
+		        var year = date.getFullYear();
+		        var month = date.getMonth() + 1;
+		        var strDate = date.getDate();
+		        if (month >= 1 && month <= 9) {
+		            month = "0" + month;
+		        }
+		        if (strDate >= 0 && strDate <= 9) {
+		            strDate = "0" + strDate;
+		        }
+		        var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate!=formatDate){
+					if(this.timety == 0) {
+						this.starttime = formatDate
+					} else {
+						this.endtime = formatDate
+					}
+				}else{
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("不可选择当前日期!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
 				}
 			},
 			timeshow: function(type) {

@@ -50,14 +50,14 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
+									<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealAfterImg1 | myimg" /></div>
+									<img :src="val.cfileDealAfterImg1" /></div>
 									<div class="state">
 										整改后
 									</div>
@@ -78,7 +78,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
+									<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state">
 										整改前
 									</div>
@@ -207,8 +207,11 @@
 						handingTime1: that.endtime
 					},
 					success: function(res) {
-						console.log(res)
-						that.mydata = res.data
+						for (var i=0;i<res.data[0].length;i++) {
+							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
+							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						}
+						that.mydata.push(res.data[0])
 						function plusReady(){
 							// 弹出系统等待对话框
 							var w = plus.nativeUI.closeWaiting()
@@ -236,10 +239,34 @@
 				}
 			},
 			startchang: function(date, formatDate) {
-				if(this.timety == 0) {
-					this.starttime = formatDate
-				} else {
-					this.endtime = formatDate
+				var date = new Date();
+		        var seperator1 = "-";
+		        var year = date.getFullYear();
+		        var month = date.getMonth() + 1;
+		        var strDate = date.getDate();
+		        if (month >= 1 && month <= 9) {
+		            month = "0" + month;
+		        }
+		        if (strDate >= 0 && strDate <= 9) {
+		            strDate = "0" + strDate;
+		        }
+		        var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate!=formatDate){
+					if(this.timety == 0) {
+						this.starttime = formatDate
+					} else {
+						this.endtime = formatDate
+					}
+				}else{
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("不可选择当前日期!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
 				}
 			},
 			timeshow: function(type) {
@@ -315,53 +342,29 @@
 				});
 			},
 			upload_img: function(p) {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				this.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				var that=this
-				if(this.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(that.server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							that.files = json.data;
-							that.cfileDealAfterImg1=that.files
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
+				var thats = this
+				var img = new Image();
+				img.src = p; // 传过来的图片路径在这里用。
+				img.onload = function() {
+					var that = this;
+					//生成比例 
+					var w = that.width,
+						h = that.height,
+						scale = w / h;
+					w = 200 || w; //480  你想压缩到多大，改这里
+					h = w / scale;
+
+					//生成canvas
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					$(canvas).attr({
+						width: w,
+						height: h
 					});
-				task.addData("uid", that.getUid());
-				for(var i = 0; i < that.files.length; i++) {
-					var f = that.files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
+					ctx.drawImage(that, 0, 0, w, h);
+					thats.upsrc=canvas.toDataURL('image/jpeg', 1 || 0.8)
+					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
 				}
-				task.start();
-			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		}
 	}

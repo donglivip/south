@@ -136,11 +136,6 @@ export default new Router({
       component:resolve => require(['@/components/admin/acan'], resolve),
       meta: { keepAlive: true}  
     },{
-      path: '/yidetail',
-      name: 'yidetail',
-      component:resolve => require(['@/components/yidetail'], resolve),
-      meta: { keepAlive: false}  
-    },{
       path: '/hworkdetail',
       name: 'hworkdetail',
       component:resolve => require(['@/components/hworkdetail'], resolve),
@@ -234,6 +229,11 @@ export default new Router({
       path: '/adetail',
       name: 'adetail',
       component:resolve => require(['@/components/admin/adetail'], resolve),
+      meta: { keepAlive: false}  
+    },{
+      path: '/gongzuolist',
+      name: 'gongzuolist',
+      component:resolve => require(['@/components/gongzuolist'], resolve),
       meta: { keepAlive: false}  
     }
   ]

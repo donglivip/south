@@ -11,12 +11,12 @@
 			<content>
 				<div class="box-group">
 					<div class="group">
-						<span>{{mydata.createTime1}}</span>
 						<span>{{mydata.cworkTitle}}</span>
+						<span>{{mydata.createTime1}}</span>
 					</div>
 				</div>
-				<div class="groupimg">
-					<img class="qlz" :src="mydata.cworkImg | myimg">
+				<div class="groupimg myimg-box">
+					<img :src="mydata.cworkImg | myimg">
 				</div>
 
 			</content>
@@ -43,10 +43,7 @@
 				},
 				success: function(res) {
 					that.mydata = res.data[0]
-					console.log(res)
-				},
-				error: function(res) {
-					console.log(res)
+					console.log(that.windexid)
 				}
 			});
 		},

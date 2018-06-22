@@ -25,16 +25,13 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('gongzuolist',val.cuserId)" v-for="val in mydata">
+				<div class="group" @click="opennew('hworkdetail',val.cworkId)" v-for="val in mydata">
 					<div class="circle"></div>
 					<div class="name">
-						{{val.cuserName}}
+						{{val.cworkTitle}}
 					</div>
-					<div class="upnum">
-						
-					</div>
-					<div class="oknum">
-						
+					<div class="oknum" style="white-space: nowrap;flex: 1;text-align: right;margin-right: .1rem;">
+						{{val.createTime1}}
 					</div>
 					<img src="../../static/arrright.png" style="margin-right: .15rem;"/>
 				</div>
@@ -60,7 +57,7 @@
 
 <script>
 	export default {
-		name: 'allgongzuo',
+		name: 'gongzuolist',
 		data() {
 			return {
 				navboo: false,
@@ -94,18 +91,11 @@
 			myajax: function() {
 				var that = this
 				var dataJson = {
-					cuserName: that.uname,
-					cuserRole: that.navid
-				}
-				if(that.uname==''){
-					delete dataJson.cuserName
-				}
-				if(that.navid==''){
-					delete dataJson.cuserRole
+					cuserId: that.windexid
 				}
 				$.ajax({
 					type: "get",
-					url: that.service + "/queryAllNamesWorkerHW",
+					url: that.service + "/querAllCwork",
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {

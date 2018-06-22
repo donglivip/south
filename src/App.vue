@@ -39,7 +39,7 @@
 			}
 		},
 		mounted() {
-			var tht=this
+			var that=this
 			function plusReady(){
 				plus.key.addEventListener("backbutton", function() {
 					that.$router.back()

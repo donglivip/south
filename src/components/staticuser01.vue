@@ -26,23 +26,23 @@
 			<div class="time-box">
 				<div class="time-left">
 					<div class="left-box">
-						<div class="box">
+						<div class="box" style="width: 3rem;">
 							<input type="text" v-model="uname" placeholder="请输入搜索姓名"/>
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
-						<div class="box" @click="navshow('1')">
+						<div class="box" @click="navshow('1')" style="width: 3rem;">
 							{{text}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 					</div>
 					<div class="left-box">
-						<div class="box" @click="timeshow(0)">
+						<div class="box" @click="timeshow(0)" style="width: 3rem;">
 							{{starttime==''?'开始时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
-						<div class="box" @click="timeshow(1)">
+						<div class="box" @click="timeshow(1)" style="width: 3rem;">
 							{{endtime==''?'结束时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
@@ -233,10 +233,34 @@
 				this.navboo = !this.navboo
 			},
 			startchang: function(date, formatDate) {
-				if(this.timety == 0) {
-					this.starttime = formatDate
-				} else {
-					this.endtime = formatDate
+				var date = new Date();
+		        var seperator1 = "-";
+		        var year = date.getFullYear();
+		        var month = date.getMonth() + 1;
+		        var strDate = date.getDate();
+		        if (month >= 1 && month <= 9) {
+		            month = "0" + month;
+		        }
+		        if (strDate >= 0 && strDate <= 9) {
+		            strDate = "0" + strDate;
+		        }
+		        var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate!=formatDate){
+					if(this.timety == 0) {
+						this.starttime = formatDate
+					} else {
+						this.endtime = formatDate
+					}
+				}else{
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("不可选择当前日期!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
 				}
 			},
 			timeshow: function(type) {

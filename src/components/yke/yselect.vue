@@ -39,7 +39,7 @@
 					<div class="img-box">
 						<div class="img-group">
 							<div class="myimg-box">
-							<img :src="val.cfileDealPrevImg1 | myimg" /></div>
+							<img :src="val.cfileDealPrevImg1" /></div>
 							<div class="state">
 								整改前
 							</div>
@@ -132,15 +132,17 @@
 					if(that.endtime==''){
 						delete ajaxJson.handingTime1
 					}
-					console.log(JSON.stringify(ajaxJson))
 					$.ajax({
 						type: "post",
 						url: that.service + "/queryByCfilePojo",
 						dataType: 'json',
 						data: ajaxJson,
 						success: function(res) {
-							console.log(JSON.stringify(res))
-							that.mydata = res.data
+							for (var i=0;i<res.data[0].length;i++) {
+								res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
+								res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+							}
+							that.mydata = res.data[0]
 							function plusReady(){
 								// 弹出系统等待对话框
 								 plus.nativeUI.closeWaiting();

@@ -30,7 +30,7 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img :src="mydata[0].cfileDealPrevImg1 | myimg" class="big-img" />
+					<img :src="mydata[0].cfileDealPrevImg1" class="big-img" />
 				</div>
 			</div>
 			<div class="detail-group" v-if="mydata[1]!=null&&userid!=null">
@@ -47,7 +47,7 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img :src="mydata[1].cfileDealAfterImg1 | myimg" class="big-img" />
+					<img :src="mydata[1].cfileDealAfterImg1" class="big-img" />
 				</div>
 			</div>
 			<div class="detail-group" v-if="mydata[1]==null&&userid!=null">
@@ -144,7 +144,6 @@
 						cfileDealAfterImg1:that.cworkImg
 					},
 					success: function(res) {
-						console.log(JSON.stringify(res))
 						if(res.status == 200) {
 							that.myajax()
 							function plusReady() {

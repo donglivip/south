@@ -199,7 +199,11 @@
 					},
 					success: function(res) {
 						console.log(res)
-						that.changephoto = res.data
+						for (var i=0;i<res.data[0].length;i++) {
+							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
+							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						}
+						that.changephoto.push(res.data[0])
 					}
 				});
 			},
