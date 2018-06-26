@@ -64,7 +64,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata[0]" v-if="val.count1!=0||val.count2!=null">
+				<tr v-for="val in mydata[0]" val.count1!=0&&val.count2!=''&&val.cuserName!=null>
 					<!--<td>
 						{{val.cuserName==null?'无':val.count1}}
 					</td>-->

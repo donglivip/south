@@ -68,7 +68,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=null">
+				<tr v-for="val in mydata" v-if="val.count1!=0&&val.count2!=''&&val.cuserName!=null">
 					<td>
 						{{val.cuserName}}
 					</td>

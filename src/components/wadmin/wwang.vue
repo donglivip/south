@@ -52,7 +52,7 @@
 							<div class="group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
 								<div class="riqi">
 									<div class="circle width12"></div>
-									<span>{{val.createTime1}}</span>
+									<span style="width: auto;">{{val.createTime1}}</span>
 								</div>
 								<span class="text">{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)" />

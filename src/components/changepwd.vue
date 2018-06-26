@@ -10,19 +10,19 @@
 			<div class="content">
 				<div class="box-group">
 					<div class="form-group">
-						<i class="icon-user"></i>
+						<!--<i class="icon-user"></i>-->
 						<input type="text" class="form-control" placeholder="请输入手机号码" name="cuserPhone" v-model='cuserPhone' @focus="myfocus" @blur="myfocus">
 					</div>
 					<div class="form-group">
-						<i class="icon-mima"></i>
+						<!--<i class="icon-mima"></i>-->
 						<input type="text" class="form-control" placeholder="请输入身份证号" name="cuserIdentityId" v-model="cuserIdentityId" @focus="myfocus" @blur="myfocus">
 					</div>
 					<div class="form-group">
-						<i class="icon-mima"></i>
+						<!--<i class="icon-mima"></i>-->
 						<input type="text" class="form-control" placeholder="请输入密码" name="cuserPassword" v-model="cuserPassword" @focus="myfocus" @blur="myfocus">
 					</div>
 					<div class="form-group">
-						<i class="icon-mima"></i>
+						<!--<i class="icon-mima"></i>-->
 						<input type="text" class="form-control" placeholder="请再次输入密码" v-model="pwd" @focus="myfocus" @blur="myfocus">
 					</div>
 

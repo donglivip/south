@@ -352,6 +352,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						Console.log(res)
 						for (var i=0;i<res.data[0].length;i++) {
 							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
 							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]

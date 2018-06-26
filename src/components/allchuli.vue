@@ -39,11 +39,11 @@
 				</div>
 				<div class="box-go" style="visibility: hidden;"></div>
 			</div>
-			<div class="time-box" style="padding-left:.4rem;">
-				<div class="time-left">
+			<div class="time-box" style="padding:0;">
+				<div class="time-left" style="margin-left: .2rem;">
 					<div class="left-box">
 						<div class="box" style="width: 100%;">
-							<input type="text" placeholder="请输入搜索网格名称" v-model="cgridName"/>
+							<input type="text" placeholder="请输入搜索网格名称" v-model="cgridName" style="width: 100%!important;"/>
 						</div>
 					</div>
 				</div>

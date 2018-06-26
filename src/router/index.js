@@ -9,7 +9,7 @@ export default new Router({
       path: '/changepwd',
       name: 'changepwd',
       component:resolve => require(['@/components/changepwd'], resolve),
-      meta: { keepAlive: true}  
+      meta: { keepAlive: false}  
    },
   {
       path: '/register',
