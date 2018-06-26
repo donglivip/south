@@ -144,7 +144,6 @@
 								ctypeTwoId:that.bottomtwoid
 							},
 							success: function(res) {
-								console.log(res)
 								if(res.status != 200) {
 									alert(res.msg)
 								} else {

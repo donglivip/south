@@ -45,17 +45,17 @@
 				<swiper-slide>
 					<div class="workcamera">
 						<div class="box-group">
-							<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
+							<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0&&val.cworkTitle!=null">
 								<div class="riqi">
 									<div class="circle width12"></div>
-									<span>{{val.createTime1}}</span>
+									<span style="width: auto;">{{val.createTime1}}</span>
 								</div>
 								<span class="text">{{val.cworkTitle}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" />
 							</div>
 							<p v-if="workphoto.length==0">暂无数据</p>
 						</div>
-						<footer>
+						<footer style="bottom: 0;">
 							<div class="box-upload">
 								<div class="upload">
 									<img src="../../../static/upload02.png" id="img1" @click="upload('1')">
@@ -121,6 +121,10 @@
 			this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
+			var that=this
+			setInterval(function() {
+				that.mynews()
+			}, 3000)
 		},
 		methods: {
 			workupload: function() {
@@ -301,7 +305,7 @@
 							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
 							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
 						}
-						that.changephoto.push(res.data[0])
+						that.changephoto=res.data[0]
 					}
 				});
 			},
@@ -468,6 +472,43 @@
 			},
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
+			},
+			mynews: function() {
+				var that = this;
+				$.ajax({
+					type: "get",
+					url: that.service + "/queryCuserMessagePojoByCuserId",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid')
+					},
+					success: function(res) {
+						if(res.data.length > 0) {
+							for(var i = 0; i < res.data.length; i++) {
+								if(res.data[i].stystemSatus == 1) {
+									that.mypush(res.data[i].cmessageId,res.data[i].cuserCmessageId)
+								}
+							}
+						}
+					}
+				});
+			},
+			mypush:function(newid,newstwoid){
+				var info = plus.push.getClientInfo();
+				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
+				var that=this
+				$.ajax({
+					type:"post",
+					url:that.service+"/updateCuserCmessageByPrimaryKeySelective",
+					dataType:'json',
+					data:{
+						cmessageId:newid,
+						cuserCmessageId:newstwoid
+					},
+					success:function(res){
+						console.log(JSON.stringify(res))
+					}
+				});
 			}
 		},
 		computed: {

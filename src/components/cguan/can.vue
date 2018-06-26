@@ -32,7 +32,7 @@
 				</div>
 				<span class="hr"></span>
 				<div class="box" @click="timeshow(1)">
-					{{endtime==''?'结束时间':starttime}}
+					{{endtime==''?'结束时间':endtime}}
 					<img src="../../../static/arrbottom.png" />
 				</div>
 				<div class="box-go" @click="gosearch">
@@ -45,7 +45,7 @@
 					<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.createTime1}}{{val.cgridName}}
+								{{val.handlingTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
@@ -85,8 +85,8 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click.stop="upload(index)"/></div>
-									<div class="state" @click.stop="imgok(val.cfileId)">
+									<img src="../../../static/uploadselect.png"/></div>
+									<div class="state">
 										上传图片
 									</div>
 								</div>
@@ -165,35 +165,6 @@
 					name: target
 				})
 			},
-			imgok:function(id){
-				var that=this
-				if(that.cfileDealAfterImg1==''){
-					function plusReady(){
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast( "请点击图片选择上传的图片后再上传");
-					}
-					if(window.plus){
-						plusReady();
-					}else{
-						document.addEventListener("plusready",plusReady,false);
-					}
-					return false;
-				}
-				$.ajax({
-					type: "post",
-					url: that.service + "/updateCfileAndCuserCase",
-					dataType: 'json',
-					data: {
-						userId: localStorage.getItem('userid'),
-						cfileId:id,
-						cfileDealAfterImg1:that.cfileDealAfterImg1
-					},
-					success: function(res) {
-						that.myajax(2)
-						that.toswiper(0)
-					}
-				});
-			},
 			myajax: function(type) {
 				var that = this
 				$.ajax({
@@ -211,7 +182,7 @@
 							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
 							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
 						}
-						that.mydata.push(res.data[0])
+						that.mydata=res.data[0]
 						function plusReady(){
 							// 弹出系统等待对话框
 							var w = plus.nativeUI.closeWaiting()
@@ -282,89 +253,6 @@
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
-			},
-			upload: function(target) {
-				var that = this
-				that.files=[]
-				that.uploadtarget = target
-				var btnArray = [{
-					title: "照相机"
-				}, {
-					title: "相册"
-				}]; //选择按钮  1 2 3
-				plus.nativeUI.actionSheet({
-					title: "请选择",
-					cancel: "取消", // 0
-					buttons: btnArray
-				}, function(e) {
-					var index = e.index; // 
-					switch(index) {
-						case 1:
-							//写自己的逻辑
-							that.camera();
-							break;
-						case 2:
-							that.album();
-							break;
-					}
-				});
-			},
-			camera: function() {
-				var that = this
-				var cmr = plus.camera.getCamera();
-				cmr.captureImage(function(p) {
-					//成功
-					plus.io.resolveLocalFileSystemURL(p, function(entry) {
-						var img_name = entry.name; //获得图片名称
-						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
-						that.upload_img(img_path);
-					}, function(e) {
-						alert("读取拍照文件错误：" + e.message);
-					});
-
-				}, function(e) {
-					alert("失败：" + e.message);
-				}, {
-					filename: '_doc/camera/',
-					index: 1
-				}); //  “_doc/camera/“  为保存文件名
-			},
-			album: function() {
-				var that = this
-				plus.gallery.pick(function(path) {
-					that.upload_img(path);
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-				}, function(e) {
-					alert("取消选择图片");
-				}, {
-					filter: "image"
-				});
-			},
-			upload_img: function(p) {
-				var thats = this
-				var img = new Image();
-				img.src = p; // 传过来的图片路径在这里用。
-				img.onload = function() {
-					var that = this;
-					//生成比例 
-					var w = that.width,
-						h = that.height,
-						scale = w / h;
-					w = 200 || w; //480  你想压缩到多大，改这里
-					h = w / scale;
-
-					//生成canvas
-					var canvas = document.createElement('canvas');
-					var ctx = canvas.getContext('2d');
-					$(canvas).attr({
-						width: w,
-						height: h
-					});
-					ctx.drawImage(that, 0, 0, w, h);
-					thats.upsrc=canvas.toDataURL('image/jpeg', 1 || 0.8)
-					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
-				}
 			}
 		}
 	}
@@ -459,11 +347,6 @@
 			.img-box {
 				display: flex;
 				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
 				.state {
 					line-height: .5rem;
 					text-align: center;

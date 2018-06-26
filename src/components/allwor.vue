@@ -46,7 +46,7 @@
 						</div>
 						<span class="hr"></span>
 						<div class="box" @click="timeshow(1)">
-							{{endtime==''?'结束时间':starttime}}
+							{{endtime==''?'结束时间':endtime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<div class="box-go" @click="myajax">
@@ -215,7 +215,7 @@
 					this.navtext = id
 					this.navid = index
 				}
-				this.navshow()
+				this.navboo = !this.navboo
 			},
 			back: function() {
 				this.$router.back()
@@ -251,7 +251,7 @@
 						}
 					});
 				} else if(num == 1) {
-					if(that.communityid == '') {
+					if(that.communityid == '选择社区') {
 						plus.nativeUI.toast("请先选择社区!");
 						return false;
 					}
@@ -579,11 +579,6 @@
 			.img-box {
 				display: flex;
 				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
 				.state {
 					line-height: .5rem;
 					text-align: center;

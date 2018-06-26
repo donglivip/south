@@ -164,7 +164,7 @@ export default new Router({
       path: '/allanjuan',
       name: 'allanjuan',
       component:resolve => require(['@/components/allanjuan'], resolve),
-      meta: { keepAlive: false}  
+      meta: { keepAlive: true}  
     },{
       path: '/allgongzuo',
       name: 'allgongzuo',

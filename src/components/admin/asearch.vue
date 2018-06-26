@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata">
+				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="val.count1!=0&&val.count2!='null'">
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName}}
@@ -120,6 +120,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata = res.data[0]
 					}
 				});

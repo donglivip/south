@@ -31,30 +31,20 @@
 					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
-			<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
+			<div class="select-group" v-for="val in mydata[0]" @click="opennew('changedetail',val.cfileId)">
 				<div class="group-inner">
 					<div class="group-title">
 						{{val.createTime1}}{{val.cgridName}}
 					</div>
 					<div class="img-box">
-						<div class="img-group">
+						<div class="img-group" style="width: 100%;">
 							<div class="myimg-box">
 							<img :src="val.cfileDealPrevImg1" /></div>
-							<div class="state">
-								整改前
-							</div>
-						</div>
-						<div class="img-group">
-							<div class="myimg-box">
-							<img src="../../../static/photo.png" /></div>
-							<div class="state">
-								游客不可上传整改后照片
-							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<p v-if="mydata.length==0">
+			<p v-if="mydata[0].length==0">
 				暂无案卷
 			</p>
 		</div>
@@ -142,7 +132,8 @@
 								res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
 								res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
 							}
-							that.mydata = res.data[0]
+							that.mydata=[];
+							that.mydata.push(res.data[0])
 							function plusReady(){
 								// 弹出系统等待对话框
 								 plus.nativeUI.closeWaiting();
@@ -328,15 +319,6 @@
 		p {
 			text-align: center;
 		}
-		.type {
-			display: flex;
-			align-items: center;
-			img {
-				height: .1rem!important;
-				width: auto!important;
-				margin: 0 .05rem!important;
-			}
-		}
 		.tselect-top {
 			display: flex;
 			background: #FFFFFF;
@@ -411,11 +393,6 @@
 			.img-box {
 				display: flex;
 				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
 				.state {
 					line-height: .5rem;
 					text-align: center;

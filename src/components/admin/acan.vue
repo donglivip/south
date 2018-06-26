@@ -96,8 +96,8 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img src="../../../static/uploadselect.png" :id='["img"+index]' @click.stop="upload(index)" /></div>
-									<div class="state" @click.stop="imgok(val.cfileId)">
+										<img src="../../../static/uploadselect.png"/></div>
+									<div class="state">
 										上传图片
 									</div>
 								</div>
@@ -110,7 +110,7 @@
 					<div class="select-group">
 						<div class="group-inner" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
 							<div class="group-title">
-								{{val.createTime1}}案卷-{{val.cgridName}}
+								{{val.handlingTime1}}案卷-{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
@@ -154,7 +154,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.ctypeTitle,val.ctypeId)" :class="navindex==index?'active':''">
 						{{val.ctypeTitle}}
 					</div>
-					<div class="sub-nav clear" @click.stop="navshow()">
+					<div class="sub-nav clear">
 						取消
 					</div>
 				</div>
@@ -162,7 +162,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cmultipleCommunitiesName,val.cmultipleCommunitiesId)" :class="navindex==index?'active':''">
 						{{val.cmultipleCommunitiesName}}
 					</div>
-					<div class="sub-nav clear" @click.stop="navshow()">
+					<div class="sub-nav clear">
 						取消
 					</div>
 				</div>
@@ -170,7 +170,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cgridName,val.cgridId)" :class="navindex==index?'active':''">
 						{{val.cgridName}}
 					</div>
-					<div class="sub-nav clear" @click.stop="navshow()">
+					<div class="sub-nav clear">
 						取消
 					</div>
 				</div>
@@ -219,15 +219,7 @@
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
 
-			function plusReady() {
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting("加载中...");
-			}
-			if(window.plus) {
-				plusReady();
-			} else {
-				document.addEventListener("plusready", plusReady, false);
-			}
+			
 		},
 		computed: {
 			swiper() {
@@ -322,6 +314,15 @@
 
 			},
 			myajax: function() {
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("处理中...");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,
@@ -355,7 +356,7 @@
 							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
 							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
 						}
-						that.mydata.push(res.data[0])
+						that.mydata=res.data[0]
 						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
@@ -480,113 +481,6 @@
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
-			},
-			upload: function(target) {
-				var that = this
-				that.files = []
-				that.uploadtarget = target
-				var btnArray = [{
-					title: "照相机"
-				}, {
-					title: "相册"
-				}]; //选择按钮  1 2 3
-				plus.nativeUI.actionSheet({
-					title: "请选择",
-					cancel: "取消", // 0
-					buttons: btnArray
-				}, function(e) {
-					var index = e.index; // 
-					switch(index) {
-						case 1:
-							//写自己的逻辑
-							that.camera();
-							break;
-						case 2:
-							that.album();
-							break;
-					}
-				});
-			},
-			camera: function() {
-				var that = this
-				var cmr = plus.camera.getCamera();
-				cmr.captureImage(function(p) {
-					//成功
-					plus.io.resolveLocalFileSystemURL(p, function(entry) {
-						var img_name = entry.name; //获得图片名称
-						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
-						that.upload_img(img_path);
-					}, function(e) {
-						alert("读取拍照文件错误：" + e.message);
-					});
-
-				}, function(e) {
-					alert("失败：" + e.message);
-				}, {
-					filename: '_doc/camera/',
-					index: 1
-				}); //  “_doc/camera/“  为保存文件名
-			},
-			album: function() {
-				var that = this
-				plus.gallery.pick(function(path) {
-					that.upload_img(path);
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-				}, function(e) {
-					alert("取消选择图片");
-				}, {
-					filter: "image"
-				});
-			},
-			upload_img: function(p) {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				this.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				var that = this
-				if(this.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(that.server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							that.files = json.data;
-							that.cfileDealAfterImg1 = that.files
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
-					});
-				task.addData("uid", that.getUid());
-				for(var i = 0; i < that.files.length; i++) {
-					var f = that.files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
-				}
-				task.start();
-			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		}
 	}

@@ -132,5 +132,5 @@ body,html,#wrapper,#app,.wrapper{height: 100%;width: 100%;position: relative;ove
 .myimg-box{height: 4rem;width: 100%;background: rgba(0,0,0,.3);overflow: hidden;display: flex;align-items: center;justify-content: center;}
 
 .myimg-box img {
-  max-width: calc(100% - 10px); max-height: calc(100% - 10px);vertical-align: middle;margin: 5px;
+  max-width: calc(100% - 10px)!important; max-height: calc(100% - 10px)!important;vertical-align: middle;margin: 5px!important;width: auto!important;height: auto!important;
 }

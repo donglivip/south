@@ -9,8 +9,8 @@
 		</div>
 		<div id="main">
 			<div class="user-group">
-				<img :src="cfileDealAfterImg1 | myimg" class="avatar" id="img1" @click="upload('1')" v-if="cuserHeadImg!='null'"/>
-				<img src="../../static/detail-up.png" class="avatar" v-if="cuserHeadImg=='null'">
+				<img :src="cfileDealAfterImg1 | myimg" class="avatar" id="img1" @click="upload('1')" v-if="cfileDealAfterImg1!='null'"/>
+				<img src="../../static/detail-up.png" class="avatar" v-if="cfileDealAfterImg1=='null'" @click="upload('1')">
 			</div>
 			<div class="user-group">
 				<div class="inform-group">

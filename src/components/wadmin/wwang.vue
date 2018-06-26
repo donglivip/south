@@ -47,15 +47,15 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group workcamera"style="background: none;">
+					<div class="select-group workcamera" style="background: none;">
 						<div class="box-group">
-							<div class="group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)" >
+							<div class="group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span>{{val.createTime1}}</span>
 								</div>
 								<span class="text">{{val.cgridName}}</span>
-								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)"/>
+								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)" />
 							</div>
 							<p v-if='mydata.length==0'>
 								暂无案卷
@@ -72,14 +72,14 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
-								<div class="img-group" >
+								<div class="img-group">
 									<div class="myimg-box">
-									<img src="../../../static/uploadselect.png"/></div>
+										<img src="../../../static/uploadselect.png" /></div>
 									<div class="state">
 										<span class="upload">
 											待上传
@@ -90,26 +90,26 @@
 						</div>
 					</div>
 					<p v-if='mydata.length==0'>
-								暂无案卷
-							</p>
+						暂无案卷
+					</p>
 				</swiper-slide>
 				<swiper-slide>
 					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==2" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.createTime1}}{{val.cgridName}}
+								{{val.handlingTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealAfterImg1" /></div>
+										<img :src="val.cfileDealAfterImg1" /></div>
 									<div class="state wwang">
 										<span>整改后</span>
 									</div>
@@ -118,8 +118,8 @@
 						</div>
 					</div>
 					<p v-if='mydata.length==0'>
-								暂无案卷
-							</p>
+						暂无案卷
+					</p>
 				</swiper-slide>
 			</swiper>
 		</div>
@@ -146,8 +146,8 @@
 				navtext: '分类',
 				server: '',
 				files: [],
-				mydata:'',
-				cfileDealAfterImg1:''
+				mydata: '',
+				cfileDealAfterImg1: ''
 			}
 		},
 		components: {
@@ -158,8 +158,9 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 2
-			this.server=this.service+'/uploadworkImage'
+			this.server = this.service + '/uploadworkImage'
 			this.myajax()
+			this.mynews()
 		},
 		computed: {
 			swiper() {
@@ -224,26 +225,36 @@
 				});
 
 			},
-			myajax:function(){
-				var that=this
+			myajax: function() {
+				function plusReady() {
+					// 显示自动消失的提示消息
+					plus.nativeUI.showWaiting('数据较多，可能加载较慢，请耐心等待~')
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+				var that = this
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCuserIdNetwork",
 					dataType: 'json',
 					data: {
-						cuserIdNetwork:localStorage.getItem('userid')
+						cuserIdNetwork: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						for (var i=0;i<res.data[0].length;i++) {
-							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						for(var i = 0; i < res.data[0].length; i++) {
+							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
+							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
 						}
 						that.mydata = res.data[0]
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
-			opennew: function(target,id) {
-				this.$store.state.windexid=id
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
@@ -258,24 +269,24 @@
 			},
 			startchang: function(date, formatDate) {
 				var date = new Date();
-		        var seperator1 = "-";
-		        var year = date.getFullYear();
-		        var month = date.getMonth() + 1;
-		        var strDate = date.getDate();
-		        if (month >= 1 && month <= 9) {
-		            month = "0" + month;
-		        }
-		        if (strDate >= 0 && strDate <= 9) {
-		            strDate = "0" + strDate;
-		        }
-		        var currentdate = year + seperator1 + month + seperator1 + strDate;
-				if(currentdate!=formatDate){
+				var seperator1 = "-";
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if(month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if(strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate != formatDate) {
 					if(this.timety == 0) {
 						this.starttime = formatDate
 					} else {
 						this.endtime = formatDate
 					}
-				}else{
+				} else {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("不可选择当前日期!");
@@ -299,6 +310,43 @@
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
+			},
+			mynews: function() {
+				var that = this;
+				$.ajax({
+					type: "get",
+					url: that.service + "/queryCuserMessagePojoByCuserId",
+					dataType: 'json',
+					data: {
+						cuserId: localStorage.getItem('userid')
+					},
+					success: function(res) {
+						if(res.data.length > 0) {
+							for(var i = 0; i < res.data.length; i++) {
+								if(res.data[i].stystemSatus == 1) {
+									that.mypush(res.data[i].cmessageId,res.data[i].cuserCmessageId)
+								}
+							}
+						}
+					}
+				});
+			},
+			mypush:function(newid,newstwoid){
+				var info = plus.push.getClientInfo();
+				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
+				var that=this
+				$.ajax({
+					type:"post",
+					url:that.service+"/updateCuserCmessageByPrimaryKeySelective",
+					dataType:'json',
+					data:{
+						cmessageId:newid,
+						cuserCmessageId:newstwoid
+					},
+					success:function(res){
+						console.log(JSON.stringify(res))
+					}
+				});
 			}
 		}
 	}
@@ -307,11 +355,11 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		p{
+		p {
 			text-align: center;
 			line-height: 1rem;
 		}
-		.swiper-container{
+		.swiper-container {
 			margin-top: .2rem;
 		}
 		.wwang {
@@ -408,11 +456,6 @@
 			.img-box {
 				display: flex;
 				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
 				.state {
 					line-height: .4rem;
 					text-align: center;

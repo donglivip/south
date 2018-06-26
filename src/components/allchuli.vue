@@ -23,8 +23,8 @@
 		</div>
 		<div id="main" style="height: calc(100% - .7rem);">
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
-			<div class="time-box">
-				<div class="time-left">
+			<div class="time-box" style="padding: 0;">
+				<div class="time-left" style="margin-left: .4rem;">
 					<div class="left-box">
 						<div class="box" @click="timeshow(0)" style="width: 3.05rem;">
 							{{starttime==''?'开始时间':starttime}}
@@ -39,7 +39,7 @@
 				</div>
 				<div class="box-go" style="visibility: hidden;"></div>
 			</div>
-			<div class="time-box">
+			<div class="time-box" style="padding-left:.4rem;">
 				<div class="time-left">
 					<div class="left-box">
 						<div class="box" style="width: 100%;">
@@ -166,10 +166,34 @@
 				this.texttype = num
 			},
 			startchang: function(date, formatDate) {
-				if(this.timety == 0) {
-					this.starttime = formatDate
-				} else {
-					this.endtime = formatDate
+				var date = new Date();
+		        var seperator1 = "-";
+		        var year = date.getFullYear();
+		        var month = date.getMonth() + 1;
+		        var strDate = date.getDate();
+		        if (month >= 1 && month <= 9) {
+		            month = "0" + month;
+		        }
+		        if (strDate >= 0 && strDate <= 9) {
+		            strDate = "0" + strDate;
+		        }
+		        var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate!=formatDate){
+					if(this.timety == 0) {
+						this.starttime = formatDate
+					} else {
+						this.endtime = formatDate
+					}
+				}else{
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("不可选择当前日期!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
 				}
 			},
 			timeshow: function(type) {
@@ -453,11 +477,6 @@
 			.img-box {
 				display: flex;
 				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
 				.state {
 					line-height: .5rem;
 					text-align: center;

@@ -53,18 +53,13 @@ export default {
 					cuserId:localStorage.getItem('userid')
 				},
 				success:function(res){
+					console.log(res)
 					that.mydata=res.data
 				}
 			});
 		}
   },
   computed:{
-  	newid(){
-  		return this.$store.state.newid
-  	},
-  	newstwoid(){
-  		return this.$store.state.newstwoid
-  	},
   	service(){
   		return this.$store.state.service
   	}

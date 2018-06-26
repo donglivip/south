@@ -23,7 +23,7 @@
 		</div>
 		<div id="main" style="height: calc(100% - .8rem);">
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
-			<div class="time-box">
+			<div class="time-box" style="padding-left: 0;">
 				<div class="time-left">
 					<div class="left-box">
 						<div class="box" @click="timeshow(0)" style="width: 40%;">
@@ -42,7 +42,7 @@
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
-						<div class="box box-go" @click="myajax" style="width: 40%!important;">
+						<div class="box box-go" @click="myajax" style="width: 40%!important;margin: 0;border-radius: 0;">
 							搜索
 						</div>
 					</div>
@@ -480,34 +480,6 @@
 				line-height: .8rem;
 				font-size: .3rem;
 				border-bottom: 1px solid #b8b8b8;
-			}
-			.img-box {
-				display: flex;
-				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
-				.state {
-					line-height: .5rem;
-					text-align: center;
-					border: 1px solid #b8b8b8;
-					border-top: 0;
-					margin-top: -2px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					font-size: .25rem;
-					font-weight: 600;
-				}
-				.upload {
-					background: #eeeeee;
-					padding: .05rem .25rem;
-					color: gray;
-					height: .35rem;
-					line-height: .35rem;
-				}
 			}
 		}
 	}

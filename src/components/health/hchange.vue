@@ -12,7 +12,7 @@
 			</div>
 			<div class="box-group">
 				<div class="box-group">
-					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0">
+					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto[0]" v-if="changephoto.length!=0">
 						<div class="riqi">
 							<div class="circle width12"></div>
 							<span>{{val.createTime}}</span>
@@ -198,12 +198,11 @@
 						cfileResult: that.navtype
 					},
 					success: function(res) {
-						console.log(res)
 						for (var i=0;i<res.data[0].length;i++) {
 							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
 							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
 						}
-						that.changephoto.push(res.data[0])
+						that.changephoto=res.data[0]
 					}
 				});
 			},
@@ -273,52 +272,29 @@
 				});
 			},
 			upload_img: function(p) {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				that.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				var that = this
-				if(that.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(that.server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							that.files = json.data;
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
+				var thats = this
+				var img = new Image();
+				img.src = p; // 传过来的图片路径在这里用。
+				img.onload = function() {
+					var that = this;
+					//生成比例 
+					var w = that.width,
+						h = that.height,
+						scale = w / h;
+					w = 100 || w; //480  你想压缩到多大，改这里
+					h = w / scale;
+
+					//生成canvas
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					$(canvas).attr({
+						width: w,
+						height: h
 					});
-				task.addData("uid", that.getUid());
-				for(var i = 0; i < that.files.length; i++) {
-					var f = that.files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
+					ctx.drawImage(that, 0, 0, w, h);
+					thats.upsrc=canvas.toDataURL('image/jpeg', 1 || 0.8)
+					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
 				}
-				task.start();
-			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		},
 		computed: {

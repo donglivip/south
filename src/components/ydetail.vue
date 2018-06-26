@@ -52,7 +52,7 @@
 					</div>
 				</div>
 				<!--<div v-if="radioboo==3">-->
-					<div class="detail-inner" @click="bottomshow(0)">
+					<div class="detail-inner" @click="bottomshow(0)" v-if="radioboo==3">
 						<div class="detail-text">
 							不受理原因：
 						</div>
@@ -145,7 +145,7 @@
 					cnotAdmissibleReason: that.cnotAdmissibleReason,
 					cfinisedId: that.cfinisedId,
 					ctypeTwoId: that.bottomtwoid,
-					ctypeTitle:that.navtext
+					ctypeTitle:that.ctypeTitle
 //					cuserIdNetwork: that.mydata[0].cuserIdNetwork,
 //					cgridId: that.mydata[0].cgridId
 				}
@@ -167,7 +167,12 @@
 					dataType: 'json',
 					data: ajaxdata,
 					success: function(res) {
-						that.$router.back()
+						if(res.status==200){
+							that.$router.back()
+						}else{
+							plus.nativeUI.toast(res.data.msg)
+						}
+						
 					}
 				});
 			},
@@ -275,6 +280,9 @@
 			},
 			bottomtwoid() {
 				return this.$store.state.bottomtwoid
+			},
+			ctypeTitle(){
+				return this.$store.state.ctypeTitle
 			}
 		}
 	}

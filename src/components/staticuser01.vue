@@ -23,7 +23,7 @@
 		</div>
 		<div id="main" style="height: calc(100% - .8rem);">
 			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
-			<div class="time-box">
+			<div class="time-box" style="padding: 0;">
 				<div class="time-left">
 					<div class="left-box">
 						<div class="box" style="width: 3rem;">
@@ -520,7 +520,7 @@
 		.time-box {
 			display: flex;
 			align-items: center;
-			padding-left: .3rem;
+			justify-content: center;
 			.box {
 				height: .5rem;
 				width: 3rem;
@@ -571,34 +571,6 @@
 				line-height: .8rem;
 				font-size: .3rem;
 				border-bottom: 1px solid #b8b8b8;
-			}
-			.img-box {
-				display: flex;
-				justify-content: space-between;
-				img {
-					width: 3rem;
-					height: 1.8rem;
-					margin-top: .3rem;
-				}
-				.state {
-					line-height: .5rem;
-					text-align: center;
-					border: 1px solid #b8b8b8;
-					border-top: 0;
-					margin-top: -2px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					font-size: .25rem;
-					font-weight: 600;
-				}
-				.upload {
-					background: #eeeeee;
-					padding: .05rem .25rem;
-					color: gray;
-					height: .35rem;
-					line-height: .35rem;
-				}
 			}
 		}
 	}

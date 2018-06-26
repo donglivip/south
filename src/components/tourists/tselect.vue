@@ -32,7 +32,7 @@
 				</div>
 				<span class="hr"></span>
 				<div class="box" @click="timeshow(1)">
-					{{endtime==''?'结束时间':starttime}}
+					{{endtime==''?'结束时间':endtime}}
 					<img src="../../../static/arrbottom.png" />
 				</div>
 				<div class="box-go" @click="gosearch">
@@ -42,10 +42,10 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="val in mydata[0]" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.createTime1}}{{val.cgridName}}
+								{{val.handlingTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
@@ -72,7 +72,7 @@
 					</p>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in mydata[0]" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cgridName}}
@@ -80,15 +80,15 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img src="../../../static/uploadselect.png" :id="['img'+index]" @click.stop="upload(index)"/></div>
-									<div class="state" @click.stop="imgok(val.cfileId)">
+										<img src="../../../static/uploadselect.png" /></div>
+									<div class="state">
 										上传图片
 									</div>
 								</div>
@@ -126,9 +126,9 @@
 				navboo: false,
 				navtext: '分类',
 				mydata: [],
-				server:'',
-				cfileDealAfterImg1:'',
-				files:[]
+				server: '',
+				cfileDealAfterImg1: '',
+				files: []
 			}
 		},
 		components: {
@@ -141,7 +141,7 @@
 		mounted() {
 			this.$store.state.tfoot = 2
 			this.myajax(2)
-			this.server=this.service+'/uploadRegisterImage'
+			this.server = this.service + '/uploadRegisterImage'
 		},
 		computed: {
 			swiper() {
@@ -152,67 +152,49 @@
 			}
 		},
 		methods: {
-			opennew: function(target,id) {
-				this.$store.state.windexid=id
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
 			},
-			imgok:function(id){
-				var that=this
-				if(that.cfileDealAfterImg1==''){
-					function plusReady(){
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast( "请点击图片选择上传的图片后再上传");
-					}
-					if(window.plus){
-						plusReady();
-					}else{
-						document.addEventListener("plusready",plusReady,false);
-					}
-					return false;
-				}
-				$.ajax({
-					type: "post",
-					url: that.service + "/updateCfileAndCuserCase",
-					dataType: 'json',
-					data: {
-						userId: localStorage.getItem('userid'),
-						cfileId:id,
-						cfileDealAfterImg1:that.cfileDealAfterImg1
-					},
-					success: function(res) {
-						that.myajax(2)
-						that.toswiper(0)
-					}
-				});
-			},
 			myajax: function(type) {
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("加载中...");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+
 				var that = this
-				var ajaxJson={
+				var ajaxJson = {
 					cuserId: localStorage.getItem('userid'),
 					cfileResult: type,
 					createTime1: that.starttime,
 					handingTime1: that.endtime
 				}
-				if(this.starttime==''){
+				if(this.starttime == '') {
 					delete ajaxJson.createTime1
 				}
-				if(this.endtime==''){
+				if(this.endtime == '') {
 					delete ajaxJson.handingTime1
 				}
-				console.log(ajaxJson)
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
-					data:ajaxJson,
+					data: ajaxJson,
 					success: function(res) {
-						for (var i=0;i<res.data[0].length;i++) {
-							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						for(var i = 0; i < res.data[0].length; i++) {
+							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
+							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
 						}
+						that.mydata = []
 						that.mydata.push(res.data[0])
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
@@ -223,32 +205,32 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
-				if(index==0){
+				if(index == 0) {
 					this.myajax(2)
-				}else{
+				} else {
 					this.myajax(0)
 				}
 			},
 			startchang: function(date, formatDate) {
 				var date = new Date();
-		        var seperator1 = "-";
-		        var year = date.getFullYear();
-		        var month = date.getMonth() + 1;
-		        var strDate = date.getDate();
-		        if (month >= 1 && month <= 9) {
-		            month = "0" + month;
-		        }
-		        if (strDate >= 0 && strDate <= 9) {
-		            strDate = "0" + strDate;
-		        }
-		        var currentdate = year + seperator1 + month + seperator1 + strDate;
-				if(currentdate!=formatDate){
+				var seperator1 = "-";
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if(month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if(strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var currentdate = year + seperator1 + month + seperator1 + strDate;
+				if(currentdate != formatDate) {
 					if(this.timety == 0) {
 						this.starttime = formatDate
 					} else {
 						this.endtime = formatDate
 					}
-				}else{
+				} else {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("不可选择当前日期!");
@@ -265,121 +247,14 @@
 				this.timety = type
 			},
 			gosearch: function() {
-				if(this.swiperindex==0){
+				if(this.swiperindex == 0) {
 					this.myajax(2)
-				}else{
+				} else {
 					this.myajax(0)
 				}
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
-			},
-			upload: function(target) {
-				var that = this
-				that.files=[]
-				that.uploadtarget = target
-				var btnArray = [{
-					title: "照相机"
-				}, {
-					title: "相册"
-				}]; //选择按钮  1 2 3
-				plus.nativeUI.actionSheet({
-					title: "请选择",
-					cancel: "取消", // 0
-					buttons: btnArray
-				}, function(e) {
-					var index = e.index; // 
-					switch(index) {
-						case 1:
-							//写自己的逻辑
-							that.camera();
-							break;
-						case 2:
-							that.album();
-							break;
-					}
-				});
-			},
-			camera: function() {
-				var that = this
-				var cmr = plus.camera.getCamera();
-				cmr.captureImage(function(p) {
-					//成功
-					plus.io.resolveLocalFileSystemURL(p, function(entry) {
-						var img_name = entry.name; //获得图片名称
-						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
-						that.upload_img(img_path);
-					}, function(e) {
-						alert("读取拍照文件错误：" + e.message);
-					});
-
-				}, function(e) {
-					alert("失败：" + e.message);
-				}, {
-					filename: '_doc/camera/',
-					index: 1
-				}); //  “_doc/camera/“  为保存文件名
-			},
-			album: function() {
-				var that = this
-				plus.gallery.pick(function(path) {
-					that.upload_img(path);
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-				}, function(e) {
-					alert("取消选择图片");
-				}, {
-					filter: "image"
-				});
-			},
-			upload_img: function(p) {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				this.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				var that=this
-				if(this.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(that.server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							that.files = json.data;
-							that.cfileDealAfterImg1=that.files
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
-					});
-				task.addData("uid", that.getUid());
-				for(var i = 0; i < that.files.length; i++) {
-					var f = that.files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
-				}
-				task.start();
-			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		}
 	}
@@ -388,7 +263,7 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		p{
+		p {
 			text-align: center;
 		}
 		.type {

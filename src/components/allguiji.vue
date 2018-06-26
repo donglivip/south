@@ -88,7 +88,6 @@
 			}
 		},
 		mounted() {
-			this.$store.state.tfoot = 2
 			this.myajax()
 		},
 		methods: {

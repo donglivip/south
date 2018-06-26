@@ -2,7 +2,7 @@
   <div class="bottom-nav">
     	<div class="nav-group">
     		<div class="sub-nav" v-for="(val,index) in bottomone" v-show="navindex==0">
-    				<span @click="havetwo(val.id)">{{val.name}}</span>
+    				<span @click="havetwo(val.id,val.name)">{{val.name}}</span>
     		</div>
     		<div class="sub-nav" v-for="(val) in bottomtwo" v-show="navindex==1">
     				<span @click="navchange(val.name,val.id)">{{val.name}}</span>
@@ -31,9 +31,10 @@ export default {
 			this.$store.state.bottomtwoid=id
 			this.navindex=0
 		},
-		havetwo:function(id){
+		havetwo:function(id,name){
 			var that=this
 			var mynav=[]
+			this.$store.state.ctypeTitle=name
 			$.ajax({
 				type: "get",
 				url: that.service + "/queryCtypeTwo",
