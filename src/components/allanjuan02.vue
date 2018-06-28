@@ -14,8 +14,14 @@
 				</div>
 			</div>
 		</transition>
-		<t-head></t-head>
-		<div id="main" style="height: calc(100% - 1.6rem);">
+		<div id="head">
+			<span @click="back">
+					<img src="../../static/back.png"/>
+				</span>
+			<div>美丽南钢</div>
+			<span></span>
+		</div>
+		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==3?'active':''" @click="toswiper(3)">
 					退回案卷
@@ -35,12 +41,12 @@
 					<div class="left-box">
 						<div class="box" @click="navshow('0')">
 							{{community}}
-							<img src="../../../static/arrbottom.png" />
+							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
 						<div class="box" @click="navshow('1')">
 							{{grid}}
-							<img src="../../../static/arrbottom.png" />
+							<img src="../../static/arrbottom.png" />
 						</div>
 						<div class="box-go" @click="navshow('2')">
 							{{navtext}}
@@ -49,12 +55,12 @@
 					<div class="left-box">
 						<div class="box" @click="timeshow(0)">
 							{{starttime==''?'开始时间':starttime}}
-							<img src="../../../static/arrbottom.png" />
+							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
 						<div class="box" @click="timeshow(1)">
 							{{endtime==''?'结束时间':endtime}}
-							<img src="../../../static/arrbottom.png" />
+							<img src="../../static/arrbottom.png" />
 						</div>
 						<div class="box-go" @click="myajax">
 							搜索
@@ -74,7 +80,7 @@
 								<span>{{val.createTime1}}</span>
 							</div>
 							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
+							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
 					</div>
 				</swiper-slide>
@@ -95,7 +101,7 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img src="../../../static/uploadselect.png"/></div>
+										<img src="../../static/uploadselect.png" /></div>
 									<div class="state">
 										上传图片
 									</div>
@@ -141,7 +147,7 @@
 								<span>{{val.createTime1}}</span>
 							</div>
 							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
+							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
 					</div>
 				</swiper-slide>
@@ -153,7 +159,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.ctypeTitle,val.ctypeId)" :class="navindex==index?'active':''">
 						{{val.ctypeTitle}}
 					</div>
-					<div class="sub-nav clear">
+					<div class="sub-nav clear" @click.stop="navshow()">
 						取消
 					</div>
 				</div>
@@ -161,7 +167,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cmultipleCommunitiesName,val.cmultipleCommunitiesId)" :class="navindex==index?'active':''">
 						{{val.cmultipleCommunitiesName}}
 					</div>
-					<div class="sub-nav clear">
+					<div class="sub-nav clear" @click.stop="navshow()">
 						取消
 					</div>
 				</div>
@@ -169,13 +175,12 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cgridName,val.cgridId)" :class="navindex==index?'active':''">
 						{{val.cgridName}}
 					</div>
-					<div class="sub-nav clear">
+					<div class="sub-nav clear" @click.stop="navshow()">
 						取消
 					</div>
 				</div>
 			</div>
 		</transition>
-		<t-foot></t-foot>
 	</div>
 </template>
 
@@ -209,13 +214,21 @@
 		},
 		components: {
 			swiper,
-			swiperSlide,
-			THead: resolve => require(['../tourists/thead'], resolve),
-			TFoot: resolve => require(['./afoot'], resolve)
+			swiperSlide
 		},
 		mounted() {
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
+
+			function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("数据加载中，等待时间可能较长，请耐心等待...");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
 		},
 		computed: {
 			swiper() {
@@ -229,35 +242,6 @@
 			}
 		},
 		methods: {
-			imgok: function(id) {
-				var that = this
-				if(that.cfileDealAfterImg1 == '') {
-					function plusReady() {
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast("请点击图片选择上传的图片后再上传");
-					}
-					if(window.plus) {
-						plusReady();
-					} else {
-						document.addEventListener("plusready", plusReady, false);
-					}
-					return false;
-				}
-				$.ajax({
-					type: "post",
-					url: that.service + "/updateCfileAndCuserCase",
-					dataType: 'json',
-					data: {
-						userId: localStorage.getItem('userid'),
-						cfileId: id,
-						cfileDealAfterImg1: that.cfileDealAfterImg1
-					},
-					success: function(res) {
-						that.myajax(2)
-						that.toswiper(0)
-					}
-				});
-			},
 			workphotod: function(id) {
 				var that = this
 				var btnArray = [{
@@ -310,15 +294,6 @@
 
 			},
 			myajax: function() {
-				function plusReady() {
-					// 弹出系统等待对话框
-					var w = plus.nativeUI.showWaiting("处理中...");
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,
@@ -348,11 +323,12 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						for (var i=0;i<res.data[0].length;i++) {
-							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						for(var i = 0; i < res.data[0].length; i++) {
+							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
+							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
 						}
-						that.mydata=res.data[0]
+						that.mydata = res.data[0]
+
 						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
@@ -427,14 +403,12 @@
 							cmultipleCommunitiesId: that.communityid
 						},
 						success: function(res) {
-							console.log(res)
 							that.bottomdata = res.data
 							that.navboo = !that.navboo
 							that.texttype = num
 						}
 					});
 				}
-				
 			},
 			toswiper: function(index) {
 				this.swiperindex = index

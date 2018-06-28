@@ -17,7 +17,7 @@
 						<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
 							{{navtext}}
 						</div>
-						<div class="setting-group" @click="submit">
+						<div class="setting-group" @click="submit" v-if="upsrc!=''">
 							<img src="../../../static/upload.png" />
 							<span>
 	    						 上传
@@ -105,7 +105,6 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-						
 					}
 					if(window.plus) {
 						plusReady();
@@ -172,7 +171,6 @@
 				} else {
 					document.addEventListener("plusready", plusReady, false);
 				}
-
 			},
 			navshow:function(name){
 				this.navtext=name
@@ -251,7 +249,7 @@
 					var w = that.width,
 						h = that.height,
 						scale = w / h;
-					w = 200 || w; //480  你想压缩到多大，改这里
+					w = 800 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
 
 					//生成canvas

@@ -12,7 +12,7 @@
 				<div class="detail-inner">
 					<img src="../../static/detail=adress.png" />
 					<div class="detail-text">
-z
+						{{mydata[0].cmultipleCommunitiesName}} - {{mydata[0].cgridName}}
 					</div>
 				</div>
 			</div>
@@ -31,7 +31,7 @@ z
 				</div>
 				<div class="detail-inner">
 					<div class="myimg-box">
-						<img :src="mydata[2]" class="big-img" />
+						<img :src="mydata[2]"/>
 					</div>
 					
 				</div>
@@ -51,7 +51,7 @@ z
 				</div>
 				<div class="detail-inner">
 					<div class="myimg-box">
-						<img :src="mydata[5]" class="big-img" />
+						<img :src="mydata[5]"/>
 					</div>
 					
 				</div>
@@ -104,6 +104,7 @@ z
 		methods: {
 			myajax:function(){
 				var that=this
+				plus.nativeUI.showWaiting('加载中')
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",
@@ -112,17 +113,8 @@ z
 						cfileId: that.windexid
 					},
 					success: function(res) {
-						console.log(res)
 						that.mydata=res.data
-						function plusReady(){
-							// 弹出系统等待对话框
-							var w = plus.nativeUI.closeWaiting()
-						}
-						if(window.plus){
-							plusReady();
-						}else{
-							document.addEventListener("plusready",plusReady,false);
-						}
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
@@ -233,7 +225,7 @@ z
 					var w = that.width,
 						h = that.height,
 						scale = w / h;
-					w = 200 || w; //480  你想压缩到多大，改这里
+					w = 800 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
 
 					//生成canvas

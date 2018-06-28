@@ -79,6 +79,9 @@ export default {
 						that.workphoto = res.data
 					}
 				});
+				setTimeout(function(){
+					that.myajax
+				},3000)
 			},
   	workupload: function() {
 				var that = this

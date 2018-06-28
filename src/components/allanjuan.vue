@@ -23,9 +23,6 @@
 		</div>
 		<div id="main">
 			<div class="tselect-top">
-				<div class="top-nav" :class="swiperindex==3?'active':''" @click="toswiper(3)">
-					退回案卷
-				</div>
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
 					未受理案卷
 				</div>
@@ -36,7 +33,6 @@
 					已整改案卷
 				</div>
 			</div>
-			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box">
 				<div class="time-left">
 					<div class="left-box">
@@ -80,7 +76,7 @@
 								<div class="circle width12"></div>
 								<span>{{val.createTime1}}</span>
 							</div>
-							<span class="text">{{val.cgridName}}</span>
+							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
 					</div>
@@ -90,19 +86,19 @@
 					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.createTime1}}案卷-{{val.cgridName}}
+								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img src="../../static/uploadselect.png"/></div>
+										<img src="../../static/uploadselect.png" /></div>
 									<div class="state">
 										上传图片
 									</div>
@@ -114,9 +110,9 @@
 				<!--已整改-->
 				<swiper-slide>
 					<div class="select-group">
-						<div class="group-inner"  @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
+						<div class="group-inner" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
 							<div class="group-title">
-								{{val.handlingTime1}}案卷-{{val.cgridName}}
+								{{val.handlingTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
@@ -142,12 +138,12 @@
 				<!--未处理-->
 				<swiper-slide>
 					<div class="box-group">
-						<div class="group"  @click="opennew('cbackdetail',val.cfileId)"  v-for="val in mydata" v-if="val.cfileResult==3">
+						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==3">
 							<div class="riqi">
 								<div class="circle width12"></div>
 								<span>{{val.createTime1}}</span>
 							</div>
-							<span class="text">{{val.cgridName}}</span>
+							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
 					</div>
@@ -193,7 +189,6 @@
 			return {
 				swiperOption: {},
 				swiperindex: 0,
-				defaultDate: new Date(),
 				starttime: '',
 				endtime: '',
 				startshow: false,
@@ -221,14 +216,14 @@
 		mounted() {
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
-			function plusReady(){
+			function plusReady() {
 				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting( "加载中..." );
+				var w = plus.nativeUI.showWaiting("加载中...");
 			}
-			if(window.plus){
+			if(window.plus) {
 				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
+			} else {
+				document.addEventListener("plusready", plusReady, false);
 			}
 		},
 		computed: {
@@ -324,19 +319,20 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						for (var i=0;i<res.data[0].length;i++) {
-							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						for(var i = 0; i < res.data[0].length; i++) {
+							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
+							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
 						}
-						that.mydata=res.data[0]
-						function plusReady(){
+						that.mydata = res.data[0]
+
+						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
 						}
-						if(window.plus){
+						if(window.plus) {
 							plusReady();
-						}else{
-							document.addEventListener("plusready",plusReady,false);
+						} else {
+							document.addEventListener("plusready", plusReady, false);
 						}
 					}
 				});
@@ -358,8 +354,8 @@
 				}
 				this.navboo = !this.navboo
 			},
-			opennew: function(target,id) {
-				this.$store.state.windexid=id
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
@@ -414,40 +410,18 @@
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
 			},
-			startchang: function(date, formatDate) {
-				var date = new Date();
-		        var seperator1 = "-";
-		        var year = date.getFullYear();
-		        var month = date.getMonth() + 1;
-		        var strDate = date.getDate();
-		        if (month >= 1 && month <= 9) {
-		            month = "0" + month;
-		        }
-		        if (strDate >= 0 && strDate <= 9) {
-		            strDate = "0" + strDate;
-		        }
-		        var currentdate = year + seperator1 + month + seperator1 + strDate;
-				if(currentdate!=formatDate){
-					if(this.timety == 0) {
-						this.starttime = formatDate
-					} else {
-						this.endtime = formatDate
-					}
-				}else{
-					function plusReady() {
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast("不可选择当前日期!");
-					}
-					if(window.plus) {
-						plusReady();
-					} else {
-						document.addEventListener("plusready", plusReady, false);
-					}
-				}
-			},
 			timeshow: function(type) {
-				this.startshow = true
-				this.timety = type
+				var that = this
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					if(type == 0) {
+						that.starttime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					} else {
+						that.endtime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					}
+				}, function(e) {
+					console.log("未选择日期：" + e.message);
+				});
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo

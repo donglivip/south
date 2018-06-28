@@ -8,33 +8,55 @@
 			<span></span>
 		</div>
 		<div id="main" style="height: calc(100% - .8rem);">
-			<div class="csearch-top">
+			<div class="csearch-top" style="margin-bottom: 0;">
 				<div class="csearch-inner">
-					<div class="csearch-group" @click="navshow">
+					<div class="csearch-group" @click="timeshow(0)" style="width: 3.5rem;">
+						<span>
+    						{{starttime}}
+    					</span>
+						<img src="../../static/xiaxia.png" />
+					</div>
+					<div class="csearch-group" @click="timeshow(1)" style="width: 3.5rem;margin: 0;">
+						<span>
+    						{{endtime}}
+    					</span>
+						<img src="../../static/xiaxia.png" />
+					</div>
+				</div>
+			</div>
+			<div class="csearch-top" style="margin-bottom: 0;">
+				<div class="csearch-inner" style="justify-content: space-between;">
+					<div class="csearch-group" @click="navshow" style="width: 3.5rem;">
 						<span>
     						{{navtext}}
     					</span>
 						<img src="../../static/xiaxia.png" />
 					</div>
-					<div class="csearch-group">
+					<div class="csearch-group" style="width: 3.5rem;margin: 0;">
 						<input type="text" placeholder="姓名" v-model="uname" />
 					</div>
-					<div class="go-search flexc" @click="myajax">
+					
+				</div>
+			</div>
+			<div class="csearch-top">
+				<div class="csearch-inner">
+					<div class="go-search flexc" @click="myajax" style="width: 100%;margin-left: 0;">
 						查询
 					</div>
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata">
+				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata">
+					<!--cdetail-->
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName}}
 					</div>
 					<div class="upnum">
-						
+
 					</div>
 					<div class="oknum">
-						
+
 					</div>
 					<img src="../../static/arrright.png" />
 				</div>
@@ -67,8 +89,7 @@
 				navtext: '人员分类',
 				uname: '',
 				navid: '',
-				bottomone: [
-				{
+				bottomone: [{
 					text: '社区网格员',
 					id: 4
 				}, {
@@ -84,7 +105,9 @@
 					text: '街办管理员',
 					id: 8
 				}, ],
-				mydata:[]
+				mydata: [],
+				starttime: '开始时间',
+				endtime: '结束时间'
 			}
 		},
 		mounted() {
@@ -92,30 +115,41 @@
 		},
 		methods: {
 			myajax: function() {
+				plus.nativeUI.showWaiting('数据加载中...')
 				var that = this
 				var dataJson = {
 					cuserName: that.uname,
-					cuserRole: that.navid
+					cuserRole: that.navid,
+					createTime1: that.starttime,
+					updataTime1: that.endtime
 				}
-				if(that.uname==''){
+				if(that.uname == '') {
 					delete dataJson.cuserName
 				}
-				if(that.navid==''){
+				if(that.navid == '') {
 					delete dataJson.cuserRole
 				}
+				if(that.starttime == '开始时间') {
+					delete dataJson.createTime1
+				}
+				if(that.endtime == '结束时间') {
+					delete dataJson.updataTime1
+				}
+				console.log(JSON.stringify(dataJson))
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryAllNames",
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
-						that.mydata=res.data
+						console.log(JSON.stringify(res))
+						that.mydata = res.data
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
-			opennew: function(target,id) {
-				this.$store.state.searchid=id
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
@@ -127,6 +161,19 @@
 			},
 			back: function() {
 				this.$router.back()
+			},
+			timeshow: function(type) {
+				var that = this
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					if(type == 0) {
+						that.starttime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					} else {
+						that.endtime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					}
+				}, function(e) {
+					console.log("未选择日期：" + e.message);
+				});
 			}
 		},
 		computed: {
@@ -145,7 +192,7 @@
 
 <style type="text/css" lang="scss">
 	.csearch {
-		p{
+		p {
 			text-align: center;
 			line-height: 1rem;
 		}

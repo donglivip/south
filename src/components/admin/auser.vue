@@ -36,7 +36,7 @@
     				</span>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<div class="submenu" @click="opennew('allanjuan')">
+				<div class="submenu" @click="opennew('allanjuan02')">
 					<img src="../../../static/user-tong.png" />
 					<span>
     					案卷查询

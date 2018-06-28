@@ -113,6 +113,9 @@
 						that.mydata=res.data
 					}
 				});
+				setTimeout(function() {
+					that.myajax
+				}, 3000)
 			},
 			opennew: function(target, id) {
 				this.$store.state.windexid = id

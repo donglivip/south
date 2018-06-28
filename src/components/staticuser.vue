@@ -22,7 +22,6 @@
 			<span></span>
 		</div>
 		<div id="main" style="height: calc(100% - .8rem);">
-			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box" style="padding-left: 0;">
 				<div class="time-left">
 					<div class="left-box">
@@ -64,22 +63,19 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata[0]" val.count1!=0&&val.count2!=''&&val.cuserName!=null>
-					<!--<td>
-						{{val.cuserName==null?'无':val.count1}}
-					</td>-->
+				<tr v-for="val in mydata" v-if="val.count1!=0&&val.count2!=0">
 					<td>
 						{{val.cgridName}}
 					</td>
 					<td>
-						{{val.count1==null?'0':val.count1}}
+						{{val.count1}}
 					</td>
 					<td>
-						{{val.count2==null?'0':val.count2}}
+						{{val.count2=='null'?'0':val.count2}}
 					</td>
 				</tr>
 			</table>
-			<p v-if="mydata[0].length==0">
+			<p v-if="mydata.length==0">
 				暂无数据
 			</p>
 		</div>
@@ -115,7 +111,7 @@
 
 			function plusReady() {
 				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting("加载中...");
+				var w = plus.nativeUI.showWaiting("数据加载中，等待时间可能较长，请耐心等待...");
 			}
 			if(window.plus) {
 				plusReady();
@@ -154,7 +150,11 @@
 					dataType: 'json',
 					data: ajaxData,
 					success: function(res) {
-						console.log(res)
+						for(var i=0;i<res.data[0].length;i++){
+							if(res.data[i+1]!=null){
+								res.data[0][i].count2=res.data[i+1].count2
+							}
+						}
 						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
@@ -164,7 +164,8 @@
 						} else {
 							document.addEventListener("plusready", plusReady, false);
 						}
-						that.mydata = res.data
+						that.mydata = res.data[0]
+						console.log(that.mydata)
 					}
 				});
 			},
@@ -181,40 +182,18 @@
 				this.texttype = num
 				console.log(num)
 			},
-			startchang: function(date, formatDate) {
-				var date = new Date();
-		        var seperator1 = "-";
-		        var year = date.getFullYear();
-		        var month = date.getMonth() + 1;
-		        var strDate = date.getDate();
-		        if (month >= 1 && month <= 9) {
-		            month = "0" + month;
-		        }
-		        if (strDate >= 0 && strDate <= 9) {
-		            strDate = "0" + strDate;
-		        }
-		        var currentdate = year + seperator1 + month + seperator1 + strDate;
-				if(currentdate!=formatDate){
-					if(this.timety == 0) {
-						this.starttime = formatDate
-					} else {
-						this.endtime = formatDate
-					}
-				}else{
-					function plusReady() {
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast("不可选择当前日期!");
-					}
-					if(window.plus) {
-						plusReady();
-					} else {
-						document.addEventListener("plusready", plusReady, false);
-					}
-				}
-			},
 			timeshow: function(type) {
-				this.startshow = true
-				this.timety = type
+				var that = this
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					if(type == 0) {
+						that.starttime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					} else {
+						that.endtime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					}
+				}, function(e) {
+					console.log("未选择日期：" + e.message);
+				});
 			},
 			gosearch: function() {
 				if(this.starttime == '' || this.endtime == '') {

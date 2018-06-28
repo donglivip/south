@@ -1,130 +1,94 @@
 <template>
 	<div id="wrapper" class="csearch">
-		<t-head></t-head>
-		<div id="main">
-			<div class="csearch-top">
+		<div id="head">
+			<span @click="back">
+    			<img src="../../static/back.png"/>
+    		</span>
+			<div>美丽南钢</div>
+			<span></span>
+		</div>
+		<div id="main" style="height: calc(100% - .8rem);">
+			<div class="csearch-top" style="margin-bottom: 0;">
 				<div class="csearch-inner">
-					<div class="csearch-group" @click="navshow">
+					<div class="csearch-group" @click="timeshow(0)" style="width: 3.5rem;">
 						<span>
-    						{{navtext}}
+    						{{starttime}}
     					</span>
-						<img src="../../../static/xiaxia.png" />
+						<img src="../../static/xiaxia.png" />
 					</div>
-					<div class="csearch-group">
-						<input type="text" placeholder="姓名" v-model="uname" />
-					</div>
-					<div class="go-search flexc" @click="myajax">
-						查询
+					<div class="csearch-group" @click="timeshow(1)" style="width: 3.5rem;margin: 0;">
+						<span>
+    						{{endtime}}
+    					</span>
+						<img src="../../static/xiaxia.png" />
 					</div>
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="val.count1!=0&&val.count2!=''&&val.cuserName!=null">
+				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="val.cworkTrajectory!=null" style="position: relative;z-index: 88;">
 					<div class="circle"></div>
 					<div class="name">
-						{{val.cuserName}}
+						{{val.cworkTitle}}
 					</div>
-					<div class="upnum">
-						上报数: {{val.count1}}
+					<div class="upnum" style="flex: 1;">
+						
 					</div>
-					<div class="oknum">
-						处理数: {{val.count2==null?'0':val.count2}}
+					<div class="oknum" style="width: 4rem;text-align: right;">
+						{{val.createTime1}}
 					</div>
-					<img src="../../../static/arrright.png" />
+					<img src="../../static/arrright.png" style="margin: 0 .15rem;"/>
 				</div>
-				<p v-if="mydata.length==0">
-					暂无数据
+				<p style="position: absolute;top: .7rem;left: 0;width: 100%;">
+					该用户暂无轨迹
 				</p>
 			</div>
 		</div>
-		<transition name='nav'>
-			<div class="bottom-nav" v-show='navboo'>
-				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in bottomone">
-						<span @click="navshow(val.text,val.id)">{{val.text}}</span>
-					</div>
-					<div class="sub-nav clear" @click="navshow('分类')">
-						取消
-					</div>
-				</div>
-			</div>
-		</transition>
-		<t-foot></t-foot>
 	</div>
 </template>
 
 <script>
 	export default {
-		name: 'index',
+		name: 'allguiji',
 		data() {
 			return {
 				navboo: false,
 				navtext: '人员分类',
 				uname: '',
 				navid: '',
-				bottomone: [{
-					text: '居民',
-					id: 0
-				}, {
-					text: '环保小卫士',
-					id: 1
-				}, {
-					text: '志愿督察员',
-					id: 2
-				}, {
-					text: '社区楼栋长',
-					id: 3
-				}, {
-					text: '社区网格员',
-					id: 4
-				}, {
-					text: '环卫工作者',
-					id: 5
-				}, {
-					text: '综合执法队',
-					id: 6
-				}, {
-					text: '城管中心',
-					id: 7
-				}, {
-					text: '街办管理员',
-					id: 8
-				}, ],
-				mydata: []
+				mydata:[],
+				starttime: '开始时间',
+				endtime: '结束时间'
 			}
 		},
 		mounted() {
-			this.$store.state.tfoot = 2
 			this.myajax()
-			var that = this
-			that.mynews()
 		},
 		methods: {
 			myajax: function() {
 				var that = this
 				var dataJson = {
-					cuserName: that.uname,
-					cuserRole: that.navid
+					cuserId: that.windexid,
+					createTime1: that.starttime,
+					updataTime1: that.endtime
 				}
-				if(that.uname == '') {
-					delete dataJson.cuserName
+				if(that.starttime == '开始时间') {
+					delete dataJson.createTime1
 				}
-				if(that.navid == '') {
-					delete dataJson.cuserRole
+				if(that.endtime == '结束时间') {
+					delete dataJson.updataTime1
 				}
 				$.ajax({
 					type: "get",
-					url: that.service + "/queryCuserNameAndCuserRoleReportCount",
+					url: that.service + "/querAllCwork",
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
-						that.mydata = res.data[0]
+						that.mydata=res.data
 					}
 				});
 			},
-			opennew: function(target, id) {
-				this.$store.state.searchid = id
+			opennew: function(target,id) {
+				this.$store.state.searchid=id
 				this.$router.push({
 					name: target
 				})
@@ -134,55 +98,21 @@
 				this.navtext = text
 				this.navid = id
 			},
-			mynews: function() {
-				var that = this;
-				$.ajax({
-					type: "get",
-					url: that.service + "/queryCuserMessagePojoByCuserId",
-					dataType: 'json',
-					data: {
-						cuserId: localStorage.getItem('userid')
-					},
-					success: function(res) {
-						if(res.data.length > 0) {
-							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1) {
-									that.mypush(res.data[i].cfileId,res.data[i].newid,res.data[i].newstwoid)
-									break;
-								}
-							}
-						}
-					}
-				});
-				setTimeout(function(){
-					that.mynews()
-				},30000)
+			back: function() {
+				this.$router.back()
 			},
-			mypush: function(newid,oneid,twoid) {
+			timeshow: function(type) {
 				var that = this
-				var info = plus.push.getClientInfo();
-				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
-				plus.push.addEventListener("click", function(msg) {
-					$.ajax({
-						type:"post",
-						url:that.service+"/updateCuserCmessageByPrimaryKeySelective",
-						dataType:'json',
-						data:{
-							cmessageId:oneid,
-							cuserCmessageId:that.twoid
-						},
-						success:function(res){
-							console.log(JSON.stringify(res))
-							that.$store.state.windexid = newid
-							that.$router.push({
-								name: 'cbackdetail'
-							})
-						},
-						error:function(error){
-							console.log(JSON.stringify(res))
-						}
-					});
-				}, false);
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					if(type == 0) {
+						that.starttime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					} else {
+						that.endtime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					}
+				}, function(e) {
+					console.log("未选择日期：" + e.message);
+				});
 			}
 		},
 		computed: {
@@ -191,19 +121,20 @@
 			},
 			service() {
 				return this.$store.state.service
+			},
+			windexid() {
+				return this.$store.state.windexid
 			}
 		},
 		components: {
-			THead: resolve => require(['../tourists/thead'], resolve),
-			TFoot: resolve => require(['./afoot'], resolve),
-			BootomNav: resolve => require(['../bottom-nav'], resolve)
+			BootomNav: resolve => require(['./bottom-nav'], resolve)
 		}
 	}
 </script>
 
 <style type="text/css" lang="scss">
 	.csearch {
-		p {
+		p{
 			text-align: center;
 			line-height: 1rem;
 		}

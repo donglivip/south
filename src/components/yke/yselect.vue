@@ -16,7 +16,6 @@
 		</transition>
 		<t-head></t-head>
 		<div id="main">
-			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box">
 				<div class="box" @click="timeshow(0)">
 					{{starttime==''?'开始时间':starttime}}
@@ -34,12 +33,12 @@
 			<div class="select-group" v-for="val in mydata[0]" @click="opennew('changedetail',val.cfileId)">
 				<div class="group-inner">
 					<div class="group-title">
-						{{val.createTime1}}{{val.cgridName}}
+						{{val.createTime1}} {{val.cmultipleCommunitiesName}} - {{val.cgridName}}
 					</div>
 					<div class="img-box">
 						<div class="img-group" style="width: 100%;">
 							<div class="myimg-box">
-							<img :src="val.cfileDealPrevImg1" /></div>
+								<img :src="val.cfileDealPrevImg1" /></div>
 						</div>
 					</div>
 				</div>
@@ -60,7 +59,6 @@
 		name: 'yselect',
 		data() {
 			return {
-				defaultDate: new Date(),
 				starttime: '',
 				endtime: '',
 				startshow: false,
@@ -82,15 +80,6 @@
 			var that = this
 			this.$store.state.tfoot = 2
 			this.myajax(0)
-			function plusReady(){
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting( "加载中..." );
-			}
-			if(window.plus){
-				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
-			}
 		},
 		computed: {
 			service() {
@@ -110,16 +99,17 @@
 			myajax: function(type) {
 				var that = this
 				function plusReady() {
+					plus.nativeUI.showWaiting("数据加载中...");
 					var ajaxJson = {
 						cuserCode: that.uuid,
 						cfileResult: type,
 						createTime1: that.starttime,
 						handingTime1: that.endtime
 					}
-					if(that.starttime==''){
+					if(that.starttime == '') {
 						delete ajaxJson.createTime1
 					}
-					if(that.endtime==''){
+					if(that.endtime == '') {
 						delete ajaxJson.handingTime1
 					}
 					$.ajax({
@@ -128,20 +118,22 @@
 						dataType: 'json',
 						data: ajaxJson,
 						success: function(res) {
-							for (var i=0;i<res.data[0].length;i++) {
-								res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-								res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+							console.log(res)
+							for(var i = 0; i < res.data[0].length; i++) {
+								res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
+								res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
 							}
-							that.mydata=[];
+							that.mydata = [];
 							that.mydata.push(res.data[0])
-							function plusReady(){
+
+							function plusReady() {
 								// 弹出系统等待对话框
-								 plus.nativeUI.closeWaiting();
+								plus.nativeUI.closeWaiting();
 							}
-							if(window.plus){
+							if(window.plus) {
 								plusReady();
-							}else{
-								document.addEventListener("plusready",plusReady,false);
+							} else {
+								document.addEventListener("plusready", plusReady, false);
 							}
 						}
 					});
@@ -151,7 +143,9 @@
 				} else {
 					document.addEventListener("plusready", plusReady, false);
 				}
-
+				setTimeout(function() {
+					that.myajax
+				}, 3000)
 			},
 			navshow: function(id) {
 				this.navboo = !this.navboo
@@ -166,148 +160,21 @@
 					this.myajax(0)
 				}
 			},
-			startchang: function(date, formatDate) {
-				var date = new Date();
-		        var seperator1 = "-";
-		        var year = date.getFullYear();
-		        var month = date.getMonth() + 1;
-		        var strDate = date.getDate();
-		        if (month >= 1 && month <= 9) {
-		            month = "0" + month;
-		        }
-		        if (strDate >= 0 && strDate <= 9) {
-		            strDate = "0" + strDate;
-		        }
-		        var currentdate = year + seperator1 + month + seperator1 + strDate;
-				if(currentdate!=formatDate){
-					if(this.timety == 0) {
-						this.starttime = formatDate
-					} else {
-						this.endtime = formatDate
-					}
-				}else{
-					function plusReady() {
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast("不可选择当前日期!");
-					}
-					if(window.plus) {
-						plusReady();
-					} else {
-						document.addEventListener("plusready", plusReady, false);
-					}
-				}
-			},
 			timeshow: function(type) {
-				this.startshow = true
-				this.timety = type
+				var that = this
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					if(type == 0) {
+						that.starttime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					} else {
+						that.endtime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					}
+				}, function(e) {
+					console.log("未选择日期：" + e.message);
+				});
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
-			},
-			upload: function(target) {
-				var that = this
-				that.uploadtarget = target
-				var btnArray = [{
-					title: "照相机"
-				}, {
-					title: "相册"
-				}]; //选择按钮  1 2 3
-				plus.nativeUI.actionSheet({
-					title: "请选择",
-					cancel: "取消", // 0
-					buttons: btnArray
-				}, function(e) {
-					var index = e.index; // 
-					switch(index) {
-						case 1:
-							//写自己的逻辑
-							that.camera();
-							break;
-						case 2:
-							that.album();
-							break;
-					}
-				});
-			},
-			camera: function() {
-				var that = this
-				var cmr = plus.camera.getCamera();
-				cmr.captureImage(function(p) {
-					//成功
-					plus.io.resolveLocalFileSystemURL(p, function(entry) {
-						var img_name = entry.name; //获得图片名称
-						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('a' + that.uploadtarget).setAttribute('src', img_path)
-						that.upload_img(img_path);
-					}, function(e) {
-						alert("读取拍照文件错误：" + e.message);
-					});
-
-				}, function(e) {
-					alert("失败：" + e.message);
-				}, {
-					filename: '_doc/camera/',
-					index: 1
-				}); //  “_doc/camera/“  为保存文件名
-			},
-			album: function() {
-				var that = this
-				plus.gallery.pick(function(path) {
-					that.upload_img(path);
-					document.getElementById('a' + that.uploadtarget).setAttribute('src', path)
-					alert(path)
-				}, function(e) {
-					alert("取消选择图片");
-				}, {
-					filter: "image"
-				});
-			},
-			upload_img: function() {
-				var that = this
-				var n = p.substr(p.lastIndexOf('/') + 1);
-				this.files.push({
-					name: "uploadkey",
-					path: p
-				});
-				//开始上传
-				that.start_upload();
-			},
-			start_upload: function() {
-				if(this.files.length <= 0) {
-					plus.nativeUI.alert("没有添加上传文件！");
-					return;
-				}
-				//原生的转圈等待框
-				var wt = plus.nativeUI.showWaiting();
-				var task = plus.uploader.createUpload(server, {
-						method: "POST"
-					},
-					function(t, status) { //上传完成
-						if(status == 200) {
-							//资源
-							var responseText = t.responseText;
-							//转换成json
-							var json = eval('(' + responseText + ')');
-							//上传文件的信息
-							var files = json.data;
-							wt.close();
-						} else {
-							alert("上传失败：" + status);
-							//关闭原生的转圈等待框
-							wt.close();
-						}
-					});
-				task.addData("uid", this.getUid());
-				for(var i = 0; i < this.files.length; i++) {
-					var f = files[i];
-					task.addFile(f.path, {
-						key: f.name
-					});
-				}
-				task.start();
-			},
-			getUid: function() {
-				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
 		}
 	}

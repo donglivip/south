@@ -161,9 +161,19 @@ export default new Router({
       component:resolve => require(['@/components/allguiji'], resolve),
       meta: { keepAlive: false}  
     },{
+      path: '/allgujilist',
+      name: 'allgujilist',
+      component:resolve => require(['@/components/allgujilist'], resolve),
+      meta: { keepAlive: false}  
+    },{
       path: '/allanjuan',
       name: 'allanjuan',
       component:resolve => require(['@/components/allanjuan'], resolve),
+      meta: { keepAlive: true}  
+    },{
+      path: '/allanjuan02',
+      name: 'allanjuan02',
+      component:resolve => require(['@/components/allanjuan02'], resolve),
       meta: { keepAlive: true}  
     },{
       path: '/allgongzuo',

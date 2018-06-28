@@ -7,7 +7,7 @@
     		<div class="sub-nav" v-for="(val) in bottomtwo" v-show="navindex==1">
     				<span @click="navchange(val.name,val.id)">{{val.name}}</span>
     		</div>
-    		<div class="sub-nav clear" @click="navchange('分类')">
+    		<div class="sub-nav clear" @click="navchange('选择分类')">
     			取消
     		</div>
     	</div>
@@ -74,6 +74,7 @@ export default {
 		left: 0;
 		background: rgba(0,0,0,.5);
 		z-index: 999;
+		font-size: .35rem;
 		.nav-group{
 			position: absolute;
 			bottom: 0;

@@ -8,16 +8,16 @@
 					<img :src="upsrc" id="img1" v-show="upimg" />
 				</div>
 				<div class="tindex-setting">
-					<div class="setting-group" @click="clear" v-if="upsrc!=''">
+					<div class="setting-group" @click="clear" v-show="upsrc!=''">
 						<img src="../../../static/reset.png" />
 						<span>
 	    						 取消
 	    					</span>
 					</div>
-					<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
+					<div class="setting-group" @click="navshow('分类')" v-show="upsrc!=''">
 						{{navtext}}
 					</div>
-					<div class="setting-group" @click="submit">
+					<div class="setting-group" @click="submit" v-show="upsrc!=''">
 						<img src="../../../static/upload.png" />
 						<span>
 	    						上传
@@ -126,9 +126,8 @@
 					return false;
 				}
 				var that = this
-
 				// 弹出系统等待对话框
-				that.w = plus.nativeUI.showWaiting("上传中...");
+				plus.nativeUI.showWaiting("上传中...");
 				plus.geolocation.getCurrentPosition(function(p) {
 					$.ajax({
 						type: "post",
@@ -142,9 +141,8 @@
 							ctypeTwoId: that.bottomtwoid
 						},
 						success: function(res) {
-							console.log(that.files)
 							console.log(JSON.stringify(res))
-							that.w.close()
+							plus.nativeUI.closeWaiting()
 							that.upimg = false
 							that.navtext = '选择分类'
 							if(res.status != 200) {
@@ -166,6 +164,11 @@
 									document.addEventListener("plusready", plusReady, false);
 								}
 							}
+						},
+						error:function(error){
+							plus.nativeUI.closeWaiting()
+							plus.nativeUI.toast('上传失败')
+							console.log(JSON.stringify(error))
 						}
 					});
 				}, function(e) {
@@ -180,7 +183,7 @@
 			clear: function() {
 				this.files = []
 				this.upimg = false
-				this.upsrc=''
+				this.upsrc = ''
 			},
 			upload: function(target) {
 				var that = this
@@ -216,7 +219,7 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
-//						that.upsrc = img_path
+						//						that.upsrc = img_path
 						that.upimg = !that.upimg
 						that.upload_img(img_path);
 						var img = document.getElementByid("img"); //通过ID获取IMG元素
@@ -245,7 +248,7 @@
 				//				相册
 				var that = this
 				plus.gallery.pick(function(path) {
-//					that.upsrc = path
+					//					that.upsrc = path
 					that.upimg = !that.upimg
 					that.upload_img(path);
 				}, function(e) {
@@ -264,7 +267,7 @@
 					var w = that.width,
 						h = that.height,
 						scale = w / h;
-					w = 100 || w; //480  你想压缩到多大，改这里
+					w = 500 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
 
 					//生成canvas
@@ -275,7 +278,7 @@
 						height: h
 					});
 					ctx.drawImage(that, 0, 0, w, h);
-					thats.upsrc=canvas.toDataURL('image/jpeg', 1 || 0.8)
+					thats.upsrc = canvas.toDataURL('image/jpeg', 1 || 0.8)
 					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
 				}
 			}

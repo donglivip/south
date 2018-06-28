@@ -12,12 +12,12 @@
 			</div>
 			<div class="box-group">
 				<div class="box-group">
-					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto[0]" v-if="changephoto.length!=0">
+					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0">
 						<div class="riqi">
 							<div class="circle width12"></div>
 							<span>{{val.createTime}}</span>
 						</div>
-						<span class="text">{{val.cgridName}}</span>
+						<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 						<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 					</div>
 					<p v-if="changephoto.length==0">暂无数据</p>
@@ -65,6 +65,7 @@
 		},
 		methods: {
 			upmy: function() {
+				plus.nativeUI.showWaiting('上传中')
 				var that = this
 				if(that.files == '' || that.bottomtwoid == '') {
 					function plusReady() {
@@ -103,12 +104,13 @@
 						cfileStation: that.cfileStation
 					},
 					success: function(res) {
-						console.log(JSON.stringify(res))
+						
 						if(res.status == 200) {
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.toast('上传完成')
 								that.myajax()
+								plus.nativeUI.closeWaiting()
 							}
 							if(window.plus) {
 								plusReady();
@@ -119,6 +121,7 @@
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.toast("上传失败!");
+								plus.nativeUI.closeWaiting()
 							}
 							if(window.plus) {
 								plusReady();
@@ -188,6 +191,7 @@
 				})
 			},
 			myajax: function() {
+				plus.nativeUI.showWaiting('加载中')
 				var that = this
 				$.ajax({
 					type: "get",
@@ -203,8 +207,12 @@
 							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
 						}
 						that.changephoto=res.data[0]
+						plus.nativeUI.closeWaiting()
 					}
 				});
+				setTimeout(function(){
+					that.myajax
+				},3000)
 			},
 			tab: function(inedx) {
 				this.navtype = inedx
@@ -281,7 +289,7 @@
 					var w = that.width,
 						h = that.height,
 						scale = w / h;
-					w = 100 || w; //480  你想压缩到多大，改这里
+					w = 800 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
 
 					//生成canvas

@@ -9,7 +9,7 @@
 		</div>
 		<div id="main">
 			<div class="user-group">
-				<img :src="cfileDealAfterImg1 | myimg" class="avatar" id="img1" @click="upload('1')" v-if="cfileDealAfterImg1!='null'" />
+				<img :src="cfileDealAfterImg1 | myimg" class="avatar" id="img1" @click="upload('1')" v-show="cfileDealAfterImg1!='null'"/>
 				<img src="../../static/detail-up.png" class="avatar" v-if="cfileDealAfterImg1=='null'" @click="upload('1')">
 			</div>
 			<div class="user-group">
@@ -18,7 +18,7 @@
 					<div class="title">
 						姓名：
 					</div>
-					<input type="text" value="董小礼" v-model="name" />
+					<input type="text" value="董小礼" v-model="name"/>
 				</div>
 				<div class="inform-group">
 					<img src="../../static/inform03.png" />
@@ -39,14 +39,14 @@
 					<div class="title">
 						身份证：
 					</div>
-					<input type="text" v-model="personnum" />
+					<input type="text" v-model="personnum"/>
 				</div>
 				<div class="inform-group">
 					<img src="../../static/inform04.png" />
 					<div class="title">
 						手机号：
 					</div>
-					<input type="text" v-model="phone" readonly="" />
+					<input type="text" v-model="phone" readonly=""/>
 				</div>
 			</div>
 			<div class="inform-group top" @click="myajax">
@@ -67,13 +67,13 @@
 				personnum: localStorage.getItem('usercode'),
 				cfileDealAfterImg1: localStorage.getItem('cuserHeadImg'),
 				name: localStorage.getItem('username'),
-				files: [],
-				server: '',
-				uploadtarget: '',
+				files:[],
+				server:'',
+				uploadtarget:'',
 			}
 		},
 		mounted() {
-			this.server = this.service + '/uploadYkPersonImage'
+			this.server=this.service+'/uploadYkPersonImage'
 		},
 		computed: {
 			service() {
@@ -81,23 +81,14 @@
 			}
 		},
 		methods: {
-			tab: function(type) {
-				this.sex = type
+			tab:function(type){
+				this.sex=type
 			},
 			back: function() {
 				this.$router.back()
 			},
 			myajax: function() {
-				function plusReady() {
-					// 显示自动消失的提示消息
-					plus.nativeUI.showWaiting('上传中。。。')
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
-				var that = this
+				var that=this
 				$.ajax({
 					type: "post",
 					url: that.service + "/updateByMyOwnerCusers",
@@ -106,29 +97,28 @@
 					data: {
 						cuserId: localStorage.getItem('userid'),
 						cuserHeadImg: that.cfileDealAfterImg1,
-						cuserName: that.name,
-						cuserSex: that.sex,
-						cuserIdentityId: that.personnum
+						cuserName:that.name,
+						cuserSex:that.sex,
+						cuserIdentityId:that.personnum
 					},
 					success: function(res) {
-						plus.nativeUI.closeWaiting()
-						localStorage.setItem('cuserHeadImg', that.cfileDealAfterImg1)
-						localStorage.setItem('sex', that.sex)
-						localStorage.setItem('usercode', that.personnum)
-						localStorage.setItem('username', that.name)
+						console.log(res)
+							localStorage.setItem('cuserHeadImg',that.cfileDealAfterImg1)
+							localStorage.setItem('sex',that.sex)
+							localStorage.setItem('usercode',that.personnum)
+							localStorage.setItem('username',that.name)
 						if(res.status != 200) {
 							alert(res.msg)
 							return false;
 						} else {
-							function plusReady() {
+							function plusReady(){
 								// 显示自动消失的提示消息
-								plus.nativeUI.closeWaiting()
-								plus.nativeUI.toast("修改成功，将在下次重启后生效！");
+								plus.nativeUI.toast( "修改成功，将在下次重启后生效！");
 							}
-							if(window.plus) {
+							if(window.plus){
 								plusReady();
-							} else {
-								document.addEventListener("plusready", plusReady, false);
+							}else{
+								document.addEventListener("plusready",plusReady,false);
 							}
 
 						}
@@ -169,7 +159,7 @@
 					plus.io.resolveLocalFileSystemURL(p, function(entry) {
 						var img_name = entry.name; //获得图片名称
 						var img_path = entry.toLocalURL(); //获得图片路径
-						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
+						document.getElementById('img1').setAttribute('src', img_path)
 						that.upload_img(img_path);
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -184,8 +174,8 @@
 			album: function() {
 				var that = this
 				plus.gallery.pick(function(path) {
-					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
 					that.upload_img(path);
+					document.getElementById('img1').setAttribute('src', path)
 				}, function(e) {
 					alert("取消选择图片");
 				}, {
@@ -193,15 +183,7 @@
 				});
 			},
 			upload_img: function(p) {
-				function plusReady() {
-					// 显示自动消失的提示消息
-					plus.nativeUI.showWaiting('图片处理中。。。')
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
+				var wt = plus.nativeUI.showWaiting();
 				var that = this
 				var n = p.substr(p.lastIndexOf('/') + 1);
 				this.files.push({
@@ -230,11 +212,11 @@
 							//上传文件的信息
 							that.files = json.data;
 							that.cfileDealAfterImg1 = that.files
-							plus.nativeUI.closeWaiting()
+							plus.nativeUI.closeWaiting();
 						} else {
 							alert("上传失败：" + status);
 							//关闭原生的转圈等待框
-							wt.close();
+							plus.nativeUI.closeWaiting();
 						}
 					});
 				task.addData("uid", that.getUid());
@@ -287,25 +269,25 @@
 			display: flex;
 			align-items: center;
 			font-size: .25rem;
-			.sex-group {
+			.sex-group{
 				display: flex;
 				align-items: center;
-				.circle {
+				.circle{
 					width: .35rem;
 					height: .35rem;
 					border-radius: 50%;
 					border: 1px solid gainsboro;
-					margin-right: .1rem;
+					margin-right:.1rem;
 					box-sizing: border-box;
 				}
-				.active {
+				.active{
 					border: 0!important;
 					background: #1e81d2;
 				}
 			}
-			.sex-group:last-of-type .circle {
-				margin-left: .1rem;
-			}
+			.sex-group:last-of-type .circle{
+					margin-left: .1rem;
+				}
 			.title {
 				width: 1.6rem;
 				font-weight: 600;

@@ -253,7 +253,7 @@
 					var w = that.width,
 						h = that.height,
 						scale = w / h;
-					w = 200 || w; //480  你想压缩到多大，改这里
+					w = 800 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
 
 					//生成canvas

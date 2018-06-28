@@ -17,7 +17,7 @@
 						<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
 							{{navtext}}
 						</div>
-						<div class="setting-group" @click="submit">
+						<div class="setting-group" @click="submit" v-if="upsrc!=''">
 							<img src="../../../static/upload.png" />
 							<span>
 	    						 上传
@@ -141,8 +141,7 @@
 								cuserId:localStorage.getItem('userid'),
 								cfileDealPrevImg1:that.files,
 								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
-								ctypeTwoId:that.bottomtwoid,
-								
+								ctypeTwoId:that.bottomtwoid
 							},
 							success: function(res) {
 								console.log(JSON.stringify(res))
@@ -255,7 +254,7 @@
 					var w = that.width,
 						h = that.height,
 						scale = w / h;
-					w = 200 || w; //480  你想压缩到多大，改这里
+					w = 800 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
 
 					//生成canvas

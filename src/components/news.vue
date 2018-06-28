@@ -8,8 +8,8 @@
 				<span ></span>
 			</div>
     	<div id="main">
-    		<div class="group" v-for="val in mydata" @click="opennew('newdetail',val.cmessageId,val.cuserCmessageId)" >
-    			<div class="circle"></div>
+    		<div class="group" v-for="val in mydata" @click="opennew('newdetail',val.cmessageId,val.cuserCmessageId,val.stystemSatus,val.cfileId)" >
+    			<div class="circle" v-show="val.status!=1"></div>
     			<div class="title">
     				{{val.cmessageTitle}}
     			</div>
@@ -33,7 +33,15 @@ export default {
   	this.myajax()
   },
   methods:{
-		opennew:function(target,id,twoid){
+		opennew:function(target,id,twoid,stystemSatus,cfileId){
+			var that=this
+			if(stystemSatus==1){
+					that.$store.state.windexid = cfileId
+					that.$router.push({
+						name: 'cbackdetail'
+					})
+					return false;
+			}
 			this.$store.state.newid=id
 			this.$store.state.newstwoid=twoid
 			this.$router.push({

@@ -7,7 +7,7 @@
 			<div>预处理案卷详情</div>
 			<span></span>
 		</div>
-		<div id="main">
+		<div id="main" style="height: calc(100% - .7rem);">
 			<div class="detail-group">
 				<div class="detail-inner">
 					<img src="../../static/detail=adress.png" />
@@ -24,7 +24,8 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img :src="mydata[0].cfileDealPrevImg1" class="big-img" />
+					<div class="myimg-box">
+					<img :src="mydata[2]"/></div>
 				</div>
 			</div>
 			<div class="detail-group">
@@ -61,7 +62,7 @@
 						</div>
 						<img src="../../static/arrright.png" class="arrimg" />
 					</div>
-					<div class="detail-inner" @click="navshow">
+					<div class="detail-inner" @click="navshow" v-if="radioboo!=3">
 						<div class="detail-text">
 							案卷分类：
 						</div>
@@ -70,7 +71,7 @@
 						</div>
 						<img src="../../static/arrright.png" class="arrimg" />
 					</div>
-					<div class="detail-inner" @click="bottomshow(2)">
+					<div class="detail-inner" @click="bottomshow(2)" v-if="radioboo!=3">
 						<div class="detail-text">
 							案卷时限：
 						</div>
@@ -240,7 +241,6 @@
 						cfileId: that.windexid
 					},
 					success: function(res) {
-						console.log(res)
 						that.mydata = res.data
 
 						function plusReady() {

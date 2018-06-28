@@ -25,7 +25,7 @@
 			<img src="../../../static/c-pai-active.png" class="factive" />
 			<img src="../../../static/c-pai.png" class="fdefault" />
 			<span>
-	    			案卷查询
+	    			案卷处理
 	    	</span>
 		</div>
 		<div class="foot-nav" :class="tfoot==5?'fthis':''" @click="opennew('cuser',5)">

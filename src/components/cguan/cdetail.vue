@@ -56,28 +56,15 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						if(res.data.length == 0||res.data[0] == 'null') {
-							function plusReady() {
-								// 显示自动消失的提示消息
-								plus.nativeUI.toast("该员工暂无轨迹!");
+						var array1 = res.data[res.data.length-2].split("],")
+						array1.pop()
+						for(var i = 0; i < array1.length; i++) {
+							array1[i] = array1[i] + ']'
+							if(i % 2 == 1) {
+								that.mydata.push(JSON.parse(array1[i]));
 							}
-							if(window.plus) {
-								plusReady();
-							} else {
-								document.addEventListener("plusready", plusReady, false);
-							}
-						} else {
-							var array1 = res.data[0].split("],")
-							array1.pop()
-							for(var i = 0; i < array1.length; i++) {
-								array1[i] = array1[i] + ']'
-								if(i % 2 == 1) {
-									that.mydata.push(JSON.parse(array1[i]));
-								}
-							}
-							console.log(that.mydata)
-							that.mylocation()
 						}
+						that.mylocation()
 					}
 				});
 			},

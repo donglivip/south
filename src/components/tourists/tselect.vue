@@ -24,7 +24,6 @@
 					未整改案卷
 				</div>
 			</div>
-			<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 			<div class="time-box">
 				<div class="box" @click="timeshow(0)">
 					{{starttime==''?'开始时间':starttime}}
@@ -45,7 +44,7 @@
 					<div class="select-group" v-for="val in mydata[0]" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.handlingTime1}}{{val.cgridName}}
+								{{val.handlingTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
@@ -75,7 +74,7 @@
 					<div class="select-group" v-for="(val,index) in mydata[0]" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.createTime1}}{{val.cgridName}}
+								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
@@ -116,7 +115,6 @@
 			return {
 				swiperOption: {},
 				swiperindex: 0,
-				defaultDate: new Date(),
 				starttime: '',
 				endtime: '',
 				startshow: false,
@@ -142,6 +140,15 @@
 			this.$store.state.tfoot = 2
 			this.myajax(2)
 			this.server = this.service + '/uploadRegisterImage'
+			function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("加载中...");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
 		},
 		computed: {
 			swiper() {
@@ -159,16 +166,6 @@
 				})
 			},
 			myajax: function(type) {
-				function plusReady() {
-					// 弹出系统等待对话框
-					var w = plus.nativeUI.showWaiting("加载中...");
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
-
 				var that = this
 				var ajaxJson = {
 					cuserId: localStorage.getItem('userid'),
@@ -188,6 +185,7 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
+						console.log(res)
 						for(var i = 0; i < res.data[0].length; i++) {
 							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
 							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
@@ -197,6 +195,9 @@
 						plus.nativeUI.closeWaiting()
 					}
 				});
+				setTimeout(function() {
+					that.myajax
+				}, 3000)
 			},
 			navshow: function(id) {
 				this.navboo = !this.navboo
@@ -211,40 +212,18 @@
 					this.myajax(0)
 				}
 			},
-			startchang: function(date, formatDate) {
-				var date = new Date();
-				var seperator1 = "-";
-				var year = date.getFullYear();
-				var month = date.getMonth() + 1;
-				var strDate = date.getDate();
-				if(month >= 1 && month <= 9) {
-					month = "0" + month;
-				}
-				if(strDate >= 0 && strDate <= 9) {
-					strDate = "0" + strDate;
-				}
-				var currentdate = year + seperator1 + month + seperator1 + strDate;
-				if(currentdate != formatDate) {
-					if(this.timety == 0) {
-						this.starttime = formatDate
-					} else {
-						this.endtime = formatDate
-					}
-				} else {
-					function plusReady() {
-						// 显示自动消失的提示消息
-						plus.nativeUI.toast("不可选择当前日期!");
-					}
-					if(window.plus) {
-						plusReady();
-					} else {
-						document.addEventListener("plusready", plusReady, false);
-					}
-				}
-			},
 			timeshow: function(type) {
-				this.startshow = true
-				this.timety = type
+				var that = this
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					if(type == 0) {
+						that.starttime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					} else {
+						that.endtime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					}
+				}, function(e) {
+					console.log("未选择日期：" + e.message);
+				});
 			},
 			gosearch: function() {
 				if(this.swiperindex == 0) {
