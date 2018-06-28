@@ -26,7 +26,7 @@
 				<div class="detail-inner">
 					<img src="../../static/detail-up.png" />
 					<div class="detail-text">
-						上报人：{{mydata[0].cuserName}}
+						上报人：{{mydata[0].cuserName==null?'本人':'mydata[0].cuserName'}}
 					</div>
 				</div>
 				<div class="detail-inner">

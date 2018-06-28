@@ -118,10 +118,10 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 1,
-			this.mylocation()
+				this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
-			var that=this
+			var that = this
 			that.mynews()
 		},
 		methods: {
@@ -139,15 +139,16 @@
 						document.addEventListener("plusready", plusReady, false);
 					}
 				}
+
 				function plusReady() {
-								// 显示自动消失的提示消息
-								plus.nativeUI.showWaiting('上传中');
-							}
-							if(window.plus) {
-								plusReady();
-							} else {
-								document.addEventListener("plusready", plusReady, false);
-							}
+					// 显示自动消失的提示消息
+					plus.nativeUI.showWaiting('上传中');
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				$.ajax({
 					type: "post",
 					url: that.service + "/insertByCworkImg",
@@ -298,11 +299,11 @@
 						cuserIdNetwork: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						for (var i=0;i<res.data[0].length;i++) {
-							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
+						for(var i = 0; i < res.data[0].length; i++) {
+							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
+							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
 						}
-						that.changephoto.push(res.data[0])
+						that.changephoto=res.data[0]
 					}
 				});
 			},
@@ -345,7 +346,7 @@
 						success: function(res) {
 							console.log('s' + res)
 						},
-						error:function(res){
+						error: function(res) {
 							console.log('e' + res)
 						}
 					});
@@ -485,17 +486,17 @@
 					success: function(res) {
 						if(res.data.length > 0) {
 							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1) {
-									that.mypush(res.data[i].cfileId,res.data[i].newid,res.data[i].newstwoid)
+								if(res.data[i].stystemSatus == 1&&status!=1) {
+									that.mypush(res.data[i].cfileId,res.data[i].cmessageId,res.data[i].cuserCmessageId)
 									break;
 								}
 							}
 						}
 					}
 				});
-				setTimeout(function(){
+				setTimeout(function() {
 					that.mynews()
-				},30000)
+				}, 30000)
 			},
 			mypush: function(newid,oneid,twoid) {
 				var that = this
@@ -503,21 +504,21 @@
 				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
 				plus.push.addEventListener("click", function(msg) {
 					$.ajax({
-						type:"post",
-						url:that.service+"/updateCuserCmessageByPrimaryKeySelective",
-						dataType:'json',
-						data:{
-							cmessageId:oneid,
-							cuserCmessageId:that.twoid
+						type: "post",
+						url: that.service + "/updateCuserCmessageByPrimaryKeySelective",
+						dataType: 'json',
+						data: {
+							cmessageId: oneid,
+							cuserCmessageId: twoid
 						},
-						success:function(res){
+						success: function(res) {
 							console.log(JSON.stringify(res))
 							that.$store.state.windexid = newid
 							that.$router.push({
-								name: 'cbackdetail'
+								name: 'ydetail'
 							})
 						},
-						error:function(error){
+						error: function(error) {
 							console.log(JSON.stringify(res))
 						}
 					});

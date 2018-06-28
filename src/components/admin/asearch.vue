@@ -146,7 +146,7 @@
 					success: function(res) {
 						if(res.data.length > 0) {
 							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1) {
+								if(res.data[i].stystemSatus == 1&&status!=1) {
 									that.mypush(res.data[i].cfileId,res.data[i].newid,res.data[i].newstwoid)
 									break;
 								}
