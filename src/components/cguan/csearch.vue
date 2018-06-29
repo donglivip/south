@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="val.count1!=0&&val.count2!='null'">
+				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="(val.count1!=0||val.count2!=0)&&val.cuserName!=null">
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName}}
@@ -28,7 +28,7 @@
 						上报数: {{val.count1}}
 					</div>
 					<div class="oknum">
-						处理数: {{val.count2==null?'0':val.count2}}
+						处理数: {{val.count2}}
 					</div>
 					<img src="../../../static/arrright.png" />
 				</div>
@@ -105,8 +105,15 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
+						for(var i=0;i<res.data[0].length;i++){
+							if(res.data[i+1]!=null){
+								res.data[0][i].count2=res.data[i+1].count2
+							}else{
+								res.data[0][i].count2=0
+							}
+						}
 						that.mydata=res.data[0]
+						console.log(that.mydata)
 					}
 				});
 			},
