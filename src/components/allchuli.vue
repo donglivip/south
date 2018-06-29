@@ -25,7 +25,7 @@
 			<div class="time-box" style="padding: 0;">
 				<div class="time-left" style="margin-left: .4rem;">
 					<div class="left-box">
-						<div class="box" @click="timeshow(0)" style="width: 3.05rem;">
+						<div class="box" @click="timeshow(0)" style="width: 3.05rem;margin-left: .1rem;">
 							{{starttime==''?'开始时间':starttime}}
 							<img src="../../static/arrbottom.png" />
 						</div>

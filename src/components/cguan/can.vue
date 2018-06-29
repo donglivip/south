@@ -44,7 +44,7 @@
 					<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.handlingTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
+								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">

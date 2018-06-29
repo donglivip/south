@@ -14,7 +14,7 @@
 	    						 取消
 	    					</span>
 					</div>
-					<div class="setting-group" @click="navshow('分类')" v-show="upsrc!=''">
+					<div class="setting-group" @click="navshow('分类')">
 						{{navtext}}
 					</div>
 					<div class="setting-group" @click="submit" v-show="upsrc!=''">
@@ -141,9 +141,9 @@
 							ctypeTwoId: that.bottomtwoid
 						},
 						success: function(res) {
-							console.log(JSON.stringify(res))
 							plus.nativeUI.closeWaiting()
 							that.upimg = false
+							that.upsrc = ''
 							that.navtext = '选择分类'
 							if(res.status != 200) {
 								function plusReady() {

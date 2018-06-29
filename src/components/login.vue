@@ -74,7 +74,7 @@
 					success: function(res) {
 //						plus.nativeUI.closeWaiting()
 						if(res.status != 200) {
-							alert(res.msg)
+							plus.nativeUI.toast(res.msg)
 							return false;
 						} else {
 							localStorage.setItem('userid', res.data.cuserId)

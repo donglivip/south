@@ -134,3 +134,4 @@ body,html,#wrapper,#app,.wrapper{height: 100%;width: 100%;position: relative;ove
 .myimg-box img {
   max-width: calc(100% - 10px)!important; max-height: calc(100% - 10px)!important;vertical-align: middle;margin: 5px!important;height: auto!important;
 }
+.btnactive{background: #1e81d2;color: white;font-weight: 600;}

@@ -192,7 +192,7 @@
 				})
 			},
 			myajax: function() {
-//				plus.nativeUI.showWaiting('加载中')
+				plus.nativeUI.showWaiting('加载中')
 				var that = this
 				$.ajax({
 					type: "get",
@@ -204,7 +204,7 @@
 					},
 					success: function(res) {
 						that.changephoto = res.data
-//						plus.nativeUI.closeWaiting()
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

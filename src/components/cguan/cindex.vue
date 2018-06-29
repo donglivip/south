@@ -70,17 +70,36 @@
 				</swiper-slide>
 				<swiper-slide>
 					<div class="hwzhenggai">
-						<div class="box-group">
-							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0&&val.createTime!=null">
+						<div class="nav">
+							<div class="nav-tab" :class="navtype==2?'active':''" @click="tab(2)">
+								整改
+							</div>
+							<div class="nav-tab" :class="navtype==1?'active':''" @click="tab(1)">
+								未整改
+							</div>
+						</div>
+						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;">
+							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0&&val.cfileResult==navtype">
 								<div class="riqi">
 									<div class="circle width12"></div>
-									<span style="width: auto;">{{val.createTime}}</span>
+									<span>{{val.createTime}}</span>
 								</div>
 								<span class="text">{{val.cgridName}}</span>
-								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)" style="margin-right: .2rem;">
+								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 							</div>
 							<p v-if="changephoto.length==0">暂无数据</p>
 						</div>
+						<footer style="bottom: 0;">
+							<div class="box-upload workcamera">
+								<div class="upload" style="height: 2rem;">
+									<img src="../../../static/upload02.png" id="img2" @click="upload('2')">
+									<div class="shangchuan">
+										<input class="sck" type="text" placeholder="请填写标题" v-model="navtext" readonly="readonly" @click="navshow"></input>
+										<div class="sctext" @click="upmy()"><span>上传</span></div>
+									</div>
+								</div>
+							</div>
+						</footer>
 					</div>
 				</swiper-slide>
 			</swiper>
@@ -114,6 +133,9 @@
 				marker: '',
 				uploadtarget: '',
 				files: [],
+				navtype:2,
+				cfileStation:'',
+				wimg:''
 			}
 		},
 		mounted() {
@@ -125,6 +147,80 @@
 			that.mynews()
 		},
 		methods: {
+			tab: function(inedx) {
+				this.navtype = inedx
+			},
+			upmy: function() {
+				if(this.navtext == '选择分类') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请选择分类!");
+						
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+					return false;
+				}
+				if(this.wimg == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请上传图片!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+					return false;
+				}
+				var that = this
+				function plusReady() {
+					// 弹出系统等待对话框
+					that.w = plus.nativeUI.showWaiting("上传中...");
+					plus.geolocation.getCurrentPosition(function(p) {
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCfileAndCuserAreadyRegister",
+							dataType: 'json',
+							data: {
+								cuserId:localStorage.getItem('userid'),
+								cfileDealPrevImg1:that.wimg,
+								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
+								ctypeTwoId:that.bottomtwoid
+							},
+							success: function(res) {
+								console.log(JSON.stringify(res))
+								if(res.status != 200) {
+									alert(res.msg)
+								} else {
+									function plusReady() {
+										plus.nativeUI.closeWaiting();
+										plus.nativeUI.toast("上传完成");
+										that.navtext = '选择分类'
+									}
+									if(window.plus) {
+										plusReady();
+									} else {
+										document.addEventListener("plusready", plusReady, false);
+									}
+								}
+							},error:function(err){
+								console.log(JSON.stringify(err))
+							}
+						});
+					}, function(e) {
+						alert('Geolocation error: ' + e.message);
+					});
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+			},
 			workupload: function() {
 				var that = this
 				if(that.cworkTitle == '' || that.cworkImg == '') {
@@ -298,7 +394,8 @@
 						cuserIdNetwork: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						that.changephoto = res.data
+						console.log(res)
+						that.changephoto = res.data[0]
 					}
 				});
 			},
@@ -397,7 +494,11 @@
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
 						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
-						that.upload_img(img_path);
+						if(that.swiperindex==2){
+							that.upload_img02(path);
+						}else{
+							that.upload_img(path);
+						}
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
 					});
@@ -413,12 +514,40 @@
 				var that = this
 				plus.gallery.pick(function(path) {
 					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-					that.upload_img(path);
+					if(that.swiperindex==2){
+						that.upload_img02(path);
+					}else{
+						that.upload_img(path);
+					}
 				}, function(e) {
 					alert("取消选择图片");
 				}, {
 					filter: "image"
 				});
+			},
+			upload_img02: function(p) {
+				var thats = this
+				var img = new Image();
+				img.src = p; // 传过来的图片路径在这里用。
+				img.onload = function() {
+					var that = this;
+					//生成比例 
+					var w = that.width,
+						h = that.height,
+						scale = w / h;
+					w = 800 || w; //480  你想压缩到多大，改这里
+					h = w / scale;
+
+					//生成canvas
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					$(canvas).attr({
+						width: w,
+						height: h
+					});
+					ctx.drawImage(that, 0, 0, w, h);
+					thats.wimg = canvas.toDataURL('image/jpeg', 1 || 0.8)
+				}
 			},
 			upload_img: function(p) {
 				var that = this
@@ -536,6 +665,9 @@
 			},
 			windexid() {
 				return this.$store.state.windexid
+			},
+			bottomtwoid() {
+				return this.$store.state.bottomtwoid
 			}
 		},
 		components: {
@@ -553,6 +685,21 @@
 		p {
 			text-align: center;
 			line-height: 1rem;
+		}
+		.nav{
+			display: flex;
+			width: 100%;
+			height: .8rem;
+			background: white;
+		}
+		.nav-tab {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.active {
+			border-bottom: 2px solid #1e81d2;
 		}
 		.tselect-top {
 			display: flex;

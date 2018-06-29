@@ -40,8 +40,8 @@
 		<transition name='nav'>
 			<div class="bottom-nav" v-show='navboo'>
 				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in bottomone">
-						<span @click="navshow(val.text,val.id)">{{val.text}}</span>
+					<div class="sub-nav" v-for="(val,index) in bottomone" @click="navshow(val.text,val.id)">
+						<span>{{val.text}}</span>
 					</div>
 					<div class="sub-nav clear" @click="navshow('分类')">
 						取消

@@ -40,8 +40,8 @@
 		<transition name='nav'>
 			<div class="bottom-nav" v-show='navboo'>
 				<div class="nav-group">
-					<div class="sub-nav" v-for="(val,index) in bottomone">
-						<span @click="navshow(val.text,val.id)">{{val.text}}</span>
+					<div class="sub-nav" v-for="(val,index) in bottomone" @click="navshow(val.text,val.id)">
+						<span>{{val.text}}</span>
 					</div>
 					<div class="sub-nav clear" @click="navshow('分类')">
 						取消
@@ -101,7 +101,7 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中')
+//				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var dataJson = {
 					cuserName: that.uname,
@@ -127,7 +127,7 @@
 							}
 						}
 						that.mydata = res.data[0]
-						plus.nativeUI.closeWaiting()
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

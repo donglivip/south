@@ -153,6 +153,7 @@
 										plus.nativeUI.toast("上传完成");
 										that.upimg = false
 										that.navtext = '选择分类'
+										that.upsrc = ''
 									}
 									if(window.plus) {
 										plusReady();

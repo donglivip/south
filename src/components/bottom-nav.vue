@@ -1,11 +1,11 @@
 <template>
   <div class="bottom-nav">
     	<div class="nav-group">
-    		<div class="sub-nav" v-for="(val,index) in bottomone" v-show="navindex==0">
-    				<span @click="havetwo(val.id,val.name)">{{val.name}}</span>
+    		<div class="sub-nav" v-for="(val,index) in bottomone" v-show="navindex==0" @click="havetwo(val.id,val.name,index)" :class="myindex==index?'btnactive':''">
+    				<span>{{val.name}}</span>
     		</div>
-    		<div class="sub-nav" v-for="(val) in bottomtwo" v-show="navindex==1">
-    				<span @click="navchange(val.name,val.id)">{{val.name}}</span>
+    		<div class="sub-nav" v-for="(val) in bottomtwo" v-show="navindex==1" @click="navchange(val.name,val.id)">
+    				<span>{{val.name}}</span>
     		</div>
     		<div class="sub-nav clear" @click="navchange('选择分类')">
     			取消
@@ -19,19 +19,21 @@ export default {
   data () {
     return {
       navindex:0,
-      bottomtwo:[]
+      bottomtwo:[],
+      myindex:-1
     }
   },
   mounted(){
   	
   },
   methods:{
-		navchange:function(name,id){
+		navchange:function(name,id,){
 			this.$emit('navshow',name)
 			this.$store.state.bottomtwoid=id
 			this.navindex=0
 		},
-		havetwo:function(id,name){
+		havetwo:function(id,name,index){
+			this.myindex=index
 			var that=this
 			var mynav=[]
 			this.$store.state.ctypeTitle=name
@@ -60,6 +62,9 @@ export default {
   	},
   	service(){
   		return this.$store.state.service
+  	},
+  	bottomtwoid(){
+  		return this.$store.state.bottomtwoid
   	}
   }
 }

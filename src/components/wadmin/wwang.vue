@@ -78,7 +78,7 @@
 					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==2" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
-								{{val.handlingTime1}}{{val.cgridName}}
+								{{val.createTime1}}{{val.cgridName}}
 							</div>
 							<div class="img-box">
 								<div class="img-group">
