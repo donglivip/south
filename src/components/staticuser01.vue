@@ -26,7 +26,7 @@
 				<div class="time-left">
 					<div class="left-box">
 						<div class="box" style="width: 3rem;">
-							<input type="text" v-model="uname" placeholder="请输入搜索姓名"/>
+							<input type="text" v-model="uname" placeholder="搜索名称"/>
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
@@ -67,7 +67,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=0">
+				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=0&&val.cgridName">
 					<td>
 						{{val.cuserName}}
 					</td>

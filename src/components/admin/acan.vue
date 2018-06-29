@@ -65,16 +65,17 @@
 
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
+				
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
 					<div class="box-group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
 						<div class="group">
 							<div class="riqi">
 								<div class="circle width12"></div>
-								<span>{{val.createTime1}}</span>
+								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
 							</div>
 							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
+							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
 						</div>
 					</div>
 				</swiper-slide>
@@ -88,7 +89,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
@@ -114,7 +115,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" />
+										<img :src="val.cfileDealPrevImg1 | myimg" />
 									</div>
 									<div class="state wwang">
 										<span>整改前</span>
@@ -122,7 +123,7 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealAfterImg1" />
+										<img :src="val.cfileDealAfterImg1 | myimg" />
 									</div>
 									<div class="state wwang">
 										<span>整改后</span>
@@ -138,10 +139,10 @@
 						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==3">
 							<div class="riqi">
 								<div class="circle width12"></div>
-								<span>{{val.createTime1}}</span>
+								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
 							</div>
 							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
+							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
 						</div>
 					</div>
 				</swiper-slide>
@@ -312,7 +313,7 @@
 			myajax: function() {
 				function plusReady() {
 					// 弹出系统等待对话框
-					var w = plus.nativeUI.showWaiting("处理中...");
+					var w = plus.nativeUI.showWaiting("数据加载中，可能用时较长，请耐心等待。。。");
 				}
 				if(window.plus) {
 					plusReady();
@@ -348,11 +349,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						for (var i=0;i<res.data[0].length;i++) {
-							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
-						}
-						that.mydata=res.data[0]
+						that.mydata=res.data
 						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
@@ -427,7 +424,6 @@
 							cmultipleCommunitiesId: that.communityid
 						},
 						success: function(res) {
-							console.log(res)
 							that.bottomdata = res.data
 							that.navboo = !that.navboo
 							that.texttype = num

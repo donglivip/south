@@ -104,7 +104,6 @@
 			var cuserRole = localStorage.getItem('cuserRole')
 			function plusReady(){
 				that.$store.state.uuid=plus.device.uuid
-				console.log(JSON.stringify(that.$store.state.uuid))
 			}
 			if(window.plus){
 				plusReady();

@@ -105,6 +105,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data[0]
 					}
 				});

@@ -23,15 +23,15 @@
 						上报时间：{{mydata[0].createTime1}}
 					</div>
 				</div>
-				<div class="detail-inner">
+				<div class="detail-inner" v-if="mydata[0].cuserName!=null">
 					<img src="../../static/detail-up.png" />
 					<div class="detail-text">
-						上报人：{{mydata[0].cuserName==null?'本人':'mydata[0].cuserName'}}
+						上报人：{{mydata[0].cuserName==null?'本人':mydata[0].cuserName}}
 					</div>
 				</div>
 				<div class="detail-inner">
 					<div class="myimg-box">
-						<img :src="mydata[2]"/>
+						<img :src="mydata[0].cfileDealPrevImg1 | myimg"/>
 					</div>
 					
 				</div>
@@ -51,7 +51,7 @@
 				</div>
 				<div class="detail-inner">
 					<div class="myimg-box">
-						<img :src="mydata[5]"/>
+						<img :src="mydata[0].cfileDealAfterImg1 | myimg"/>
 					</div>
 					
 				</div>
@@ -64,7 +64,7 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img src="../../static/scimggrey.png" class="big-img" @click="upload('1')" id="img1"/>
+					<img src="../../static/scimggrey.png" class="big-img" @click="upload('1')" id="img1" style="width: 100%;height: auto;"/>
 				</div>
 			</div>
 			<div class="submit" v-show="cworkImg!=''" @click="myupload">
@@ -91,15 +91,6 @@
 		mounted() {
 			this.server=this.service+'/uploadworkImage'
 			this.myajax()
-			function plusReady(){
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting( "加载中..." );
-			}
-			if(window.plus){
-				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
-			}
 		},
 		methods: {
 			myajax:function(){

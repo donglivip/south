@@ -30,7 +30,7 @@
 					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
-			<div class="select-group" v-for="val in mydata[0]" @click="opennew('changedetail',val.cfileId)">
+			<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
 				<div class="group-inner">
 					<div class="group-title">
 						{{val.createTime1}} {{val.cmultipleCommunitiesName}} - {{val.cgridName}}
@@ -38,12 +38,12 @@
 					<div class="img-box">
 						<div class="img-group" style="width: 100%;">
 							<div class="myimg-box">
-								<img :src="val.cfileDealPrevImg1" /></div>
+								<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<p v-if="mydata[0].length==0">
+			<p v-if="mydata.length==0">
 				暂无案卷
 			</p>
 		</div>
@@ -118,14 +118,8 @@
 						dataType: 'json',
 						data: ajaxJson,
 						success: function(res) {
-							console.log(res)
-							for(var i = 0; i < res.data[0].length; i++) {
-								res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
-								res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
-							}
-							that.mydata = [];
-							that.mydata.push(res.data[0])
-
+							console.log(JSON.stringify(res))
+							that.mydata=res.data
 							function plusReady() {
 								// 弹出系统等待对话框
 								plus.nativeUI.closeWaiting();
@@ -143,9 +137,6 @@
 				} else {
 					document.addEventListener("plusready", plusReady, false);
 				}
-				setTimeout(function() {
-					that.myajax
-				}, 3000)
 			},
 			navshow: function(id) {
 				this.navboo = !this.navboo

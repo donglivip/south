@@ -41,7 +41,7 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group" v-for="val in mydata[0]" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.handlingTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -49,7 +49,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" />
+										<img :src="val.cfileDealPrevImg1 | myimg" />
 									</div>
 									<div class="state">
 										整改前
@@ -57,7 +57,7 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealAfterImg1" />
+										<img :src="val.cfileDealAfterImg1 | myimg" />
 									</div>
 									<div class="state">
 										整改后
@@ -71,7 +71,7 @@
 					</p>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata[0]" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in mydata" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -79,7 +79,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state">
 										整改前
 									</div>
@@ -140,15 +140,6 @@
 			this.$store.state.tfoot = 2
 			this.myajax(2)
 			this.server = this.service + '/uploadRegisterImage'
-			function plusReady() {
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting("加载中...");
-			}
-			if(window.plus) {
-				plusReady();
-			} else {
-				document.addEventListener("plusready", plusReady, false);
-			}
 		},
 		computed: {
 			swiper() {
@@ -167,6 +158,7 @@
 			},
 			myajax: function(type) {
 				var that = this
+				plus.nativeUI.showWaiting("数据加载中,可能用时较长，请耐心等待...");
 				var ajaxJson = {
 					cuserId: localStorage.getItem('userid'),
 					cfileResult: type,
@@ -179,25 +171,18 @@
 				if(this.endtime == '') {
 					delete ajaxJson.handingTime1
 				}
+				console.log(JSON.stringify(ajaxJson))
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
-						console.log(res)
-						for(var i = 0; i < res.data[0].length; i++) {
-							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
-							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
-						}
-						that.mydata = []
-						that.mydata.push(res.data[0])
+						console.log(JSON.stringify(res))
+						that.mydata=res.data
 						plus.nativeUI.closeWaiting()
 					}
 				});
-				setTimeout(function() {
-					that.myajax
-				}, 3000)
 			},
 			navshow: function(id) {
 				this.navboo = !this.navboo

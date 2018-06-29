@@ -67,7 +67,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=null">
+				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=0">
 					<td>
 						{{val.cgridName}}
 					</td>
@@ -189,7 +189,6 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
 						for(var i=0;i<res.data[0].length;i++){
 							res.data[0][i].count2=res.data[i+1].count2
 						}

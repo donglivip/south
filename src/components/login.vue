@@ -52,6 +52,7 @@
 				})
 			},
 			submit: function() {
+//				plus.nativeUI.showWaiting('登录中...')
 				if(this.phone == '' || this.pwd == '') {
 					alert('账号或密码不能为空！')
 					return
@@ -71,6 +72,7 @@
 						cuserPassword: that.pwd
 					},
 					success: function(res) {
+//						plus.nativeUI.closeWaiting()
 						if(res.status != 200) {
 							alert(res.msg)
 							return false;

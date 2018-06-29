@@ -8,22 +8,6 @@
 			<span></span>
 		</div>
 		<div id="main" style="height: calc(100% - .8rem);">
-			<div class="csearch-top">
-				<div class="csearch-inner">
-					<div class="csearch-group" @click="navshow">
-						<span>
-    						{{navtext}}
-    					</span>
-						<img src="../../static/xiaxia.png" />
-					</div>
-					<div class="csearch-group">
-						<input type="text" placeholder="姓名" v-model="uname" />
-					</div>
-					<div class="go-search flexc" @click="myajax">
-						查询
-					</div>
-				</div>
-			</div>
 			<div class="csearch-main">
 				<div class="group" @click="opennew('hworkdetail',val.cworkId)" v-for="val in mydata">
 					<div class="circle"></div>

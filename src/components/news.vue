@@ -8,7 +8,7 @@
 				<span ></span>
 			</div>
     	<div id="main">
-    		<div class="group" v-for="val in mydata" @click="opennew('newdetail',val.cmessageId,val.cuserCmessageId,val.stystemSatus,val.cfileId)" >
+    		<div class="group" v-for="val in mydata" @click="opennew('newdetail',val.cmessageId,val.cuserCmessageId,val.stystemSatus,val.cfileId,val.status)" >
     			<div class="circle" v-show="val.status!=1"></div>
     			<div class="title">
     				{{val.cmessageTitle}}
@@ -33,13 +33,24 @@ export default {
   	this.myajax()
   },
   methods:{
-		opennew:function(target,id,twoid,stystemSatus,cfileId){
+		opennew:function(target,id,twoid,stystemSatus,cfileId,status){
 			var that=this
-			if(stystemSatus==1){
-					that.$store.state.windexid = cfileId
-					that.$router.push({
-						name: 'cbackdetail'
-					})
+			if(stystemSatus==1&&status==0){
+					$.ajax({
+						type: "post",
+						url: that.service + "/updateCuserCmessageByPrimaryKeySelective",
+						dataType: 'json',
+						data: {
+							cmessageId:id,
+							cuserCmessageId:twoid
+						},
+						success: function(res) {
+							that.$store.state.windexid = cfileId
+							that.$router.push({
+								name: 'ydetail'
+							})
+						}
+					});
 					return false;
 			}
 			this.$store.state.newid=id
@@ -52,6 +63,7 @@ export default {
 			this.$router.back()
 		},
 		myajax:function(){
+			plus.nativeUI.showWaiting('数据加载中')
 			var that=this;
 			$.ajax({
 				type:"get",
@@ -61,8 +73,8 @@ export default {
 					cuserId:localStorage.getItem('userid')
 				},
 				success:function(res){
-					console.log(res)
 					that.mydata=res.data
+					plus.nativeUI.closeWaiting()
 				}
 			});
 		}

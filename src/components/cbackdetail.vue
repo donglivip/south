@@ -30,7 +30,7 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img :src="mydata[2]" class="big-img" />
+					<img :src="mydata[0].cfileDealPrevImg1 | myimg" class="big-img" />
 				</div>
 			</div>
 		</div>
@@ -57,7 +57,6 @@
 		methods: {
 			myajax:function(){
 				var that=this
-				console.log(that.windexid)
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",

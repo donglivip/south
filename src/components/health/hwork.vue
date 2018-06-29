@@ -1,6 +1,6 @@
 <template>
-  <div class="workcamera" id="warpper">
-  	<transition name='alert'>
+	<div class="workcamera" id="warpper">
+		<transition name='alert'>
 			<div class="alert" v-show="alertboo" @click="alerttab">
 				<div class="alert-inner">
 					<div class="alert-text">
@@ -14,59 +14,59 @@
 				</div>
 			</div>
 		</transition>
-  	<t-head></t-head>
-			<div id="main" style="position: relative;">
-				<div>
-					<div class="box-group">
-							<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
-								<div class="riqi">
-									<div class="circle width12"></div>
-									<span>{{val.createTime1}}</span>
-								</div>
-								<span class="text">{{val.cworkTitle}}</span>
-								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" />
-							</div>
-							<p v-if="workphoto.length==0">暂无数据</p>
-						</div>		
+		<t-head></t-head>
+		<div id="main" style="position: relative;">
+			<div>
+				<div class="box-group">
+					<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
+						<div class="riqi">
+							<div class="circle width12"></div>
+							<span style="width: auto;">{{val.createTime1}}</span>
+						</div>
+						<span class="text">{{val.cworkTitle}}</span>
+						<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;"/>
+					</div>
+					<p v-if="workphoto.length==0">暂无数据</p>
 				</div>
 			</div>
-				<footer>
-					<div class="box-upload">
-						<div class="upload">
-							<img src="../../../static/upload02.png" id="img1" @click="upload('1')">
-							<div class="shangchuan">
-								<input class="sck" type="text" placeholder="请填写标题" v-model="cworkTitle"></input>
-								<div class="sctext" @click="workupload"><span>上传</span></div>
-							</div>
-						</div>
-					</div>
-				</footer>
-				<t-foot></t-foot>
-			</div>
 		</div>
+		<footer>
+			<div class="box-upload">
+				<div class="upload">
+					<img src="../../../static/upload02.png" id="img1" @click="upload('1')">
+					<div class="shangchuan">
+						<input class="sck" type="text" placeholder="请填写标题" v-model="cworkTitle"></input>
+						<div class="sctext" @click="workupload"><span>上传</span></div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<t-foot></t-foot>
+	</div>
+	</div>
 </template>
 
 <script>
-export default {
-  name: 'hwork',
-  data () {
-    return {
-      	uploadtarget: '',
-				server:'http://39.107.70.18/Transportation/uploadDriverImage',
-				files:[],
-				alertboo:false,
-				workphoto:'',
-				cworkTitle:''
-    }
-  },
-  mounted(){
-  	this.$store.state.tfoot=2
-  	this.server = this.service + '/uploadworkImage'
-  	this.myajax()
-  	
-  },
-  methods:{
-  	myajax: function() {
+	export default {
+		name: 'hwork',
+		data() {
+			return {
+				uploadtarget: '',
+				server: 'http://39.107.70.18/Transportation/uploadDriverImage',
+				files: [],
+				alertboo: false,
+				workphoto: '',
+				cworkTitle: ''
+			}
+		},
+		mounted() {
+			this.$store.state.tfoot = 2
+			this.server = this.service + '/uploadworkImage'
+			this.myajax()
+
+		},
+		methods: {
+			myajax: function() {
 				var that = this
 				$.ajax({
 					type: "get",
@@ -79,11 +79,8 @@ export default {
 						that.workphoto = res.data
 					}
 				});
-				setTimeout(function(){
-					that.myajax
-				},3000)
 			},
-  	workupload: function() {
+			workupload: function() {
 				var that = this
 				if(that.cworkTitle == '' || that.files == '') {
 					function plusReady() {
@@ -97,15 +94,16 @@ export default {
 						document.addEventListener("plusready", plusReady, false);
 					}
 				}
+
 				function plusReady() {
-								// 显示自动消失的提示消息
-								plus.nativeUI.showWaiting('上传中');
-							}
-							if(window.plus) {
-								plusReady();
-							} else {
-								document.addEventListener("plusready", plusReady, false);
-							}
+					// 显示自动消失的提示消息
+					plus.nativeUI.showWaiting('上传中');
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				$.ajax({
 					type: "post",
 					url: that.service + "/insertByCworkImg",
@@ -118,10 +116,11 @@ export default {
 					success: function(res) {
 						if(res.status == 200) {
 							that.myajax()
+
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.closeWaiting();
-								that.cworkTitle=''
+								that.cworkTitle = ''
 							}
 							if(window.plus) {
 								plusReady();
@@ -132,7 +131,7 @@ export default {
 					}
 				});
 			},
-  	workphotod: function(id) {
+			workphotod: function(id) {
 				var that = this
 				var btnArray = [{
 					title: "删除"
@@ -183,16 +182,16 @@ export default {
 				});
 
 			},
-  	alerttab:function(){
-  		this.alertboo=!this.alertboo
-  	},
-		opennew:function(target,id){
-			this.$store.state.windexid = id
+			alerttab: function() {
+				this.alertboo = !this.alertboo
+			},
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
-		},
-		upload: function(target) {
+			},
+			upload: function(target) {
 				var that = this
 				that.files = []
 				that.uploadtarget = target
@@ -297,31 +296,43 @@ export default {
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			}
-  },
-  computed:{
-  	tfoot(){
-  		return this.$store.state.tfoot
-  	},
-  	service() {
+		},
+		computed: {
+			tfoot() {
+				return this.$store.state.tfoot
+			},
+			service() {
 				return this.$store.state.service
 			},
-  	windexid() {
+			windexid() {
 				return this.$store.state.windexid
 			}
-  	
-  },
-  components:{
-  	THead:resolve => require(['../tourists/thead'],resolve),
-  	TFoot:resolve => require(['./hfoot'],resolve)
-  }
-}
+
+		},
+		components: {
+			THead: resolve => require(['../tourists/thead'], resolve),
+			TFoot: resolve => require(['./hfoot'], resolve)
+		}
+	}
 </script>
 
 <style type="text/css" lang="scss">
-	html,body,.warpper{padding: 0px;margin: 0px; font-size:.2rem;width: 100%;height: 100%;position: relative;}
-	.workcamera{overflow: hidden;
-	p{
-		text-align: center;
-		line-height: 1rem;
-	}}
+	html,
+	body,
+	.warpper {
+		padding: 0px;
+		margin: 0px;
+		font-size: .2rem;
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
+	
+	.workcamera {
+		overflow: hidden;
+		p {
+			text-align: center;
+			line-height: 1rem;
+		}
+	}
 </style>

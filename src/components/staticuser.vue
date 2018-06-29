@@ -37,7 +37,7 @@
 					</div>
 					<div class="left-box">
 						<div class="box" style="width: 40%;">
-							<input type="text" v-model="grid" placeholder="请输入网格名称" />
+							<input type="text" v-model="grid" placeholder="搜索名称" />
 							<img src="../../static/arrbottom.png" />
 						</div>
 						<span class="hr"></span>
@@ -63,7 +63,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata" v-if="val.count1!=0&&val.count2!=0">
+				<tr v-for="val in mydata" v-if="val.count1!=0&&val.count2!=0&&val.cgridName!=null">
 					<td>
 						{{val.cgridName}}
 					</td>

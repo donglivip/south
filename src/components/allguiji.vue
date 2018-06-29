@@ -115,7 +115,7 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中...')
+//				plus.nativeUI.showWaiting('数据加载中...')
 				var that = this
 				var dataJson = {
 					cuserName: that.uname,
@@ -135,16 +135,14 @@
 				if(that.endtime == '结束时间') {
 					delete dataJson.updataTime1
 				}
-				console.log(JSON.stringify(dataJson))
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryAllNames",
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(JSON.stringify(res))
 						that.mydata = res.data
-						plus.nativeUI.closeWaiting()
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

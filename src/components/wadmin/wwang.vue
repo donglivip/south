@@ -27,23 +27,6 @@
 					已处理案卷
 				</div>
 			</div>
-			<!--<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>-->
-			<!--<transition name='alert'>
-			<div class="time-box" v-show='swiperindex!=0'>
-				<div class="box" @click="timeshow(0)">
-					{{starttime==''?'开始时间':starttime}}
-					<img src="../../../static/arrbottom.png" />
-				</div>
-				<span class="hr"></span>
-				<div class="box" @click="timeshow(1)">
-					{{endtime==''?'结束时间':starttime}}
-					<img src="../../../static/arrbottom.png" />
-				</div>
-				<div class="box-go" @click="gosearch">
-					<img src="../../../static/search.png" /> 搜索
-				</div>
-			</div>
-			</transition>-->
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
@@ -55,7 +38,7 @@
 									<span style="width: auto;">{{val.createTime1}}</span>
 								</div>
 								<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)" />
+								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)" style="margin-right: .2rem;"/>
 							</div>
 							<p v-if='mydata.length==0'>
 								暂无案卷
@@ -72,7 +55,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
@@ -81,9 +64,7 @@
 									<div class="myimg-box">
 										<img src="../../../static/uploadselect.png" /></div>
 									<div class="state">
-										<span class="upload">
-											待上传
-										</span>
+										待上传
 									</div>
 								</div>
 							</div>
@@ -102,14 +83,14 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealAfterImg1" /></div>
+										<img :src="val.cfileDealAfterImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改后</span>
 									</div>
@@ -160,20 +141,6 @@
 			this.$store.state.tfoot = 2
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
-			this.mynews()
-			var date = new Date();
-			var year = date.getFullYear();
-			var month = date.getMonth() + 1;
-			var day = date.getDate();
-			if(month < 10) {
-				month = "0" + month;
-			}
-			if(day < 10) {
-				day = "0" + day;
-			}
-			var nowDate = year + "-" + month + "-" + day;
-			this.starttime = nowDate
-			this.endtime = nowDate
 		},
 		computed: {
 			swiper() {
@@ -257,12 +224,12 @@
 						cuserIdNetwork: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						for(var i = 0; i < res.data[0].length; i++) {
-							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
-							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
-						}
+						console.log(res)
 						that.mydata = res.data[0]
 						plus.nativeUI.closeWaiting()
+					},
+					error: function(err) {
+						console.log(err)
 					}
 				});
 			},
@@ -300,43 +267,6 @@
 			},
 			alerttab: function() {
 				this.alertboo = !this.alertboo
-			},
-			mynews: function() {
-				var that = this;
-				$.ajax({
-					type: "get",
-					url: that.service + "/queryCuserMessagePojoByCuserId",
-					dataType: 'json',
-					data: {
-						cuserId: localStorage.getItem('userid')
-					},
-					success: function(res) {
-						if(res.data.length > 0) {
-							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1) {
-									that.mypush(res.data[i].cmessageId, res.data[i].cuserCmessageId)
-								}
-							}
-						}
-					}
-				});
-			},
-			mypush: function(newid, newstwoid) {
-				var info = plus.push.getClientInfo();
-				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
-				var that = this
-				$.ajax({
-					type: "post",
-					url: that.service + "/updateCuserCmessageByPrimaryKeySelective",
-					dataType: 'json',
-					data: {
-						cmessageId: newid,
-						cuserCmessageId: newstwoid
-					},
-					success: function(res) {
-						console.log(JSON.stringify(res))
-					}
-				});
 			}
 		}
 	}

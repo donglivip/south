@@ -2,7 +2,7 @@
 	<div id="wrapper" class="tindex">
 		<t-head></t-head>
 		<div id="main">
-			<div class="tindex-top">、
+			<div class="tindex-top">
 					<div class="img-box" @click="upload('1')">
 						<img src="../../../static/creame.png" class="gocream" v-show="!upimg"/>
 						<img :src="upsrc"  id="img1" v-show="upimg"/>
@@ -17,13 +17,13 @@
 						<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
 							{{navtext}}
 						</div>
-						<div class="setting-group" @click="submit">
+						<div class="setting-group" @click="submit" v-if="upsrc!=''">
 							<img src="../../../static/upload.png" />
 							<span>
 	    						 上传
 	    					</span>
 						</div>
-					</div>、
+					</div>
 			</div>
 			<div class="tindex-bottom">
 				<div class="bottom-title">

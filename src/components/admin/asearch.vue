@@ -101,6 +101,7 @@
 		},
 		methods: {
 			myajax: function() {
+				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var dataJson = {
 					cuserName: that.uname,
@@ -118,8 +119,8 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
 						that.mydata = res.data[0]
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
@@ -146,17 +147,17 @@
 					success: function(res) {
 						if(res.data.length > 0) {
 							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1&&status!=1) {
-									that.mypush(res.data[i].cfileId,res.data[i].newid,res.data[i].newstwoid)
+								if(res.data[i].stystemSatus == 1&&res.data[i].status!=1) {
+									that.mypush(res.data[i].cfileId,res.data[i].cmessageId,res.data[i].cuserCmessageId)
 									break;
 								}
 							}
 						}
 					}
 				});
-				setTimeout(function(){
+				setTimeout(function() {
 					that.mynews()
-				},30000)
+				}, 100000)
 			},
 			mypush: function(newid,oneid,twoid) {
 				var that = this
@@ -164,21 +165,24 @@
 				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
 				plus.push.addEventListener("click", function(msg) {
 					$.ajax({
-						type:"post",
-						url:that.service+"/updateCuserCmessageByPrimaryKeySelective",
-						dataType:'json',
-						data:{
-							cmessageId:oneid,
-							cuserCmessageId:that.twoid
+						type: "post",
+						url: that.service + "/updateCuserCmessageByPrimaryKeySelective",
+						dataType: 'json',
+						data: {
+							cmessageId: oneid,
+							cuserCmessageId: twoid
 						},
-						success:function(res){
-							console.log(JSON.stringify(res))
-							that.$store.state.windexid = newid
-							that.$router.push({
-								name: 'cbackdetail'
-							})
+						success: function(res) {
+							if(res.status==200){
+								that.$store.state.windexid = newid
+								that.$router.push({
+									name: 'ydetail'
+								})
+							}else{
+								plus.nativeUI.toast('消息读取错误')
+							}
 						},
-						error:function(error){
+						error: function(error) {
 							console.log(JSON.stringify(res))
 						}
 					});

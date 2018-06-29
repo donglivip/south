@@ -139,11 +139,16 @@
 				})
 			},
 			submit: function(event) {
+				plus.nativeUI.showWaiting('提交中...')
 				var formData = new FormData(event.target);
 				var that = this
 				var file = document.getElementById('file');
 				var fileData = file.files[0];
 				var size = fileData.size;
+				if(this.inputdata.cuserPassword.length>=6) {
+					alert('密码必须为6位数以上!')
+					return false;
+				}
 				if(parseInt(size)>=1048576){
 					alert('上传图片过大，请更换图片后重试！')
 					return false;
@@ -188,6 +193,7 @@
 					processData: false,
 					data: formData,
 					success: function(res) {
+						plus.nativeUI.closeWaiting()
 						if(res.status != 200) {
 							alert(res.msg)
 							return

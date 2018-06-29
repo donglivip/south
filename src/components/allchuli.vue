@@ -63,7 +63,7 @@
 							处理数量
 						</td>
 					</tr>
-					<tr v-for="(val,index) in mydata" v-if="val.count1!=0||val.count2!=null">
+					<tr v-for="(val,index) in mydata" v-if="val.count1!=0||val.count2!=0">
 						<td>
 							{{val.cgridName}}
 						</td>
@@ -147,12 +147,14 @@
 						}else{
 							document.addEventListener("plusready",plusReady,false);
 						}
+						for(var i=0;i<res.data[0].length;i++){
+							if(res.data[i+1]!=null){
+								res.data[0][i].count2=res.data[i+1].count2
+							}
+						}
 						that.mydata=res.data[0]
 					}
 				});
-				setTimeout(function() {
-					that.myajax
-				}, 3000)
 			},
 			back: function() {
 				this.$router.back()

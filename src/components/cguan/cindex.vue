@@ -48,10 +48,10 @@
 							<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
 								<div class="riqi">
 									<div class="circle width12"></div>
-									<span>{{val.createTime1}}</span>
+									<span style="width: auto;">{{val.createTime1}}</span>
 								</div>
 								<span class="text">{{val.cworkTitle}}</span>
-								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" />
+								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;"/>
 							</div>
 							<p v-if="workphoto.length==0">暂无数据</p>
 						</div>
@@ -71,13 +71,13 @@
 				<swiper-slide>
 					<div class="hwzhenggai">
 						<div class="box-group">
-							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0">
+							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0&&val.createTime!=null">
 								<div class="riqi">
 									<div class="circle width12"></div>
-									<span>{{val.createTime}}</span>
+									<span style="width: auto;">{{val.createTime}}</span>
 								</div>
 								<span class="text">{{val.cgridName}}</span>
-								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)" style="margin-right: .2rem;">
 							</div>
 							<p v-if="changephoto.length==0">暂无数据</p>
 						</div>
@@ -288,7 +288,6 @@
 					},
 					success: function(res) {
 						that.workphoto = res.data
-						console.log(that.workphoto)
 					}
 				});
 				$.ajax({
@@ -299,11 +298,7 @@
 						cuserIdNetwork: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						for(var i = 0; i < res.data[0].length; i++) {
-							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
-							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
-						}
-						that.changephoto=res.data[0]
+						that.changephoto = res.data
 					}
 				});
 			},
@@ -486,8 +481,8 @@
 					success: function(res) {
 						if(res.data.length > 0) {
 							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1&&status!=1) {
-									that.mypush(res.data[i].cfileId,res.data[i].cmessageId,res.data[i].cuserCmessageId)
+								if(res.data[i].stystemSatus == 1 && res.data[i].status != 1) {
+									that.mypush(res.data[i].cfileId, res.data[i].cmessageId, res.data[i].cuserCmessageId)
 									break;
 								}
 							}
@@ -496,9 +491,9 @@
 				});
 				setTimeout(function() {
 					that.mynews()
-				}, 30000)
+				}, 100000)
 			},
-			mypush: function(newid,oneid,twoid) {
+			mypush: function(newid, oneid, twoid) {
 				var that = this
 				var info = plus.push.getClientInfo();
 				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
@@ -513,10 +508,14 @@
 						},
 						success: function(res) {
 							console.log(JSON.stringify(res))
-							that.$store.state.windexid = newid
-							that.$router.push({
-								name: 'ydetail'
-							})
+							if(res.status==200){
+								that.$store.state.windexid = newid
+								that.$router.push({
+									name: 'ydetail'
+								})
+							}else{
+								plus.nativeUI.toast('消息读取错误')
+							}
 						},
 						error: function(error) {
 							console.log(JSON.stringify(res))

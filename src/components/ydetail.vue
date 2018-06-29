@@ -25,7 +25,7 @@
 				</div>
 				<div class="detail-inner">
 					<div class="myimg-box">
-					<img :src="mydata[2]"/></div>
+					<img :src="mydata[0].cfileDealPrevImg1 | myimg"/></div>
 				</div>
 			</div>
 			<div class="detail-group">
@@ -139,6 +139,7 @@
 		},
 		methods: {
 			godubmit: function() {
+				plus.nativeUI.showWaiting('处理中')
 				var that = this
 				var ajaxdata = {
 					cfileId: that.windexid,
@@ -168,6 +169,7 @@
 					dataType: 'json',
 					data: ajaxdata,
 					success: function(res) {
+						plus.nativeUI.closeWaiting()
 						if(res.status==200){
 							that.$router.back()
 						}else{
@@ -242,7 +244,6 @@
 					},
 					success: function(res) {
 						that.mydata = res.data
-
 						function plusReady() {
 							// 弹出系统等待对话框
 							var w = plus.nativeUI.closeWaiting()

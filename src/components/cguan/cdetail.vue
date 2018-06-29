@@ -7,14 +7,13 @@
 		</div>
 		<div id="main" class="big-main" style="overflow: hidden;">
 			<div class="csearch-top">
-				<calendar v-model='startshow' :defaultDate="defaultDate" @change="startchang"></calendar>
 				<div class="csearch-inner">
 					<div class="csearch-group" @click="timeshow">
 						<img src="../../../static/date.png" />
 						<input type="text" placeholder="请选择日期" v-model="mydate" />
 						<img src="../../../static/xiaxia.png" style="height: .15rem;width: .27rem;" />
 					</div>
-					<div class="go-search flexc">
+					<div class="go-search flexc" @click="myajax()">
 						查询
 					</div>
 				</div>
@@ -33,7 +32,6 @@
 			return {
 				mydate: '请选择日期',
 				startshow: false,
-				defaultDate: new Date(),
 				mydata: []
 			}
 		},
@@ -42,6 +40,7 @@
 		},
 		methods: {
 			myajax: function() {
+				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var dataJson = {
 					cuserId: that.searchid,
@@ -56,15 +55,20 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						var array1 = res.data[res.data.length-2].split("],")
-						array1.pop()
-						for(var i = 0; i < array1.length; i++) {
-							array1[i] = array1[i] + ']'
-							if(i % 2 == 1) {
-								that.mydata.push(JSON.parse(array1[i]));
+						plus.nativeUI.closeWaiting()
+						if(res.data.length>=2){
+							var array1 = res.data[res.data.length - 2].split("],")
+							array1.pop()
+							for(var i = 0; i < array1.length; i++) {
+								array1[i] = array1[i] + ']'
+								if(i % 2 == 1) {
+									that.mydata.push(JSON.parse(array1[i]));
+								}
 							}
+							that.mylocation()
+						}else{
+							plus.nativeUI.toast('该用户暂无轨迹')
 						}
-						that.mylocation()
 					}
 				});
 			},
@@ -151,7 +155,17 @@
 				this.$router.back()
 			},
 			timeshow: function(type) {
-				this.startshow = true
+				var that = this
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					if(type == 0) {
+						that.mydate = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					} else {
+						that.mydate = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+					}
+				}, function(e) {
+					console.log("未选择日期：" + e.message);
+				});
 			},
 			startchang: function(date, formatDate) {
 				this.date = formatDate

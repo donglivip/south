@@ -288,7 +288,6 @@
 						cuserId: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						console.log(res)
 						that.workphoto = res.data
 					}
 				});
@@ -300,11 +299,7 @@
 						cuserIdNetwork: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						for(var i = 0; i < res.data[0].length; i++) {
-							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
-							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
-						}
-						that.changephoto = res.data[0]
+						that.changephoto = res.data
 					}
 				});
 			},
@@ -484,8 +479,9 @@
 					success: function(res) {
 						if(res.data.length > 0) {
 							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1&&status!=1) {
-									that.mypush(res.data[i].cfileId,res.data[i].newid,res.data[i].newstwoid)
+								if(res.data[i].stystemSatus == 1&&res.data[i].status!=1) {
+									console.log(JSON.stringify(res.data[i]))
+									that.mypush(res.data[i].cfileId,res.data[i].cmessageId,res.data[i].cuserCmessageId)
 									break;
 								}
 							}
@@ -494,7 +490,7 @@
 				});
 				setTimeout(function(){
 					that.mynews()
-				},30000)
+				},100000)
 			},
 			mypush: function(newid,oneid,twoid) {
 				var that = this
@@ -507,14 +503,13 @@
 						dataType:'json',
 						data:{
 							cmessageId:oneid,
-							cuserCmessageId:that.twoid
+							cuserCmessageId:twoid
 						},
 						success:function(res){
-							console.log(JSON.stringify(res))
-							that.$store.state.windexid = newid
-							that.$router.push({
-								name: 'cbackdetail'
-							})
+								that.$store.state.windexid = newid
+								that.$router.push({
+									name: 'ydetail'
+								})
 						},
 						error:function(error){
 							console.log(JSON.stringify(res))

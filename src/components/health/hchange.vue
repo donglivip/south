@@ -68,17 +68,17 @@
 				plus.nativeUI.showWaiting('上传中')
 				var that = this
 				if(that.files == '' || that.bottomtwoid == '') {
+					alert('错误')
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请把信息填写完整后重试！");
-						that.myajax()
-						return false;
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 				function plusReady() {
 					plus.geolocation.getCurrentPosition(function(p) {
@@ -96,7 +96,7 @@
 				$.ajax({
 					type: "post",
 					url: that.service + "/insertCfileAndCuserAreadyRegister",
-					dataType: 'json',
+					dataType:text,
 					data: {
 						cuserId: localStorage.getItem('userid'),
 						cfileDealPrevImg1: that.files,
@@ -104,13 +104,12 @@
 						cfileStation: that.cfileStation
 					},
 					success: function(res) {
-						
+						plus.nativeUI.closeWaiting()
 						if(res.status == 200) {
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.toast('上传完成')
 								that.myajax()
-								plus.nativeUI.closeWaiting()
 							}
 							if(window.plus) {
 								plusReady();
@@ -121,7 +120,6 @@
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.toast("上传失败!");
-								plus.nativeUI.closeWaiting()
 							}
 							if(window.plus) {
 								plusReady();
@@ -130,6 +128,9 @@
 							}
 
 						}
+					},
+					error:function(error){
+						console.log(JSON.stringify(error))
 					}
 				});
 			},
@@ -191,7 +192,7 @@
 				})
 			},
 			myajax: function() {
-				plus.nativeUI.showWaiting('加载中')
+//				plus.nativeUI.showWaiting('加载中')
 				var that = this
 				$.ajax({
 					type: "get",
@@ -202,17 +203,10 @@
 						cfileResult: that.navtype
 					},
 					success: function(res) {
-						for (var i=0;i<res.data[0].length;i++) {
-							res.data[0][i].cfileDealPrevImg1=res.data[(2*i)+1]
-							res.data[0][i].cfileDealAfterImg1=res.data[(2*i)+2]
-						}
-						that.changephoto=res.data[0]
-						plus.nativeUI.closeWaiting()
+						that.changephoto = res.data
+//						plus.nativeUI.closeWaiting()
 					}
 				});
-				setTimeout(function(){
-					that.myajax
-				},3000)
 			},
 			tab: function(inedx) {
 				this.navtype = inedx
@@ -300,7 +294,7 @@
 						height: h
 					});
 					ctx.drawImage(that, 0, 0, w, h);
-					thats.upsrc=canvas.toDataURL('image/jpeg', 1 || 0.8)
+					thats.upsrc = canvas.toDataURL('image/jpeg', 1 || 0.8)
 					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
 				}
 			}

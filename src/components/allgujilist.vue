@@ -24,6 +24,11 @@
 					</div>
 				</div>
 			</div>
+			<div class="csearch-top" style="margin-bottom: 0;">
+				<div class="btn" @click="myajax()" style="width: calc(100% - .6rem);height: .6rem;border-radius: .15rem;color: white;background: #1e81d2;display: flex;align-items: center;justify-content: center;margin-left: .3rem;">
+					搜索
+				</div>
+			</div>
 			<div class="csearch-main">
 				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="val.cworkTrajectory!=null" style="position: relative;z-index: 88;">
 					<div class="circle"></div>
@@ -38,7 +43,7 @@
 					</div>
 					<img src="../../static/arrright.png" style="margin: 0 .15rem;"/>
 				</div>
-				<p style="position: absolute;top: .7rem;left: 0;width: 100%;">
+				<p style="position: absolute;top: 2.7rem;left: 0;width: 100%;">
 					该用户暂无轨迹
 				</p>
 			</div>

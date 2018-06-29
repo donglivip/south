@@ -94,7 +94,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" /></div>
+										<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state wwang">
 										<span>整改前</span>
 									</div>
@@ -120,7 +120,7 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealPrevImg1" />
+										<img :src="val.cfileDealPrevImg1 | myimg" />
 									</div>
 									<div class="state wwang">
 										<span>整改前</span>
@@ -128,7 +128,7 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img :src="val.cfileDealAfterImg1" />
+										<img :src="val.cfileDealAfterImg1 | myimg" />
 									</div>
 									<div class="state wwang">
 										<span>整改后</span>
@@ -323,11 +323,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						for(var i = 0; i < res.data[0].length; i++) {
-							res.data[0][i].cfileDealPrevImg1 = res.data[(2 * i) + 1]
-							res.data[0][i].cfileDealAfterImg1 = res.data[(2 * i) + 2]
-						}
-						that.mydata = res.data[0]
+						that.mydata = res.data
 
 						function plusReady() {
 							// 弹出系统等待对话框
