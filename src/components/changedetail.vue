@@ -114,7 +114,7 @@
 			},
 			myajax:function(){
 				var that=this
-//				plus.nativeUI.showWaiting('加载中')
+				plus.nativeUI.showWaiting('加载中')
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",
@@ -126,7 +126,7 @@
 						console.log(res)
 						that.mydata=res.data
 						that.havemap()
-//						plus.nativeUI.closeWaiting()
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
