@@ -107,7 +107,7 @@
 		<transition name='nav'>
 			<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
 		</transition>
-		<h-foot></h-foot>
+		<h-foot v-on:mynews='mynews'></h-foot>
 	</div>
 </template>
 <script>
@@ -140,7 +140,7 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 1,
-				this.mylocation()
+			this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
 			var that = this
@@ -155,7 +155,7 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-						
+
 					}
 					if(window.plus) {
 						plusReady();
@@ -177,20 +177,23 @@
 					return false;
 				}
 				var that = this
+
 				function plusReady() {
 					// 弹出系统等待对话框
 					that.w = plus.nativeUI.showWaiting("上传中...");
 					plus.geolocation.getCurrentPosition(function(p) {
+						var dataJson = {
+							cuserId: localStorage.getItem('userid'),
+							cfileDealPrevImg1: that.wimg,
+							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+							ctypeTwoId: that.bottomtwoid
+						}
+						console.log(JSON.stringify(dataJson))
 						$.ajax({
 							type: "post",
 							url: that.service + "/insertCfileAndCuserAreadyRegister",
 							dataType: 'json',
-							data: {
-								cuserId:localStorage.getItem('userid'),
-								cfileDealPrevImg1:that.wimg,
-								cfileStation:p.coords.longitude + ',' + p.coords.latitude,
-								ctypeTwoId:that.bottomtwoid
-							},
+							data: dataJson,
 							success: function(res) {
 								console.log(JSON.stringify(res))
 								if(res.status != 200) {
@@ -207,7 +210,8 @@
 										document.addEventListener("plusready", plusReady, false);
 									}
 								}
-							},error:function(err){
+							},
+							error: function(err) {
 								console.log(JSON.stringify(err))
 							}
 						});
@@ -443,7 +447,7 @@
 						}
 					});
 				}, function(e) {
-					alert('Geolocation error: ' + e.message);
+					alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
 				});
 			},
 			opennew: function(target, id) {
@@ -495,9 +499,9 @@
 						var img_path = entry.toLocalURL();
 						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
 						if(that.swiperindex==2){
-							that.upload_img02(path);
+							that.upload_img02(img_path);
 						}else{
-							that.upload_img(path);
+							that.upload_img(img_path);
 						}
 					}, function(e) {
 						alert("读取拍照文件错误：" + e.message);
@@ -599,7 +603,7 @@
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
 			},
 			mynews: function() {
-				var that = this;
+				var that = this
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryCuserMessagePojoByCuserId",
@@ -610,9 +614,18 @@
 					success: function(res) {
 						if(res.data.length > 0) {
 							for(var i = 0; i < res.data.length; i++) {
-								if(res.data[i].stystemSatus == 1 && res.data[i].status != 1) {
-									that.mypush(res.data[i].cfileId, res.data[i].cmessageId, res.data[i].cuserCmessageId)
-									break;
+								if((res.data[i].stystemSatus == 1 || res.data[i].stystemSatus == 2) && res.data[i].status != 1) {
+									var mm1 = (parseInt(new Date().Format("ss")) - 5).toString();
+									if(mm1.length == 1) {
+										mm1 = '0' + mm1
+									};
+									var testdate=res.data[i].createTime1;
+									var startDateString = new Date().Format("yyyy-MM-dd hh:mm:"+mm1+"");
+									var endDateString = new Date().Format("yyyy-MM-dd hh:mm:ss");
+									if(new Date(testdate) > new Date(startDateString) && new Date(testdate) < new Date(endDateString)) {
+										console.log('yes')
+										that.mypush(res.data[i].cfileId, res.data[i].cmessageId, res.data[i].cuserCmessageId,res.stystemSatus)
+									}
 								}
 							}
 						}
@@ -620,12 +633,16 @@
 				});
 				setTimeout(function() {
 					that.mynews()
-				}, 100000)
+				}, 3000)
 			},
-			mypush: function(newid, oneid, twoid) {
+			mypush: function(newid, oneid, twoid, type) {
 				var that = this
 				var info = plus.push.getClientInfo();
-				plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
+				if(type == 1) {
+					plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
+				} else {
+					plus.push.createMessage('您有新的已处理案卷,请点击查看!');
+				}
 				plus.push.addEventListener("click", function(msg) {
 					$.ajax({
 						type: "post",
@@ -636,15 +653,17 @@
 							cuserCmessageId: twoid
 						},
 						success: function(res) {
-							console.log(JSON.stringify(res))
-							if(res.status==200){
-								that.$store.state.windexid = newid
+							that.$store.state.windexid = newid
+							if(type == 1) {
 								that.$router.push({
 									name: 'ydetail'
 								})
-							}else{
-								plus.nativeUI.toast('消息读取错误')
+							} else {
+								that.$router.push({
+									name: 'changedetail'
+								})
 							}
+
 						},
 						error: function(error) {
 							console.log(JSON.stringify(res))

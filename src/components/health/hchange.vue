@@ -55,7 +55,8 @@
 				navtext: '分类',
 				navtype: 0,
 				changephoto: [],
-				cfileStation: ''
+				cfileStation: '',
+				wimg:''
 			}
 		},
 		mounted() {
@@ -65,13 +66,11 @@
 		},
 		methods: {
 			upmy: function() {
-				plus.nativeUI.showWaiting('上传中')
-				var that = this
-				if(that.files == '' || that.bottomtwoid == '') {
-					alert('错误')
+				if(this.navtext == '选择分类') {
 					function plusReady() {
 						// 显示自动消失的提示消息
-						plus.nativeUI.toast("请把信息填写完整后重试！");
+						plus.nativeUI.toast("请选择分类!");
+
 					}
 					if(window.plus) {
 						plusReady();
@@ -80,12 +79,59 @@
 					}
 					return false;
 				}
+				if(this.wimg == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请上传图片!");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+					return false;
+				}
+				var that = this
+
 				function plusReady() {
+					// 弹出系统等待对话框
+					that.w = plus.nativeUI.showWaiting("上传中...");
 					plus.geolocation.getCurrentPosition(function(p) {
-						that.cfileStation = ''
-						that.cfileStation = p.coords.longitude + ',' + p.coords.latitude
+						var dataJson = {
+							cuserId: localStorage.getItem('userid'),
+							cfileDealPrevImg1: that.wimg,
+							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+							ctypeTwoId: that.bottomtwoid
+						}
+						console.log(JSON.stringify(dataJson))
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCfileAndCuserAreadyRegister",
+							dataType: 'json',
+							data: dataJson,
+							success: function(res) {
+								console.log(JSON.stringify(res))
+								if(res.status != 200) {
+									alert(res.msg)
+								} else {
+									function plusReady() {
+										plus.nativeUI.closeWaiting();
+										plus.nativeUI.toast("上传完成");
+										that.navtext = '选择分类'
+									}
+									if(window.plus) {
+										plusReady();
+									} else {
+										document.addEventListener("plusready", plusReady, false);
+									}
+								}
+							},
+							error: function(err) {
+								console.log(JSON.stringify(err))
+							}
+						});
 					}, function(e) {
-						alert('Geolocation error: ' + e.message);
+						alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
 					});
 				}
 				if(window.plus) {
@@ -93,46 +139,6 @@
 				} else {
 					document.addEventListener("plusready", plusReady, false);
 				}
-				$.ajax({
-					type: "post",
-					url: that.service + "/insertCfileAndCuserAreadyRegister",
-					dataType:text,
-					data: {
-						cuserId: localStorage.getItem('userid'),
-						cfileDealPrevImg1: that.files,
-						ctypeTwoId: that.bottomtwoid,
-						cfileStation: that.cfileStation
-					},
-					success: function(res) {
-						plus.nativeUI.closeWaiting()
-						if(res.status == 200) {
-							function plusReady() {
-								// 显示自动消失的提示消息
-								plus.nativeUI.toast('上传完成')
-								that.myajax()
-							}
-							if(window.plus) {
-								plusReady();
-							} else {
-								document.addEventListener("plusready", plusReady, false);
-							}
-						} else {
-							function plusReady() {
-								// 显示自动消失的提示消息
-								plus.nativeUI.toast("上传失败!");
-							}
-							if(window.plus) {
-								plusReady();
-							} else {
-								document.addEventListener("plusready", plusReady, false);
-							}
-
-						}
-					},
-					error:function(error){
-						console.log(JSON.stringify(error))
-					}
-				});
 			},
 			filephotod: function(id) {
 				var that = this
@@ -294,8 +300,7 @@
 						height: h
 					});
 					ctx.drawImage(that, 0, 0, w, h);
-					thats.upsrc = canvas.toDataURL('image/jpeg', 1 || 0.8)
-					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
+					thats.wimg = canvas.toDataURL('image/jpeg', 1 || 0.8)
 				}
 			}
 		},

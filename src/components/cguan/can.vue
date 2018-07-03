@@ -17,11 +17,11 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tselect-top">
-				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					已整改案卷
-				</div>
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
 					未整改案卷
+				</div>
+				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
+					已整改案卷
 				</div>
 			</div>
 			<div class="time-box">
@@ -95,7 +95,9 @@
 					<p v-show='mydata.length==0'>
 						暂无案卷
 					</p>
+					
 				</swiper-slide>
+				
 			</swiper>
 		</div>
 		<transition name='nav'>
@@ -112,7 +114,7 @@
 		data() {
 			return {
 				swiperOption: {},
-				swiperindex: 0,
+				swiperindex: 1,
 				starttime: '',
 				endtime: '',
 				startshow: false,
@@ -136,7 +138,7 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 4
-			this.myajax(2)
+			this.myajax(0)
 			this.server=this.service+'/uploadRegisterImage'
 			function plusReady(){
 				// 弹出系统等待对话框
@@ -183,7 +185,6 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
-						console.log(JSON.stringify(res))
 						that.mydata=res.data
 						function plusReady(){
 							// 弹出系统等待对话框
@@ -226,9 +227,9 @@
 			},
 			gosearch: function() {
 				if(this.swiperindex==0){
-					this.myajax(2)
-				}else{
 					this.myajax(0)
+				}else{
+					this.myajax(2)
 				}
 			},
 			alerttab: function() {

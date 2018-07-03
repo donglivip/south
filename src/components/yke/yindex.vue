@@ -14,7 +14,7 @@
 	    						 取消
 	    					</span>
 					</div>
-					<div class="setting-group" @click="navshow('分类')">
+					<div class="setting-group" @click="navshow('分类')" v-show="upsrc!=''">
 						{{navtext}}
 					</div>
 					<div class="setting-group" @click="submit" v-show="upsrc!=''">
@@ -87,7 +87,8 @@
 				navtext: '选择分类',
 				bottomboo: false,
 				cfileStation: '',
-				w: ''
+				w: '',
+				wimg: ''
 			}
 		},
 		components: {
@@ -113,7 +114,7 @@
 					}
 					return false;
 				}
-				if(this.upsrc == '') {
+				if(this.wimg == '') {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请上传图片!");
@@ -129,17 +130,18 @@
 				// 弹出系统等待对话框
 				plus.nativeUI.showWaiting("上传中...");
 				plus.geolocation.getCurrentPosition(function(p) {
+					var dataJson = {
+						cuserCode: that.uuid,
+						cuserRole: 0,
+						cfileDealPrevImg1: that.wimg,
+						cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+						ctypeTwoId: that.bottomtwoid
+					}
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCfileAndCuser",
 						dataType: 'json',
-						data: {
-							cuserCode: that.uuid,
-							cuserRole: 0,
-							cfileDealPrevImg1: that.files,
-							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
-							ctypeTwoId: that.bottomtwoid
-						},
+						data: dataJson,
 						success: function(res) {
 							plus.nativeUI.closeWaiting()
 							that.upimg = false
@@ -165,14 +167,14 @@
 								}
 							}
 						},
-						error:function(error){
+						error: function(error) {
 							plus.nativeUI.closeWaiting()
 							plus.nativeUI.toast('上传失败')
 							console.log(JSON.stringify(error))
 						}
 					});
 				}, function(e) {
-					alert('Geolocation error: ' + e.message);
+					alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
 				});
 
 			},
@@ -267,7 +269,7 @@
 					var w = that.width,
 						h = that.height,
 						scale = w / h;
-					w = 500 || w; //480  你想压缩到多大，改这里
+					w = 800 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
 
 					//生成canvas
@@ -279,7 +281,7 @@
 					});
 					ctx.drawImage(that, 0, 0, w, h);
 					thats.upsrc = canvas.toDataURL('image/jpeg', 1 || 0.8)
-					thats.files = canvas.toDataURL('image/jpeg', 1 || 0.8)
+					thats.wimg = canvas.toDataURL('image/jpeg', 1 || 0.8)
 				}
 			}
 		},

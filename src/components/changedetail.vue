@@ -8,7 +8,7 @@
 			<span></span>
 		</div>
 		<div id="main">
-			<div class="detail-group">
+			<div class="detail-group" v-if="mydata.length>0">
 				<div class="detail-inner">
 					<img src="../../static/detail=adress.png" />
 					<div class="detail-text">
@@ -16,7 +16,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="detail-group">
+			<div class="detail-group" v-if="mydata.length>0">
 				<div class="detail-inner">
 					<img src="../../static/detail-time.png" />
 					<div class="detail-text">
@@ -34,6 +34,11 @@
 						<img :src="mydata[0].cfileDealPrevImg1 | myimg"/>
 					</div>
 					
+				</div>
+			</div>
+			<div class="detail-group" v-if="mydata[1]==null">
+				<div class="detail-inner">
+					<div id="mymap"></div>
 				</div>
 			</div>
 			<div class="detail-group" v-if="mydata[1]!=null&&userid!=null">
@@ -75,6 +80,7 @@
 </template>
 
 <script>
+	import AMap from 'AMap'
 	export default {
 		name: 'changedetail',
 		data() {
@@ -91,11 +97,24 @@
 		mounted() {
 			this.server=this.service+'/uploadworkImage'
 			this.myajax()
+			
 		},
 		methods: {
+			havemap:function(){
+				var that=this
+				var mapcenter=JSON.parse("["+that.mydata[0].cfileStation+"]")
+				var map=new AMap.Map('mymap', {
+		          center: mapcenter,
+		          zoom: 15
+		        })
+				var marker = new AMap.Marker({
+					title: '提示'
+				});
+				marker.setMap(map);
+			},
 			myajax:function(){
 				var that=this
-				plus.nativeUI.showWaiting('加载中')
+//				plus.nativeUI.showWaiting('加载中')
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",
@@ -104,8 +123,10 @@
 						cfileId: that.windexid
 					},
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
-						plus.nativeUI.closeWaiting()
+						that.havemap()
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
@@ -244,6 +265,10 @@
 
 <style type="text/css" lang="scss">
 	.cbackdetail {
+		#mymap{
+			height: 4rem;
+			width: 100%;
+		}
 		background: #EEEEEE;
 		.submit{
 			position: absolute;

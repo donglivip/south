@@ -8,7 +8,7 @@
 			<span></span>
 		</div>
 		<div id="main" style="height: calc(100% - .7rem);">
-			<div class="detail-group">
+			<div class="detail-group" v-if="mydata.length>0">
 				<div class="detail-inner">
 					<img src="../../static/detail=adress.png" />
 					<div class="detail-text">
@@ -16,7 +16,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="detail-group">
+			<div class="detail-group" v-if="mydata.length>0">
 				<div class="detail-inner">
 					<img src="../../static/anjuan.png" />
 					<div class="detail-text">
@@ -29,6 +29,11 @@
 				</div>
 			</div>
 			<div class="detail-group">
+				<div class="detail-inner">
+					<div id="mymap"></div>
+				</div>
+			</div>
+			<div class="detail-group" v-if="mydata.length>0">
 				<div class="detail-inner">
 					<div class="detail-text">
 						是否受理：
@@ -139,7 +144,7 @@
 		},
 		methods: {
 			godubmit: function() {
-				plus.nativeUI.showWaiting('处理中')
+//				plus.nativeUI.showWaiting('处理中')
 				var that = this
 				var ajaxdata = {
 					cfileId: that.windexid,
@@ -147,7 +152,8 @@
 					cnotAdmissibleReason: that.cnotAdmissibleReason,
 					cfinisedId: that.cfinisedId,
 					ctypeTwoId: that.bottomtwoid,
-					ctypeTitle:that.ctypeTitle
+					ctypeTitle:that.ctypeTitle,
+					cuserId1:localStorage.getItem('userid')
 //					cuserIdNetwork: that.mydata[0].cuserIdNetwork,
 //					cgridId: that.mydata[0].cgridId
 				}
@@ -169,7 +175,7 @@
 					dataType: 'json',
 					data: ajaxdata,
 					success: function(res) {
-						plus.nativeUI.closeWaiting()
+//						plus.nativeUI.closeWaiting()
 						if(res.status==200){
 							that.$router.back()
 						}else{
@@ -233,6 +239,18 @@
 				this.type = type
 				this.navboo = !this.navboo
 			},
+			havemap:function(){
+				var that=this
+				var mapcenter=JSON.parse("["+that.mydata[0].cfileStation+"]")
+				var map=new AMap.Map('mymap', {
+		          center: mapcenter,
+		          zoom: 15
+		        })
+				var marker = new AMap.Marker({
+					title: '提示'
+				});
+				marker.setMap(map);
+			},
 			myajax: function() {
 				var that = this
 				$.ajax({
@@ -244,6 +262,7 @@
 					},
 					success: function(res) {
 						that.mydata = res.data
+						that.havemap()
 						function plusReady() {
 							// 弹出系统等待对话框
 							var w = plus.nativeUI.closeWaiting()
@@ -291,6 +310,10 @@
 
 <style type="text/css" lang="scss">
 	.cbackdetail {
+		#mymap{
+			height: 4rem;
+			width: 100%;
+		}
 		.radio {
 			display: flex;
 			align-items: center;

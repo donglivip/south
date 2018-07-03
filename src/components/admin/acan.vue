@@ -65,7 +65,6 @@
 
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
-				
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
 					<div class="box-group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
