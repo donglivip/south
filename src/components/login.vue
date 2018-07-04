@@ -128,6 +128,9 @@
 	
 	.login {
 		background: rgb(30, 129, 214);
+		i{
+			position: inherit!important;
+		}
 	}
 	
 	.login .title {
@@ -211,19 +214,20 @@
 	
 	.login .form-group {
 		margin: 0 0 .5rem 0;
-		position: relative;
 		display: flex;
 		align-items: center;
 		width: 5rem;
+		border: 1px #ccc solid;
+		border-radius: .5rem;
+		background: white;
+		overflow: hidden;
 	}
 	
 	.login .form-control {
 		flex: 1;
-		border: 1px #ccc solid;
-		border-radius: .5rem;
 		box-shadow: none;
-		padding: 0 .45rem 0 .9rem;
 		height: .86rem;
+		border: 0;
 	}
 	
 	.login .form-group .reg {

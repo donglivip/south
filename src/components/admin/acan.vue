@@ -106,8 +106,8 @@
 				</swiper-slide>
 				<!--已整改-->
 				<swiper-slide>
-					<div class="select-group">
-						<div class="group-inner" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
+					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
+						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
 							</div>
@@ -140,7 +140,7 @@
 								<div class="circle width12"></div>
 								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
 							</div>
-							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
+							<span class="text">{{val.cmultipleCommunitiesName==null?'名称暂缺':val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
 						</div>
 					</div>
@@ -348,6 +348,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
 						function plusReady() {
 							// 弹出系统等待对话框

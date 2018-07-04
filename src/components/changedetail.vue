@@ -111,6 +111,7 @@
 					title: '提示'
 				});
 				marker.setMap(map);
+				plus.nativeUI.closeWaiting()
 			},
 			myajax:function(){
 				var that=this
@@ -123,10 +124,9 @@
 						cfileId: that.windexid
 					},
 					success: function(res) {
-						console.log(res)
 						that.mydata=res.data
 						that.havemap()
-						plus.nativeUI.closeWaiting()
+						
 					}
 				});
 			},

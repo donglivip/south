@@ -69,7 +69,7 @@
 				</tr>
 				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=0">
 					<td>
-						{{val.cgridName}}
+						{{val.cgridName==null?'名称暂缺':val.cgridName}}
 					</td>
 					<td>
 						{{val.count1}}

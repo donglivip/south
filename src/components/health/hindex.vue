@@ -63,7 +63,7 @@
 				if(this.start) {
 					this.setime = setInterval(function() {
 						that.havecenter()
-					}, 3000)
+					}, 1000)
 				} else {
 					clearInterval(this.setime)
 				}

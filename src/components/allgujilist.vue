@@ -33,7 +33,7 @@
 				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="val.cworkTrajectory!=null" style="position: relative;z-index: 88;">
 					<div class="circle"></div>
 					<div class="name">
-						{{val.cworkTitle}}
+						{{val.cworkTitle==null?'名称暂缺':val.cworkTitle}}
 					</div>
 					<div class="upnum" style="flex: 1;">
 						

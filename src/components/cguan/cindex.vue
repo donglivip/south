@@ -51,7 +51,7 @@
 									<span style="width: auto;">{{val.createTime1}}</span>
 								</div>
 								<span class="text">{{val.cworkTitle}}</span>
-								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;"/>
+								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;" />
 							</div>
 							<p v-if="workphoto.length==0">暂无数据</p>
 						</div>
@@ -107,7 +107,7 @@
 		<transition name='nav'>
 			<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
 		</transition>
-		<h-foot v-on:mynews='mynews'></h-foot>
+		<h-foot></h-foot>
 	</div>
 </template>
 <script>
@@ -133,22 +133,26 @@
 				marker: '',
 				uploadtarget: '',
 				files: [],
-				navtype:2,
-				cfileStation:'',
-				wimg:''
+				navtype: 2,
+				cfileStation: '',
+				wimg: ''
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 1,
-			this.mylocation()
+				this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
 			var that = this
-			that.mynews()
 		},
 		methods: {
 			tab: function(inedx) {
 				this.navtype = inedx
+				if(inedx==2){
+					this.havechange(2)
+				}else{
+					this.havechange(0)
+				}
 			},
 			upmy: function() {
 				if(this.navtext == '选择分类') {
@@ -389,17 +393,21 @@
 					success: function(res) {
 						that.workphoto = res.data
 					}
-				});
+				})
+			},
+			havechange:function(type){
+				var that=this
 				$.ajax({
 					type: "get",
-					url: that.service + "/queryListByCuserIdNetwork",
+					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
 					data: {
-						cuserIdNetwork: localStorage.getItem('userid')
+						cuserId: localStorage.getItem('userid'),
+						cfileResult:type
 					},
 					success: function(res) {
 						console.log(res)
-						that.changephoto = res.data[0]
+						that.changephoto = res.data
 					}
 				});
 			},
@@ -409,7 +417,7 @@
 				if(this.start) {
 					this.setime = setInterval(function() {
 						that.havecenter()
-					}, 3000)
+					}, 1000)
 				} else {
 					clearInterval(this.setime)
 				}
@@ -498,9 +506,9 @@
 						var img_name = entry.name;
 						var img_path = entry.toLocalURL();
 						document.getElementById('img' + that.uploadtarget).setAttribute('src', img_path)
-						if(that.swiperindex==2){
+						if(that.swiperindex == 2) {
 							that.upload_img02(img_path);
-						}else{
+						} else {
 							that.upload_img(img_path);
 						}
 					}, function(e) {
@@ -518,9 +526,9 @@
 				var that = this
 				plus.gallery.pick(function(path) {
 					document.getElementById('img' + that.uploadtarget).setAttribute('src', path)
-					if(that.swiperindex==2){
+					if(that.swiperindex == 2) {
 						that.upload_img02(path);
-					}else{
+					} else {
 						that.upload_img(path);
 					}
 				}, function(e) {
@@ -601,75 +609,6 @@
 			},
 			getUid: function() {
 				return Math.floor(Math.random() * 100000000 + 10000000).toString();
-			},
-			mynews: function() {
-				var that = this
-				$.ajax({
-					type: "get",
-					url: that.service + "/queryCuserMessagePojoByCuserId",
-					dataType: 'json',
-					data: {
-						cuserId: localStorage.getItem('userid')
-					},
-					success: function(res) {
-						if(res.data.length > 0) {
-							for(var i = 0; i < res.data.length; i++) {
-								if((res.data[i].stystemSatus == 1 || res.data[i].stystemSatus == 2) && res.data[i].status != 1) {
-									var mm1 = (parseInt(new Date().Format("ss")) - 5).toString();
-									if(mm1.length == 1) {
-										mm1 = '0' + mm1
-									};
-									var testdate=res.data[i].createTime1;
-									var startDateString = new Date().Format("yyyy-MM-dd hh:mm:"+mm1+"");
-									var endDateString = new Date().Format("yyyy-MM-dd hh:mm:ss");
-									if(new Date(testdate) > new Date(startDateString) && new Date(testdate) < new Date(endDateString)) {
-										console.log('yes')
-										that.mypush(res.data[i].cfileId, res.data[i].cmessageId, res.data[i].cuserCmessageId,res.stystemSatus)
-									}
-								}
-							}
-						}
-					}
-				});
-				setTimeout(function() {
-					that.mynews()
-				}, 3000)
-			},
-			mypush: function(newid, oneid, twoid, type) {
-				var that = this
-				var info = plus.push.getClientInfo();
-				if(type == 1) {
-					plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
-				} else {
-					plus.push.createMessage('您有新的已处理案卷,请点击查看!');
-				}
-				plus.push.addEventListener("click", function(msg) {
-					$.ajax({
-						type: "post",
-						url: that.service + "/updateCuserCmessageByPrimaryKeySelective",
-						dataType: 'json',
-						data: {
-							cmessageId: oneid,
-							cuserCmessageId: twoid
-						},
-						success: function(res) {
-							that.$store.state.windexid = newid
-							if(type == 1) {
-								that.$router.push({
-									name: 'ydetail'
-								})
-							} else {
-								that.$router.push({
-									name: 'changedetail'
-								})
-							}
-
-						},
-						error: function(error) {
-							console.log(JSON.stringify(res))
-						}
-					});
-				}, false);
 			}
 		},
 		computed: {
@@ -705,7 +644,7 @@
 			text-align: center;
 			line-height: 1rem;
 		}
-		.nav{
+		.nav {
 			display: flex;
 			width: 100%;
 			height: .8rem;

@@ -12,7 +12,7 @@
 				<div class="detail-inner">
 					<img src="../../static/detail=adress.png" />
 					<div class="detail-text">
-						{{mydata[0].cgridName}}
+						{{mydata[0].cgridName==null?'名称暂缺':mydata[0].cgridName}}
 					</div>
 				</div>
 			</div>
@@ -56,17 +56,18 @@
 		},
 		methods: {
 			myajax:function(){
+				console.log(this.windexid)
 				var that=this
 				$.ajax({
 					type: "get",
-					url: that.service + "/queryListByCfileId",
+					url: that.service + "/queryReturnFileById",
 					dataType: 'json',
 					data: {
 						cfileId: that.windexid
 					},
 					success: function(res) {
 						that.mydata=res.data
-						console.log(that.mydata)	
+						console.log(res)	
 					}
 				});
 			},
@@ -94,7 +95,7 @@
 						cfileDealAfterImg1:that.cworkImg
 					},
 					success: function(res) {
-						console.log(JSON.stringify(res))
+						console.log(res)
 						if(res.status == 200) {
 							that.myajax()
 							function plusReady() {

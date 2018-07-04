@@ -97,7 +97,6 @@
 			this.$store.state.tfoot = 2
 			this.myajax()
 			var that = this
-			that.mynews()
 		},
 		methods: {
 			myajax: function() {

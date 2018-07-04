@@ -131,7 +131,6 @@
 		},
 		mounted() {
 			this.myajax()
-
 			function plusReady() {
 				// 弹出系统等待对话框
 				var w = plus.nativeUI.showWaiting("加载中...");
@@ -144,7 +143,7 @@
 		},
 		methods: {
 			godubmit: function() {
-//				plus.nativeUI.showWaiting('处理中')
+				plus.nativeUI.showWaiting('处理中')
 				var that = this
 				var ajaxdata = {
 					cfileId: that.windexid,
@@ -175,7 +174,7 @@
 					dataType: 'json',
 					data: ajaxdata,
 					success: function(res) {
-//						plus.nativeUI.closeWaiting()
+						plus.nativeUI.closeWaiting()
 						if(res.status==200){
 							that.$router.back()
 						}else{

@@ -7,61 +7,51 @@
 		</header>
 		<div class="main">
 			<div class="centercircle" v-show="groupshow">
-				<div class="group ">
-					<img src="../../static/yuan.png">
+				<div class="group">
 					<span class="name">美南丽钢</span>
 				</div>
 				<transition name='tran1'>
 					<div class="group" v-show="groupshow" @click="opennew('yindex',1)">
-						<img src="../../static/home_03.png">
 						<div class="name1"><span>居民</span><span>随手拍</span></div>
 					</div>
 				</transition>
 				<transition name='tran2'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>环保</span><span>小卫士</span></div>
 					</div>
 				</transition>
 				<transition name='tran3'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>志愿</span><span>督察员</span></div>
 					</div>
 				</transition>
 				<transition name='tran4'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>社区</span><span>楼栋长</span></div>
 					</div>
 				</transition>
 				<transition name='tran5'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>社区</span><span>网格员</span></div>
 					</div>
 				</transition>
 				<transition name='tran6'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>环卫</span><span>工作者</span></div>
 					</div>
 				</transition>
 				<transition name='tran7'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>综合</span><span>执法队</span></div>
 					</div>
 				</transition>
 				<transition name='tran8'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>城管</span><span>中心</span></div>
 					</div>
 				</transition>
 				<transition name='tran9'>
 					<div class="group width12" v-show="groupshow" @click="opennew('login')">
-						<img src="../../static/home_06.png">
 						<div class="name1"><span>街办</span><span>管理员</span></div>
 					</div>
 				</transition>
@@ -147,19 +137,7 @@
 </script>
 
 <style lang="scss">
-	@for $i from 1 through 9 {
-		.tran#{$i}-enter-active,
-		.tran#{$i}-leave-active {
-			transition: all .25s * $i ease-in-out;
-		}
-	}
-	
-	@for $i from 1 through 9 {
-		.tran#{$i}-enter,
-		.tran#{$i}-leave {
-			opacity: 0;
-		}
-	}
+
 	
 	html,
 	body,
@@ -238,14 +216,23 @@
 	.index .group {
 		color: rgb(4, 158, 255);
 	}
-	
+	.index .group {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: url(../../static/home_06.png);
+		background-size: 100% 100%;
+	}
 	.index .group:nth-of-type(1) {
 		width: 2.8rem;
 		height: 2.8rem;
 		color: #FFFFFF;
 		font-size: 0.48rem;
 		top: -.9rem;
-		right: .1rem
+		right: .1rem;
+		background: url(../../static/yuan.png);
+		background-size: 100% 100%;
 	}
 	
 	.index .group:nth-of-type(2) {
@@ -292,15 +279,9 @@
 		left: -1.4rem;
 	}
 	
-	.index .group {
-		position: absolute;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+	
 	
 	.index .name {
-		position: absolute;
 		font-size: 0.5rem;
 		font-weight: bold;
 		width: 1.4rem;
@@ -309,7 +290,6 @@
 	}
 	
 	.index .name1 {
-		position: absolute;
 		font-size: 0.24rem;
 		font-weight: bold;
 		display: flex;

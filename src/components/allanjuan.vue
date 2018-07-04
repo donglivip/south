@@ -109,8 +109,8 @@
 				</swiper-slide>
 				<!--已整改-->
 				<swiper-slide>
-					<div class="select-group">
-						<div class="group-inner" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
+					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
+						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
 							</div>

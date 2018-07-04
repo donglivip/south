@@ -138,7 +138,7 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 4
-			this.myajax(0)
+			this.toswiper(1)
 			this.server=this.service+'/uploadRegisterImage'
 			function plusReady(){
 				// 弹出系统等待对话框
@@ -185,6 +185,7 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
 						function plusReady(){
 							// 弹出系统等待对话框
