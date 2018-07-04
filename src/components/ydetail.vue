@@ -112,6 +112,7 @@
 </template>
 
 <script>
+	import AMap from 'AMap'
 	export default {
 		name: 'ydetail',
 		data() {

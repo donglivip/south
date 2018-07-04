@@ -80,6 +80,7 @@ export default {
 		background: rgba(0,0,0,.5);
 		z-index: 999;
 		font-size: .35rem;
+		height: 100%;
 		.nav-group{
 			position: absolute;
 			bottom: 0;
@@ -93,6 +94,7 @@ export default {
 				justify-content: center;
 				border-bottom: 1px solid ghostwhite;
 				flex-direction: column;
+				background: white;
 			}
 			span{
 				padding: .3rem 0;

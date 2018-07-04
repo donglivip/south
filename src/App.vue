@@ -120,9 +120,6 @@
 				document.addEventListener("pause", function() {
 					plus.nativeUI.toast('程序在后台运行')
 				}, false);
-				document.addEventListener("resume", function() {
-					plus.nativeUI.toast('欢迎回来')
-				}, false)
 			}
 			if(window.plus) {
 				plusReady();
