@@ -140,15 +140,6 @@
 			this.$store.state.tfoot = 4
 			this.toswiper(1)
 			this.server=this.service+'/uploadRegisterImage'
-			function plusReady(){
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting( "加载中..." );
-			}
-			if(window.plus){
-				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
-			}
 		},
 		computed: {
 			swiper() {
@@ -166,36 +157,28 @@
 				})
 			},
 			myajax: function(type) {
+				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var ajaxJson={
 						cuserId: localStorage.getItem('userid'),
 						cfileResult: type,
 						createTime1:that.starttime,
-						handingTime1:that.endtime
+						handingTime1:that.endtime,
+						cuserRole:localStorage.getItem('cuserRole')
 					}
 				if(that.starttime==''){
 					delete ajaxJson.createTime1
 				}if(that.endtime==''){
 					delete ajaxJson.handingTime1
 				}
-				console.log(JSON.stringify(ajaxJson))
 				$.ajax({
 					type: "post",
-					url: that.service + "/queryByCfilePojoRegister",
+					url: that.service + "/queryCfilePojoAndRoleAndResultAndCtypeTitle",
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
-						console.log(res)
 						that.mydata=res.data
-						function plusReady(){
-							// 弹出系统等待对话框
-							var w = plus.nativeUI.closeWaiting()
-						}
-						if(window.plus){
-							plusReady();
-						}else{
-							document.addEventListener("plusready",plusReady,false);
-						}
+						plus.nativeUI.closeWaiting()	
 						
 					}
 				});

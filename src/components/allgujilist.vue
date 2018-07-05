@@ -70,6 +70,7 @@
 		},
 		methods: {
 			myajax: function() {
+				plus.nativeUI.showWaiting( "加载中..." );
 				var that = this
 				var dataJson = {
 					cuserId: that.windexid,
@@ -89,6 +90,7 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata=res.data
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

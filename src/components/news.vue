@@ -86,7 +86,7 @@
 				this.$router.back()
 			},
 			myajax: function() {
-//				plus.nativeUI.showWaiting('数据加载中')
+				plus.nativeUI.showWaiting('数据加载中')
 				var that = this;
 				$.ajax({
 					type: "get",
@@ -96,9 +96,8 @@
 						cuserId: localStorage.getItem('userid')
 					},
 					success: function(res) {
-						console.log(res.data)
 						that.mydata = res.data
-//						plus.nativeUI.closeWaiting()
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			}

@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="(val.count1!=0||val.count2!=0)&&val.cuserName!=null">
+				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" v-if="(val.count1!=0||val.count2!=0)&&val.cuserName!=null">
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName}}
@@ -88,6 +88,7 @@
 		},
 		methods: {
 			myajax: function() {
+				plus.nativeUI.showWaiting('数据加载中...')
 				var that = this
 				var dataJson = {
 					cuserName: that.uname,
@@ -113,12 +114,12 @@
 							}
 						}
 						that.mydata=res.data[0]
-						console.log(that.mydata)
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
 			opennew: function(target,id) {
-				this.$store.state.searchid=id
+				this.$store.state.windexid=id
 				this.$router.push({
 					name: target
 				})

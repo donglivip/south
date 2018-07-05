@@ -44,6 +44,7 @@
 				this.$router.back()
 			},
 			myajax: function() {
+				plus.nativeUI.showWaiting('数据加载中...')
 				var that = this
 				$.ajax({
 					type: "post",
@@ -55,6 +56,7 @@
 					},
 					success: function(res) {
 						that.mydata = res.data
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			}

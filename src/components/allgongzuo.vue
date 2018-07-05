@@ -92,6 +92,7 @@
 		},
 		methods: {
 			myajax: function() {
+				plus.nativeUI.showWaiting( "加载中..." );
 				var that = this
 				var dataJson = {
 					cuserName: that.uname,
@@ -109,8 +110,8 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
 						that.mydata=res.data
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

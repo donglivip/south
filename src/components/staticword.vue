@@ -23,7 +23,6 @@
 			}
 		},
 		mounted() {
-
 			var chartoption = {
 				tooltip: {
 					trigger: 'axis',

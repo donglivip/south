@@ -108,6 +108,7 @@
 					plus.nativeUI.toast('请上传身份证')
 					return false;
 				}
+				plus.nativeUI.showWaiting('资料提交中...')
 				$.ajax({
 					type: "post",
 					url: that.service + "/updateByMyOwnerCusers",
@@ -115,6 +116,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						plus.nativeUI.closeWaiting()
 						localStorage.setItem('cuserHeadImg', that.cfileDealAfterImg1)
 						localStorage.setItem('sex', that.sex)
 						localStorage.setItem('usercode', that.personnum)

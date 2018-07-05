@@ -93,6 +93,7 @@
 					plus.nativeUI.toast('请先选择网格')
 					return false;
 				}
+				plus.nativeUI.showWaiting( "数据处理中..." );
 				var that = this
 				var ajaxJson={
 						cgridId: that.cgridId,
@@ -107,6 +108,7 @@
 					data: ajaxJson,
 					success: function(res) {
 						that.$router.back()
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

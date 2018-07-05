@@ -103,6 +103,7 @@
 					}
 					return false;
 				}
+				plus.nativeUI.showWaiting('更新提交中...')
 				$.ajax({
 					type: "post",
 					url: that.service + "/updatePasswordByCusers",
@@ -117,6 +118,7 @@
 							alert(res.msg)
 							return false;
 						}
+						plus.nativeUI.closeWaiting()
 						that.opennew('login')
 					}
 				});

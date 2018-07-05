@@ -139,7 +139,7 @@
 				})
 			},
 			submit: function(event) {
-				plus.nativeUI.showWaiting('提交中...')
+				plus.nativeUI.showWaiting('资料提交中...')
 				var formData = new FormData(event.target);
 				var that = this
 				var file = document.getElementById('file');

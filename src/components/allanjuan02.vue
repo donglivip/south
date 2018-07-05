@@ -219,16 +219,6 @@
 		mounted() {
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
-
-			function plusReady() {
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting("数据加载中，等待时间可能较长，请耐心等待...");
-			}
-			if(window.plus) {
-				plusReady();
-			} else {
-				document.addEventListener("plusready", plusReady, false);
-			}
 		},
 		computed: {
 			swiper() {
@@ -294,6 +284,7 @@
 
 			},
 			myajax: function() {
+				plus.nativeUI.showWaiting("数据加载中...");
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,

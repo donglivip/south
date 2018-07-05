@@ -106,15 +106,6 @@
 		},
 		mounted() {
 			this.myajax()
-			function plusReady(){
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting( "加载中..." );
-			}
-			if(window.plus){
-				plusReady();
-			}else{
-				document.addEventListener("plusready",plusReady,false);
-			}
 		},
 		computed: {
 			service() {
@@ -123,6 +114,7 @@
 		},
 		methods: {
 			myajax:function(){
+				plus.nativeUI.showWaiting( "加载中..." );
 				var that=this
 				var formData={
 					createTime1: that.starttime,

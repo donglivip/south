@@ -165,7 +165,7 @@
 										function plusReady() {
 											// 显示自动消失的提示消息
 											plus.nativeUI.toast("删除完成！");
-											that.myajax()
+											that.tab(0)
 										}
 										if(window.plus) {
 											plusReady();

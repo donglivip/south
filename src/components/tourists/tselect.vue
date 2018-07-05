@@ -158,7 +158,7 @@
 			},
 			myajax: function(type) {
 				var that = this
-				plus.nativeUI.showWaiting("数据加载中,可能用时较长，请耐心等待...");
+//				plus.nativeUI.showWaiting("数据加载中,可能用时较长，请耐心等待...");
 				var ajaxJson = {
 					cuserId: localStorage.getItem('userid'),
 					cfileResult: type,
@@ -177,8 +177,9 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
-						plus.nativeUI.closeWaiting()
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

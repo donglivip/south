@@ -425,7 +425,7 @@
 			mylocation: function() {
 				var that = this
 				that.map = new AMap.Map('map-container', {
-					zoom: 15,
+					zoom: 18,
 					center: JSON.parse(that.mapcenter)
 				})
 				that.marker = new AMap.Marker({

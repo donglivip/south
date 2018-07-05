@@ -216,15 +216,6 @@
 		mounted() {
 			this.myajax()
 			this.server = this.service + '/uploadworkImage'
-			function plusReady() {
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting("加载中...");
-			}
-			if(window.plus) {
-				plusReady();
-			} else {
-				document.addEventListener("plusready", plusReady, false);
-			}
 		},
 		computed: {
 			swiper() {
@@ -290,6 +281,7 @@
 
 			},
 			myajax: function() {
+				plus.nativeUI.showWaiting("数据加载中,请稍后...")
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,
@@ -320,15 +312,7 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata = res.data
-						function plusReady() {
-							// 弹出系统等待对话框
-							plus.nativeUI.closeWaiting();
-						}
-						if(window.plus) {
-							plusReady();
-						} else {
-							document.addEventListener("plusready", plusReady, false);
-						}
+						plus.nativeUI.closeWaiting();
 					}
 				});
 			},

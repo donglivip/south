@@ -115,7 +115,7 @@
 			},
 			myajax:function(){
 				var that=this
-				plus.nativeUI.showWaiting('加载中')
+				plus.nativeUI.showWaiting('数据加载中...')
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",
@@ -143,6 +143,7 @@
 				this.navtext = id
 			},
 			myupload:function(){
+				plus.nativeUI.showWaiting('数据上传中...')
 				var that=this
 				$.ajax({
 					type: "post",
@@ -158,7 +159,7 @@
 							that.myajax()
 							function plusReady() {
 								// 显示自动消失的提示消息
-								plus.nativeUI.toast("上传完成！");
+								plus.nativeUI.closeWaiting()
 								that.cworkImg=''
 							}
 							if(window.plus) {

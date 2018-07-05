@@ -19,10 +19,10 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="(val.count1!=0||val.count2!='')&&val.cuserName!=null">
+				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" >
 					<div class="circle"></div>
 					<div class="name">
-						{{val.cuserName}}
+						{{val.cuserName==null?'名称暂缺':val.cuserName}}
 					</div>
 					<div class="upnum">
 						上报数: {{val.count1}}
@@ -117,7 +117,7 @@
 					url: that.service + "/queryCuserNameAndCuserRoleReportCount",
 					dataType: 'json',
 					data: dataJson,
-					success: function(res) {
+					success: function(res) {console.log(res)
 						for(var i=0;i<res.data[0].length;i++){
 							if(res.data[i+1]!=null){
 								res.data[0][i].count2=res.data[i+1].count2
@@ -131,7 +131,7 @@
 				});
 			},
 			opennew: function(target, id) {
-				this.$store.state.searchid = id
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
