@@ -57,9 +57,16 @@
 											mystatus=res.data[i].stystemSatus
 											cmessageId=res.data[i].cmessageId
 											cuserCmessageId=res.data[i].cuserCmessageId
+											console.log(res.data[i])
+											console.log(mystatus)
 //											推送消息
 											var info = plus.push.getClientInfo();
-											plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
+											if(mystatus==1){
+												plus.push.createMessage('您有新的案卷需要处理,请点击查看!');
+											}else{
+												plus.push.createMessage('您有新的消息！');
+											}
+											
 //											点击事件
 											plus.push.addEventListener("click", function(msg) {
 												if(mystatus==1){

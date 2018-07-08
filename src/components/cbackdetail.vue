@@ -26,7 +26,7 @@
 				<div class="detail-inner" v-if='mydata.length>0'>
 					<img src="../../static/detail-up.png" />
 					<div class="detail-text">
-						上报人：{{mydata[0].cuserName}}
+						上报人：{{mydata[0].cuserName==null?'名称暂缺':mydata[0].cuserName}}
 					</div>
 				</div>
 				<div class="detail-inner" v-if='mydata.length>0'>
@@ -98,8 +98,7 @@
 				var ajaxJson={
 						cgridId: that.cgridId,
 						cfileId:that.mydata[0].cfileId,
-						cfileResult:0,
-						cuserIdNetwork:that.mydata[0].cuserId
+						cfileResult:0
 				}
 				$.ajax({
 					type: "post",
@@ -107,7 +106,12 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
-						that.$router.back()
+						console.log(res)
+						if(res.status==200){
+							that.$router.back()
+						}else{
+							plus.nativeUI.showWaiting('提交错误')
+						}
 						plus.nativeUI.closeWaiting()
 					}
 				});
@@ -153,7 +157,6 @@
 					url: that.service + "/queryCgrid",
 					dataType: 'json',
 					success: function(res) {
-						console.log(res)
 						that.noway = res.data
 					}
 				});

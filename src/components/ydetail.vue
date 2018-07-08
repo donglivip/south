@@ -144,6 +144,19 @@
 		},
 		methods: {
 			godubmit: function() {
+//				受理
+				if(this.radioboo==1){
+					if(this.cfinisedId==''||this.ctypeTwoId==''){
+						plus.nativeUI.toast('请把参数选择完整')
+						return false;
+					}
+//				不受理
+				}else if(this.radioboo==3){
+					if(this.cnotAdmissibleReason==''){
+						plus.nativeUI.toast('请把参数选择完整')
+						return false;
+					}
+				}
 				plus.nativeUI.showWaiting('处理中')
 				var that = this
 				var ajaxdata = {
@@ -169,12 +182,17 @@
 				if(that.bottomtwoid == '') {
 					delete ajaxdata.ctypeTwoId
 				}
+				if(that.ctypeTitle == '选择分类') {
+					delete ajaxdata.ctypeTitle
+				}
+				console.log(ajaxdata)
 				$.ajax({
 					type: "post",
 					url: that.service + "/updateBycfilePreCase",
 					dataType: 'json',
 					data: ajaxdata,
 					success: function(res) {
+						console.log(res)
 						plus.nativeUI.closeWaiting()
 						if(res.status==200){
 							that.$router.back()
@@ -182,6 +200,10 @@
 							plus.nativeUI.toast(res.data.msg)
 						}
 						
+					},
+					error:function(err){
+						plus.nativeUI.closeWaiting()
+						plus.nativeUI.toast('提交失败')
 					}
 				});
 			},

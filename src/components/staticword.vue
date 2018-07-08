@@ -85,8 +85,9 @@
 					for(var i=0;i<res.data[0].length;i++){
 							res.data[0][i].count2=res.data[i+1].count2
 						}
+					console.log(res.data[0])
 					for(var i=0;i<res.data[0].length;i++){
-						chartoption.xAxis[0].data.push(res.data[0][i].cmultipleCommunitiesName)
+						chartoption.xAxis[0].data.push(res.data[0][i].cgridName)
 						chartoption.series[0].data.push(res.data[0][i].count1)
 						chartoption.series[1].data.push(res.data[0][i].count2)
 					}

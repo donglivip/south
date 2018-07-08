@@ -30,16 +30,16 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId)" v-for="val in mydata" v-if="val.cworkTrajectory!=null" style="position: relative;z-index: 88;">
+				<div class="group" @click="opennew('cdetail',val.cuserId,index)" v-for="(val,index) in mydata" v-if="val.cworkTrajectory!=null" style="position: relative;z-index: 88;">
 					<div class="circle"></div>
-					<div class="name">
-						{{val.cworkTitle==null?'名称暂缺':val.cworkTitle}}
+					<div class="name" style="width: auto;font-weight: bold;white-space: nowrap;">
+						{{val.createTime1}}
 					</div>
 					<div class="upnum" style="flex: 1;">
 						
 					</div>
 					<div class="oknum" style="width: 4rem;text-align: right;">
-						{{val.createTime1}}
+						
 					</div>
 					<img src="../../static/arrright.png" style="margin: 0 .15rem;"/>
 				</div>
@@ -70,7 +70,7 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting( "加载中..." );
+//				plus.nativeUI.showWaiting( "加载中..." );
 				var that = this
 				var dataJson = {
 					cuserId: that.windexid,
@@ -89,13 +89,15 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
-						plus.nativeUI.closeWaiting()
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
-			opennew: function(target,id) {
+			opennew: function(target,id,index) {
 				this.$store.state.searchid=id
+				this.$store.state.mapid=index
 				this.$router.push({
 					name: target
 				})

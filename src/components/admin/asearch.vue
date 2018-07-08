@@ -117,7 +117,7 @@
 					url: that.service + "/queryCuserNameAndCuserRoleReportCount",
 					dataType: 'json',
 					data: dataJson,
-					success: function(res) {console.log(res)
+					success: function(res) {
 						for(var i=0;i<res.data[0].length;i++){
 							if(res.data[i+1]!=null){
 								res.data[0][i].count2=res.data[i+1].count2

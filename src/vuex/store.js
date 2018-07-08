@@ -19,7 +19,8 @@ const store = new Vuex.Store({
 		uuid:'',
 		windexid:'',
 		searchid:'',
-		ctypeTitle:'选择分类'
+		ctypeTitle:'选择分类',
+		mapid:''
 	}
 })
 

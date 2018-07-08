@@ -150,7 +150,7 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting( "加载中..." );
+//				plus.nativeUI.showWaiting( "加载中..." );
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,

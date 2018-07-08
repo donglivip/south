@@ -27,7 +27,7 @@
 
 <script>
 	export default {
-		name: 'index',
+		name: 'cdetail',
 		data() {
 			return {
 				mydate: '请选择日期',
@@ -56,9 +56,11 @@
 					data: dataJson,
 					success: function(res) {
 						plus.nativeUI.closeWaiting()
+						
 						if(res.data.length>=2){
-							var array1 = res.data[res.data.length - 2].split("],")
+							var array1 = res.data[that.mapid].split("],")
 							array1.pop()
+							
 							for(var i = 0; i < array1.length; i++) {
 								array1[i] = array1[i] + ']'
 								if(i % 2 == 1) {
@@ -183,6 +185,9 @@
 			searchid() {
 				return this.$store.state.searchid
 			},
+			mapid() {
+				return this.$store.state.mapid
+			}
 
 		},
 		components: {

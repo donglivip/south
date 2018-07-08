@@ -74,7 +74,7 @@
 							<div class="nav-tab" :class="navtype==2?'active':''" @click="tab(2)">
 								整改
 							</div>
-							<div class="nav-tab" :class="navtype==1?'active':''" @click="tab(1)">
+							<div class="nav-tab" :class="navtype==0?'active':''" @click="tab(0)">
 								未整改
 							</div>
 						</div>
@@ -143,7 +143,7 @@
 				this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
-			var that = this
+			this.tab(2)
 		},
 		methods: {
 			tab: function(inedx) {
@@ -382,6 +382,7 @@
 
 			},
 			myajax: function() {
+				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				$.ajax({
 					type: "get",
@@ -392,10 +393,12 @@
 					},
 					success: function(res) {
 						that.workphoto = res.data
+						plus.nativeUI.closeWaiting()
 					}
 				})
 			},
 			havechange:function(type){
+				plus.nativeUI.showWaiting('数据加载中')
 				var that=this
 				$.ajax({
 					type: "get",
@@ -406,8 +409,8 @@
 						cfileResult:type
 					},
 					success: function(res) {
-						console.log(res)
 						that.changephoto = res.data
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
