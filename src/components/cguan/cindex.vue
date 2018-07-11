@@ -79,7 +79,7 @@
 							</div>
 						</div>
 						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;">
-							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0&&val.cfileResult==navtype">
+							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span>{{val.createTime}}</span>
@@ -140,7 +140,7 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 1,
-				this.mylocation()
+			this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
 			this.tab(2)
@@ -159,7 +159,6 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-
 					}
 					if(window.plus) {
 						plusReady();
@@ -192,14 +191,12 @@
 							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
 							ctypeTwoId: that.bottomtwoid
 						}
-						console.log(JSON.stringify(dataJson))
 						$.ajax({
 							type: "post",
 							url: that.service + "/insertCfileAndCuserAreadyRegister",
 							dataType: 'json',
 							data: dataJson,
 							success: function(res) {
-								console.log(JSON.stringify(res))
 								if(res.status != 200) {
 									alert(res.msg)
 								} else {
@@ -265,7 +262,6 @@
 					success: function(res) {
 						if(res.status == 200) {
 							that.myajax()
-
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.closeWaiting();
@@ -409,6 +405,7 @@
 						cfileResult:type
 					},
 					success: function(res) {
+						console.log(res)
 						that.changephoto = res.data
 						plus.nativeUI.closeWaiting()
 					}
@@ -418,17 +415,16 @@
 				var that = this
 				this.start = !this.start
 				if(this.start) {
-					this.setime = setInterval(function() {
 						that.havecenter()
-					}, 1000)
 				} else {
-					clearInterval(this.setime)
+					plus.geolocation.clearWatch(that.setime);
+					that.setime=''
 				}
 			},
 			mylocation: function() {
 				var that = this
 				that.map = new AMap.Map('map-container', {
-					zoom: 18,
+					zoom: 25,
 					center: JSON.parse(that.mapcenter)
 				})
 				that.marker = new AMap.Marker({
@@ -438,10 +434,10 @@
 			},
 			havecenter: function() {
 				var that = this
-				plus.geolocation.getCurrentPosition(function(p) {
+				that.setime = plus.geolocation.watchPosition(function(p) {
 					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
-					that.map.setCenter(JSON.parse(that.mapcenter));
 					that.marker.setPosition(JSON.parse(that.mapcenter));
+					that.map.setCenter(JSON.parse(that.mapcenter));
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCworkBytxt",
@@ -451,14 +447,11 @@
 							point: that.mapcenter
 						},
 						success: function(res) {
-							console.log('s' + res)
-						},
-						error: function(res) {
-							console.log('e' + res)
+							
 						}
 					});
 				}, function(e) {
-					alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
+					alert('错误信息:' + e.message);
 				});
 			},
 			opennew: function(target, id) {

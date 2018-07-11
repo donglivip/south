@@ -27,7 +27,6 @@
 				});
 			},
 			havenew: function() {
-//				10~20s
 				var that = this
 				that.set = setInterval(function() {
 					$.ajax({
@@ -57,8 +56,6 @@
 											mystatus=res.data[i].stystemSatus
 											cmessageId=res.data[i].cmessageId
 											cuserCmessageId=res.data[i].cuserCmessageId
-											console.log(res.data[i])
-											console.log(mystatus)
 //											推送消息
 											var info = plus.push.getClientInfo();
 											if(mystatus==1){

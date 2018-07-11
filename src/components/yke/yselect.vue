@@ -33,7 +33,7 @@
 			<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
 				<div class="group-inner">
 					<div class="group-title">
-						{{val.createTime1}} {{val.cmultipleCommunitiesName}} - {{val.cgridName}}
+						{{val.createTime1}} {{val.cmultipleCommunitiesName}}  {{val.cgridName}}
 					</div>
 					<div class="img-box">
 						<div class="img-group" style="width: 100%;">
@@ -112,6 +112,7 @@
 					if(that.endtime == '') {
 						delete ajaxJson.handingTime1
 					}
+					console.log(ajaxJson)
 					$.ajax({
 						type: "post",
 						url: that.service + "/queryByCfilePojo",

@@ -11,7 +11,7 @@
 			<div class="title"><img src="../../static/title.png"></div>
 			<div class="content">
 				<div class="box-group">
-					<div class="form-group">
+					<div class="form-group	">
 						<i class="icon-user"></i>
 						<input type="text" class="form-control" placeholder="请输入手机号码" v-model="phone" @focus="myfocus" @blur="myfocus">
 					</div>
@@ -74,7 +74,7 @@
 					success: function(res) {
 //						plus.nativeUI.closeWaiting()
 						if(res.status != 200) {
-							plus.nativeUI.toast(res.msg)
+//							plus.nativeUI.toast(res.msg)
 							return false;
 						} else {
 							localStorage.setItem('userid', res.data.cuserId)

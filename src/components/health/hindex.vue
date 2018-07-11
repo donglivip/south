@@ -61,17 +61,16 @@
 				var that = this
 				this.start = !this.start
 				if(this.start) {
-					this.setime = setInterval(function() {
-						that.havecenter()
-					}, 1000)
+					that.havecenter()
 				} else {
-					clearInterval(this.setime)
+					plus.geolocation.clearWatch(that.setime);
+					that.setime=''
 				}
 			},
 			mylocation: function() {
 				var that = this
 				that.map = new AMap.Map('map-container', {
-					zoom: 18,
+					zoom: 25,
 					center: JSON.parse(that.mapcenter)
 				})
 				that.marker = new AMap.Marker({
@@ -81,10 +80,10 @@
 			},
 			havecenter: function() {
 				var that = this
-				plus.geolocation.getCurrentPosition(function(p) {
+				that.setime = plus.geolocation.watchPosition(function(p) {
 					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
-					that.map.setCenter(JSON.parse(that.mapcenter));
 					that.marker.setPosition(JSON.parse(that.mapcenter));
+					that.map.setCenter(JSON.parse(that.mapcenter));
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCworkBytxt",
@@ -94,11 +93,11 @@
 							point: that.mapcenter
 						},
 						success: function(res) {
-							console.log('s' + res)
+							
 						}
 					});
 				}, function(e) {
-					alert('Geolocation error: ' + e.message);
+					alert('错误信息:' + e.message);
 				});
 			},
 			opennew: function(target) {

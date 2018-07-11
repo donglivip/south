@@ -140,7 +140,6 @@
 							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
 							ctypeTwoId: that.bottomtwoid
 						}
-						console.log(JSON.stringify(dataJson))
 						$.ajax({
 							type: "post",
 							url: that.service + "/insertCfileAndCuserAreadyRegister",

@@ -170,7 +170,6 @@
 						error: function(error) {
 							plus.nativeUI.closeWaiting()
 							plus.nativeUI.toast('上传失败')
-							console.log(JSON.stringify(error))
 						}
 					});
 				}, function(e) {
