@@ -17,7 +17,7 @@
 					<div class="setting-group" @click="navshow('分类')" v-show="upsrc!=''">
 						{{navtext}}
 					</div>
-					<div class="setting-group" @click="submit" v-show="upsrc!=''">
+					<div class="setting-group" @click="mapshow" v-show="upsrc!=''">
 						<img src="../../../static/upload.png" />
 						<span>
 	    						上传
@@ -70,10 +70,14 @@
 		<transition name='bottom'>
 			<bottom-nav v-show='bottomboo' @navshow='navshow'></bottom-nav>
 		</transition>
+		<transition name='bottom'>
+			<map-change v-show='mapboo' @mapshow="mapshow"></map-change>
+		</transition>
 	</div>
 </template>
 
 <script>
+	import AMap from 'AMap'
 	export default {
 		name: 'yindex',
 		data() {
@@ -88,19 +92,27 @@
 				bottomboo: false,
 				cfileStation: '',
 				w: '',
-				wimg: ''
+				wimg: '',
+				mapboo:false
 			}
 		},
 		components: {
 			THead: resolve => require(['../tourists/head'], resolve),
 			TFoot: resolve => require(['./yfoot'], resolve),
-			bottomNav: resolve => require(['../bottom-nav'], resolve)
+			bottomNav: resolve => require(['../bottom-nav'], resolve),
+			mapChange: resolve => require(['../mapchange'], resolve)
 		},
 		mounted() {
 			var that = this
 			this.$store.state.tfoot = 1
 		},
 		methods: {
+			mapshow:function(type){
+				this.mapboo=!this.mapboo
+				if(type==1){
+					this.submit()
+				}
+			},
 			submit: function(event) {
 				if(this.navtext == '选择分类') {
 					function plusReady() {
@@ -129,12 +141,11 @@
 				var that = this
 				// 弹出系统等待对话框
 				plus.nativeUI.showWaiting("上传中...");
-				plus.geolocation.getCurrentPosition(function(p) {
 					var dataJson = {
 						cuserCode: that.uuid,
 						cuserRole: 0,
 						cfileDealPrevImg1: that.wimg,
-						cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+						cfileStation: that.lng + ',' + that.lat,
 						ctypeTwoId: that.bottomtwoid
 					}
 					$.ajax({
@@ -172,10 +183,6 @@
 							plus.nativeUI.toast('上传失败')
 						}
 					});
-				}, function(e) {
-					alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
-				});
-
 			},
 			navshow: function(name) {
 				this.navtext = name
@@ -293,6 +300,12 @@
 			},
 			uuid() {
 				return this.$store.state.uuid
+			},
+			lng() {
+				return this.$store.state.lng
+			},
+			lat() {
+				return this.$store.state.lat
 			}
 		}
 	}

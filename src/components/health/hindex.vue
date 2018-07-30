@@ -98,7 +98,7 @@
 					});
 				}, function(e) {
 					alert('错误信息:' + e.message);
-				});
+				},{enableHighAccuracy:true});
 			},
 			opennew: function(target) {
 				this.$router.push({

@@ -17,7 +17,7 @@
 						<div class="setting-group" @click="navshow('分类')" v-if="upsrc!=''">
 							{{navtext}}
 						</div>
-						<div class="setting-group" @click="submit" v-if="upsrc!=''">
+						<div class="setting-group" @click="mapshow" v-if="upsrc!=''">
 							<img src="../../../static/upload.png" />
 							<span>
 	    						 上传
@@ -70,6 +70,9 @@
 		<transition name='bottom'>
 			<bottom-nav v-show='bottomboo' @navshow='navshow'></bottom-nav>
 		</transition>
+		<transition name='bottom'>
+			<map-change v-show='mapboo' @mapshow="mapshow"></map-change>
+		</transition>
 	</div>
 </template>
 
@@ -88,19 +91,27 @@
 				bottomboo: false,
 				cfileStation: '',
 				w: '',
-				wimg:''
+				wimg:'',
+				mapboo:false
 			}
 		},
 		components: {
 			THead: resolve => require(['../tourists/thead'], resolve),
 			TFoot: resolve => require(['./cfoot'], resolve),
-			bottomNav:resolve => require(['../bottom-nav'], resolve)
+			bottomNav:resolve => require(['../bottom-nav'], resolve),
+			mapChange: resolve => require(['../mapchange'], resolve)
 		},
 		mounted() {
 			this.$store.state.tfoot = 3
 			this.server=this.service+'/uploadYhImage'
 		},
 		methods: {
+			mapshow:function(type){
+				this.mapboo=!this.mapboo
+				if(type==1){
+					this.submit()
+				}
+			},
 			submit: function(event) {
 				if(this.navtext == '选择分类') {
 					function plusReady() {
@@ -128,25 +139,20 @@
 					return false;
 				}
 				var that = this
-
-				function plusReady() {
 					// 弹出系统等待对话框
 					that.w = plus.nativeUI.showWaiting("上传中...");
-					plus.geolocation.getCurrentPosition(function(p) {
 						var dataJson = {
 							cuserId: localStorage.getItem('userid'),
 							cfileDealPrevImg1: that.wimg,
-							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+							cfileStation: that.lng + ',' + that.lat,
 							ctypeTwoId: that.bottomtwoid
 						}
-						console.log(JSON.stringify(dataJson))
 						$.ajax({
 							type: "post",
 							url: that.service + "/insertCfileAndCuserAreadyRegister",
 							dataType: 'json',
 							data: dataJson,
 							success: function(res) {
-								console.log(JSON.stringify(res))
 								if(res.status != 200) {
 									alert(res.msg)
 								} else {
@@ -168,15 +174,6 @@
 								console.log(JSON.stringify(err))
 							}
 						});
-					}, function(e) {
-						alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
-					});
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
 			},
 			navshow:function(name){
 				this.navtext=name
@@ -277,6 +274,12 @@
 			},
 			bottomtwoid(){
 				return this.$store.state.bottomtwoid
+			},
+			lng() {
+				return this.$store.state.lng
+			},
+			lat() {
+				return this.$store.state.lat
 			}
 		}
 	}
