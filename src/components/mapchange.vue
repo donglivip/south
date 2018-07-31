@@ -28,14 +28,19 @@
 				var lng = p.coords.longitude
 				var lat = p.coords.latitude
 				var mapcenter='[' + lng + ',' + lat + ']'
-				console.log(JSON.parse(mapcenter))
-				that.map = new AMap.Map('container', {
+				that.$store.state.lng =lng
+				that.$store.state.lat =lat
+				var map = new AMap.Map('container', {
 					zoom: 15,
-					center: JSON.parse(mapcenter)
+					center: JSON.parse(mapcenter),
+					layers: [new AMap.TileLayer.Satellite()]
 				})
-				new AMap.InfoWindow({
-					content: '当前位置'
-				}).open(that.map, JSON.parse(mapcenter));
+				var marker = new AMap.Marker({
+				    icon: "http://27.54.248.14:8080/uploadImg/image/lryh/20180730/icon.png",
+				    position:JSON.parse(mapcenter),
+				    offset: new AMap.Pixel(-32, -32) 
+				});
+				marker.setMap(map);
 				var _onClick = function(e) {
 					AMap.service('AMap.Geocoder', function() {
 						var geocoder = new AMap.Geocoder({
@@ -43,18 +48,14 @@
 						});
 						geocoder.getAddress(e.lnglat, function(status, result) {
 							if(status === 'complete' && result.info === 'OK') {
-								var info = [];
-								info.push(result.regeocode.formattedAddress)
-								new AMap.InfoWindow({
-									content: info.join("<br>") //使用默认信息窗体框样式，显示信息内容
-								}).open(that.map, e.lnglat);
+								marker.setPosition([e.lnglat.lng, e.lnglat.lat]); 
 								that.$store.state.lng = e.lnglat.lng
 								that.$store.state.lat = e.lnglat.lat
 							}
 						});
 					})
 				}
-				AMap.event.addListener(that.map, "click", _onClick);
+				AMap.event.addListener(map, "click", _onClick);
 			}, function(e) {
 				alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
 			});
@@ -96,12 +97,11 @@
 			width: 100%;
 			.btn {
 				flex: 1;
-				line-height: .6rem;
+				line-height: .8rem;
 				color: white;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				border: 1px solid #FFFFFF;
 			}
 		}
 	}
