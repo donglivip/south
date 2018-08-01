@@ -95,7 +95,7 @@
 									<img src="../../../static/upload02.png" id="img2" @click="upload('2')">
 									<div class="shangchuan">
 										<input class="sck" type="text" placeholder="请填写标题" v-model="navtext" readonly="readonly" @click="navshow"></input>
-										<div class="sctext" @click="upmy()"><span>上传</span></div>
+										<div class="sctext" @click="mapshow()"><span>上传</span></div>
 									</div>
 								</div>
 							</div>
@@ -109,6 +109,9 @@
 			<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
 		</transition>
 		<h-foot></h-foot>
+		<transition name='bottom'>
+			<map-change v-show='mapboo' @mapshow="mapshow"></map-change>
+		</transition>
 	</div>
 </template>
 <script>
@@ -136,7 +139,8 @@
 				files: [],
 				navtype: 2,
 				cfileStation: '',
-				wimg: ''
+				wimg: '',
+				mapboo: false
 			}
 		},
 		mounted() {
@@ -155,6 +159,12 @@
 					this.havechange(0)
 				}
 				
+			},
+			mapshow: function(type) {
+				this.mapboo = !this.mapboo
+				if(type == 1) {
+					this.upmy()
+				}
 			},
 			upmy: function() {
 				if(this.navtext == '选择分类') {
@@ -183,15 +193,12 @@
 					return false;
 				}
 				var that = this
-
-				function plusReady() {
 					// 弹出系统等待对话框
 					that.w = plus.nativeUI.showWaiting("上传中...");
-					plus.geolocation.getCurrentPosition(function(p) {
 						var dataJson = {
 							cuserId: localStorage.getItem('userid'),
 							cfileDealPrevImg1: that.wimg,
-							cfileStation: p.coords.longitude + ',' + p.coords.latitude,
+							cfileStation: that.lng + ',' + that.lat,
 							ctypeTwoId: that.bottomtwoid
 						}
 						console.log(JSON.stringify(dataJson))
@@ -220,15 +227,6 @@
 								console.log(JSON.stringify(err))
 							}
 						});
-					}, function(e) {
-						alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
-					});
-				}
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener("plusready", plusReady, false);
-				}
 			},
 			workupload: function() {
 				var that = this
@@ -626,6 +624,12 @@
 			},
 			bottomtwoid() {
 				return this.$store.state.bottomtwoid
+			},
+			lng() {
+				return this.$store.state.lng
+			},
+			lat() {
+				return this.$store.state.lat
 			}
 		},
 		components: {
@@ -633,7 +637,8 @@
 			swiperSlide,
 			THead: resolve => require(['../tourists/thead'], resolve),
 			HFoot: resolve => require(['./wfoot'], resolve),
-			BottomNav: resolve => require(['../bottom-nav'], resolve)
+			BottomNav: resolve => require(['../bottom-nav'], resolve),
+			mapChange: resolve => require(['../mapchange'], resolve)
 		}
 	}
 </script>
