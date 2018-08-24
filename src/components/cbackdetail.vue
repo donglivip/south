@@ -29,7 +29,7 @@
 						上报人：{{mydata[0].cuserName==null?'名称暂缺':mydata[0].cuserName}}
 					</div>
 				</div>
-				<div class="detail-inner" v-if='mydata.length>0'>
+				<div class="detail-inner" v-if='mydata.length>0' @click="imgclick(mydata[0].cfileDealPrevImg1)">
 					<div class="myimg-box">
 						<img :src="mydata[0].cfileDealPrevImg1 | myimg" />
 					</div>
@@ -88,6 +88,11 @@
 			this.myajax()
 		},
 		methods: {
+			imgclick:function(src){
+					plus.nativeUI.previewImage([
+						'http://202.109.131.175:7080' + src
+					]);
+			},
 			backsubmit:function(){
 				if(this.navtext=='选择网格'){
 					plus.nativeUI.toast('请先选择网格')

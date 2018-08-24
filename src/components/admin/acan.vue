@@ -349,6 +349,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
 						function plusReady() {
 							// 弹出系统等待对话框

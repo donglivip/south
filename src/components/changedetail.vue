@@ -31,7 +31,7 @@
 				</div>
 				<div class="detail-inner">
 					<div class="myimg-box">
-						<img :src="mydata[0].cfileDealPrevImg1 | myimg"/>
+						<img :src="mydata[0].cfileDealPrevImg1 | myimg" @click="imgclick(mydata[0].cfileDealPrevImg1)"/>
 					</div>
 					
 				</div>
@@ -54,7 +54,7 @@
 						整改人：{{mydata[1].cuserName}}
 					</div>
 				</div>
-				<div class="detail-inner">
+				<div class="detail-inner" @click="imgclick(mydata[0].cfileDealPrevImg1)">
 					<div class="myimg-box">
 						<img :src="mydata[0].cfileDealAfterImg1 | myimg"/>
 					</div>
@@ -100,6 +100,11 @@
 			
 		},
 		methods: {
+			imgclick:function(src){
+					plus.nativeUI.previewImage([
+						'http://202.109.131.175:7080' + src
+					]);
+			},
 			havemap:function(){
 				var that=this
 				var mapcenter=JSON.parse("["+that.mydata[0].cfileStation+"]")
@@ -112,11 +117,11 @@
 					title: '提示'
 				});
 				marker.setMap(map);
-				plus.nativeUI.closeWaiting()
+//				plus.nativeUI.closeWaiting()
 			},
 			myajax:function(){
 				var that=this
-				plus.nativeUI.showWaiting('数据加载中...')
+//				plus.nativeUI.showWaiting('数据加载中...')
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",

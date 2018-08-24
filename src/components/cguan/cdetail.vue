@@ -40,7 +40,7 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中')
+//				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var dataJson = {
 					cuserId: that.searchid,
@@ -55,12 +55,11 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						plus.nativeUI.closeWaiting()
-						
+//						plus.nativeUI.closeWaiting()
+						console.log(res)
 						if(res.data.length>=2){
 							var array1 = res.data[that.mapid].split("],")
 							array1.pop()
-							
 							for(var i = 0; i < array1.length; i++) {
 								array1[i] = array1[i] + ']'
 								if(i % 2 == 1) {

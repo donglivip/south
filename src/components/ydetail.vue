@@ -192,7 +192,6 @@
 					dataType: 'json',
 					data: ajaxdata,
 					success: function(res) {
-						console.log(res)
 						plus.nativeUI.closeWaiting()
 						if(res.status==200){
 							that.$router.back()
@@ -266,7 +265,8 @@
 				var mapcenter=JSON.parse("["+that.mydata[0].cfileStation+"]")
 				var map=new AMap.Map('mymap', {
 		          center: mapcenter,
-		          zoom: 15
+		          zoom: 15,
+				layers: [new AMap.TileLayer.Satellite(),new AMap.TileLayer.RoadNet()]
 		        })
 				var marker = new AMap.Marker({
 					title: '提示'

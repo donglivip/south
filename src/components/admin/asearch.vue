@@ -100,7 +100,7 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中')
+//				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var dataJson = {
 					cuserName: that.uname,
@@ -118,17 +118,13 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						for(var i=0;i<res.data[0].length;i++){
-							if(res.data[i+1]!=null){
-								res.data[0][i].count2=res.data[i+1].count2
-							}else{
-								res.data[0][i].count2=0
-							}
-						}
-						that.mydata = res.data[0]
-						plus.nativeUI.closeWaiting()
+						that.mydata = res.data
+					},
+					error:function(err){
+						console.log(err)
 					}
 				});
+//				plus.nativeUI.closeWaiting()
 			},
 			opennew: function(target, id) {
 				this.$store.state.windexid = id
@@ -151,6 +147,7 @@
 						cuserId: localStorage.getItem('userid')
 					},
 					success: function(res) {
+						console.log(res)
 						if(res.data.length > 0) {
 							for(var i = 0; i < res.data.length; i++) {
 								if((res.data[i].stystemSatus == 1 || res.data[i].stystemSatus == 2) && res.data[i].status != 1) {
@@ -162,7 +159,6 @@
 									var startDateString = new Date().Format("yyyy-MM-dd hh:mm:"+mm1+"");
 									var endDateString = new Date().Format("yyyy-MM-dd hh:mm:ss");
 									if(new Date(testdate) > new Date(startDateString) && new Date(testdate) < new Date(endDateString)) {
-										console.log('yes')
 										that.mypush(res.data[i].cfileId, res.data[i].cmessageId, res.data[i].cuserCmessageId,res.stystemSatus)
 									}
 								}

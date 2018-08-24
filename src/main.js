@@ -18,7 +18,7 @@ Vue.config.productionTip = false
 //Vue.prototype.$ajax = axios
 Vue.use(VueAwesomeSwiper)
 Vue.filter('myimg', function(value) {
-	return 'http://27.54.248.14:8080' + value
+	return 'http://202.109.131.175:7080' + value
 })
 Date.prototype.Format = function(fmt) { // author: meizz
 	var o = {

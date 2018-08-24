@@ -139,13 +139,17 @@
 				})
 			},
 			submit: function(event) {
-				plus.nativeUI.showWaiting('资料提交中...')
 				var formData = new FormData(event.target);
 				var that = this
 				var file = document.getElementById('file');
 				var fileData = file.files[0];
+				if(file.files[0]==undefined){
+					alert('头像不能为空!')
+					return false;
+				}
 				var size = fileData.size;
-				if(this.inputdata.cuserPassword.length>=6) {
+				
+				if(this.inputdata.cuserPassword.length<6) {
 					alert('密码必须为6位数以上!')
 					return false;
 				}
@@ -185,6 +189,7 @@
 					alert('两次密码不一致!')
 					return false;
 				}
+				plus.nativeUI.showWaiting('资料提交中...')
 				$.ajax({
 					type: "post",
 					url: that.service + "/register",

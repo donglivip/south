@@ -63,7 +63,7 @@
 						处理数量
 					</td>
 				</tr>
-				<tr v-for="val in mydata" v-if="(val.count1!=0&&val.count2!=0)&&val.cgridName!=null">
+				<tr v-for="val in mydata" v-if="val.count1!=0||val.count2!=0">
 					<td>
 						{{val.cgridName}}
 					</td>
