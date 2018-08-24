@@ -112,14 +112,12 @@
 					if(that.endtime == '') {
 						delete ajaxJson.handingTime1
 					}
-					console.log(ajaxJson)
 					$.ajax({
 						type: "post",
 						url: that.service + "/queryByCfilePojo",
 						dataType: 'json',
 						data: ajaxJson,
 						success: function(res) {
-							console.log(JSON.stringify(res))
 							that.mydata=res.data
 							function plusReady() {
 								// 弹出系统等待对话框

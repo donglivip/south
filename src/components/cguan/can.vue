@@ -157,7 +157,7 @@
 				})
 			},
 			myajax: function(type) {
-				plus.nativeUI.showWaiting('数据加载中')
+//				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var ajaxJson={
 						cuserId: localStorage.getItem('userid'),
@@ -178,7 +178,7 @@
 					data: ajaxJson,
 					success: function(res) {
 						that.mydata=res.data
-						plus.nativeUI.closeWaiting()	
+//						plus.nativeUI.closeWaiting()	
 						
 					}
 				});

@@ -115,7 +115,7 @@
 			return {
 				swiperOption: {},
 				swiperindex: 0,
-				starttime: '',
+				starttime: '2018-05-22',
 				endtime: '',
 				startshow: false,
 				timety: 0,
@@ -177,7 +177,6 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
-						console.log(res)
 						that.mydata=res.data
 						plus.nativeUI.closeWaiting()
 					}
