@@ -115,7 +115,7 @@
 			return {
 				swiperOption: {},
 				swiperindex: 0,
-				starttime: '2018-05-22',
+				starttime: '',
 				endtime: '',
 				startshow: false,
 				timety: 0,

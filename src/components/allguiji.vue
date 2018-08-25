@@ -141,6 +141,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata = res.data
 //						plus.nativeUI.closeWaiting()
 					}

@@ -31,9 +31,9 @@
 				</div>
 				<div class="detail-inner">
 					<div class="myimg-box">
-						<img :src="mydata[0].cfileDealPrevImg1 | myimg" @click="imgclick(mydata[0].cfileDealPrevImg1)"/>
+						<img :src="mydata[0].cfileDealPrevImg1 | myimg" @click="imgclick(mydata[0].cfileDealPrevImg1)" />
 					</div>
-					
+
 				</div>
 			</div>
 			<div class="detail-group" v-if="mydata[1]==null">
@@ -56,9 +56,9 @@
 				</div>
 				<div class="detail-inner" @click="imgclick(mydata[0].cfileDealPrevImg1)">
 					<div class="myimg-box">
-						<img :src="mydata[0].cfileDealAfterImg1 | myimg"/>
+						<img :src="mydata[0].cfileDealAfterImg1 | myimg" />
 					</div>
-					
+
 				</div>
 			</div>
 			<div class="detail-group" v-if="mydata[1]==null&&userid!=null">
@@ -69,13 +69,14 @@
 					</div>
 				</div>
 				<div class="detail-inner">
-					<img src="../../static/scimggrey.png" class="big-img" @click="upload('1')" id="img1" style="width: 100%;height: auto;"/>
+					<img src="../../static/scimggrey.png" class="big-img" @click="upload('1')" id="img1" style="width: 100%;height: auto;" />
 				</div>
 			</div>
 			<div class="submit" v-show="cworkImg!=''" @click="myupload">
 				上传
 			</div>
 		</div>
+		<show-images @imgclick='imgclick' v-if='mimgboo'></show-images>
 	</div>
 </template>
 
@@ -86,42 +87,46 @@
 		data() {
 			return {
 				navtext: '选择分类',
-				mydata:[],
-				cworkImg:'',
+				mydata: [],
+				cworkImg: '',
 				uploadtarget: '',
-				server:'',
-				files:[],
-				userid:localStorage.getItem('userid')
+				server: '',
+				files: [],
+				userid: localStorage.getItem('userid'),
+				mimgboo:false
 			}
 		},
 		mounted() {
-			this.server=this.service+'/uploadworkImage'
+			this.server = this.service + '/uploadworkImage'
 			this.myajax()
-			
+
+		},
+		components: {
+			ShowImages: resolve => require(['./showimages'], resolve)
 		},
 		methods: {
-			imgclick:function(src){
-					plus.nativeUI.previewImage([
-						'http://202.109.131.175:7080' + src
-					]);
+			imgclick: function(src) {
+				this.mimgboo=!this.mimgboo
+				var mysrc = this.service + src
+				this.$store.state.mimg=mysrc
 			},
-			havemap:function(){
-				var that=this
-				var mapcenter=JSON.parse("["+that.mydata[0].cfileStation+"]")
-				var map=new AMap.Map('mymap', {
-		          center: mapcenter,
-		          zoom: 15,
-				layers: [new AMap.TileLayer.Satellite(),new AMap.TileLayer.RoadNet()]
-		        })
+			havemap: function() {
+				var that = this
+				var mapcenter = JSON.parse("[" + that.mydata[0].cfileStation + "]")
+				var map = new AMap.Map('mymap', {
+					center: mapcenter,
+					zoom: 15,
+					layers: [new AMap.TileLayer.Satellite(), new AMap.TileLayer.RoadNet()]
+				})
 				var marker = new AMap.Marker({
 					title: '提示'
 				});
 				marker.setMap(map);
-//				plus.nativeUI.closeWaiting()
+								plus.nativeUI.closeWaiting()
 			},
-			myajax:function(){
-				var that=this
-//				plus.nativeUI.showWaiting('数据加载中...')
+			myajax: function() {
+				var that = this
+								plus.nativeUI.showWaiting('数据加载中...')
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",
@@ -130,9 +135,9 @@
 						cfileId: that.windexid
 					},
 					success: function(res) {
-						that.mydata=res.data
+						that.mydata = res.data
 						that.havemap()
-						
+
 					}
 				});
 			},
@@ -148,25 +153,26 @@
 				this.navboo = !this.navboo
 				this.navtext = id
 			},
-			myupload:function(){
+			myupload: function() {
 				plus.nativeUI.showWaiting('数据上传中...')
-				var that=this
+				var that = this
 				$.ajax({
 					type: "post",
 					url: that.service + "/updateCfileAndCuserCase",
 					dataType: 'json',
 					data: {
 						cfileId: that.mydata[0].cfileId,
-						userId:localStorage.getItem('userid'),
-						cfileDealAfterImg1:that.cworkImg
+						userId: localStorage.getItem('userid'),
+						cfileDealAfterImg1: that.cworkImg
 					},
 					success: function(res) {
 						if(res.status == 200) {
 							that.myajax()
+
 							function plusReady() {
 								// 显示自动消失的提示消息
 								plus.nativeUI.closeWaiting()
-								that.cworkImg=''
+								that.cworkImg = ''
 							}
 							if(window.plus) {
 								plusReady();
@@ -265,6 +271,9 @@
 			},
 			service() {
 				return this.$store.state.service
+			},
+			mimg() {
+				return this.$store.state.mimg
 			}
 		}
 	}
@@ -272,12 +281,12 @@
 
 <style type="text/css" lang="scss">
 	.cbackdetail {
-		#mymap{
+		#mymap {
 			height: 4rem;
 			width: 100%;
 		}
 		background: #EEEEEE;
-		.submit{
+		.submit {
 			position: absolute;
 			bottom: .2rem;
 			width: calc(100% - .6rem);

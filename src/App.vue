@@ -133,9 +133,6 @@
 					that.$router.back()
 				})
 				plus.navigator.setStatusBarBackground('#1e81d2');
-				document.addEventListener("pause", function() {
-					plus.nativeUI.toast('程序在后台运行')
-				}, false);
 			}
 			if(window.plus) {
 				plusReady();

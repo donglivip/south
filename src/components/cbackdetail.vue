@@ -63,6 +63,7 @@
 				</div>
 			</div>
 		</transition>
+		<show-images @imgclick='imgclick' v-if='mimgboo'></show-images>
 	</div>
 </template>
 
@@ -80,18 +81,22 @@
 				files: [],
 				noway:[],
 				cgridId:'',
-				navboo:false
+				navboo:false,
+				mimgboo:false
 			}
 		},
 		mounted() {
 			this.server = this.service + '/uploadworkImage'
 			this.myajax()
 		},
+		components: {
+			ShowImages: resolve => require(['./showimages'], resolve)
+		},
 		methods: {
 			imgclick:function(src){
-					plus.nativeUI.previewImage([
-						'http://202.109.131.175:7080' + src
-					]);
+				this.mimgboo=!this.mimgboo
+				var mysrc = this.service + src
+				this.$store.state.mimg=mysrc
 			},
 			backsubmit:function(){
 				if(this.navtext=='选择网格'){
@@ -140,10 +145,10 @@
 					title: '提示'
 				});
 				marker.setMap(map);
-				plus.nativeUI.closeWaiting()
+//				plus.nativeUI.closeWaiting()
 			},
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中')
+//				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				$.ajax({
 					type: "get",
@@ -153,7 +158,6 @@
 						cfileId: that.windexid
 					},
 					success: function(res) {
-						console.log(res)
 						that.mydata = res.data
 						that.havemap()
 					}
