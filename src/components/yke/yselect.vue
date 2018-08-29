@@ -30,7 +30,7 @@
 					<img src="../../../static/search.png" /> 搜索
 				</div>
 			</div>
-			<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
+			<div class="select-group" v-for="val in list" @click="opennew('changedetail',val.cfileId)">
 				<div class="group-inner">
 					<div class="group-title">
 						{{val.createTime1}} {{val.cmultipleCommunitiesName}}  {{val.cgridName}}
@@ -43,6 +43,8 @@
 					</div>
 				</div>
 			</div>
+			<div class="more"  @click="myajax()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+			<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 			<p v-if="mydata.length==0">
 				暂无案卷
 			</p>
@@ -68,7 +70,10 @@
 				navboo: false,
 				navtext: '分类',
 				mydata: [],
-				cuserCode: ''
+				cuserCode: '',
+				pageNum:0,
+				pageSize:10,
+				list:[]
 			}
 		},
 		components: {
@@ -97,6 +102,7 @@
 				})
 			},
 			myajax: function(type) {
+				this.pageNum++
 				var that = this
 				function plusReady() {
 					plus.nativeUI.showWaiting("数据加载中...");
@@ -104,7 +110,9 @@
 						cuserCode: that.uuid,
 						cfileResult: type,
 						createTime1: that.starttime,
-						handingTime1: that.endtime
+						handingTime1: that.endtime,
+						pageNum:that.pageNum,
+						pageSize:that.pageSize
 					}
 					if(that.starttime == '') {
 						delete ajaxJson.createTime1
@@ -112,13 +120,20 @@
 					if(that.endtime == '') {
 						delete ajaxJson.handingTime1
 					}
+					console.log(ajaxJson)
 					$.ajax({
 						type: "post",
 						url: that.service + "/queryByCfilePojo",
 						dataType: 'json',
 						data: ajaxJson,
 						success: function(res) {
+							console.log(res)
 							that.mydata=res.data
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
+							
+							console.log(that.list)
 							function plusReady() {
 								// 弹出系统等待对话框
 								plus.nativeUI.closeWaiting();

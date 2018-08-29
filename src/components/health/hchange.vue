@@ -12,7 +12,7 @@
 			</div>
 			<div class="box-group">
 				<div class="box-group">
-					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0">
+					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in list">
 						<div class="riqi">
 							<div class="circle width12"></div>
 							<span>{{val.createTime}}</span>
@@ -20,7 +20,8 @@
 						<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 						<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 					</div>
-					<p v-if="changephoto.length==0">暂无数据</p>
+					<div class="more"  @click="next()" v-if="pageNum&lt;changephoto.lastPage">点击加载更多</div>
+							<div class="more"  v-if="pageNum&gt;changephoto.lastPage||pageNum==changephoto.lastPage">没有更多啦~</div>
 				</div>
 			</div>
 		</div>
@@ -60,13 +61,16 @@
 				changephoto: [],
 				cfileStation: '',
 				wimg:'',
-				mapboo: false
+				mapboo: false,
+				pageNum:0,
+				pageSize:10,
+				list:[]
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 3
 			this.server = this.service + '/uploadworkImage'
-			this.myajax()
+			this.next()
 		},
 		methods: {
 			mapshow: function(type) {
@@ -110,14 +114,12 @@
 							cfileStation: that.lng + ',' + that.lat,
 							ctypeTwoId: that.bottomtwoid
 						}
-						console.log(JSON.stringify(dataJson))
 						$.ajax({
 							type: "post",
 							url: that.service + "/insertCfileAndCuserAreadyRegister",
 							dataType: 'json',
 							data: dataJson,
 							success: function(res) {
-								console.log(JSON.stringify(res))
 								if(res.status != 200) {
 									alert(res.msg)
 								} else {
@@ -195,6 +197,10 @@
 					name: target
 				})
 			},
+			next:function(){
+				this.pageNum++
+				this.myajax()
+			},
 			myajax: function() {
 				plus.nativeUI.showWaiting('加载中')
 				var that = this
@@ -204,10 +210,15 @@
 					dataType: 'json',
 					data: {
 						cuserId: localStorage.getItem('userid'),
-						cfileResult: that.navtype
+						cfileResult: that.navtype,
+						pageNum:that.pageNum,
+						pageSize:1
 					},
 					success: function(res) {
 						that.changephoto = res.data
+						for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
 						plus.nativeUI.closeWaiting()
 					}
 				});

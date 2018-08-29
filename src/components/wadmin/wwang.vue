@@ -32,7 +32,7 @@
 				<swiper-slide>
 					<div class="select-group workcamera" style="background: none;">
 						<div class="box-group">
-							<div class="group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
+							<div class="group" v-for="val in list" v-if="val.cfileResult==3" @click="opennew('ydetail',val.cfileId)">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span style="width: auto;">{{val.createTime1}}</span>
@@ -40,6 +40,8 @@
 								<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)" style="margin-right: .2rem;"/>
 							</div>
+							<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+							<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 							<p v-if='mydata.length==0'>
 								暂无案卷
 							</p>
@@ -47,7 +49,7 @@
 					</div>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cgridName}}
@@ -70,12 +72,11 @@
 							</div>
 						</div>
 					</div>
-					<p v-if='mydata.length==0'>
-						暂无案卷
-					</p>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==2" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list" v-if="val.cfileResult==2" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cgridName}}
@@ -98,9 +99,8 @@
 							</div>
 						</div>
 					</div>
-					<p v-if='mydata.length==0'>
-						暂无案卷
-					</p>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 			</swiper>
 		</div>
@@ -128,7 +128,10 @@
 				server: '',
 				files: [],
 				mydata: '',
-				cfileDealAfterImg1: ''
+				cfileDealAfterImg1: '',
+				pageNum:0,
+				pageSize:10,
+				list:[]
 			}
 		},
 		components: {
@@ -140,7 +143,7 @@
 		mounted() {
 			this.$store.state.tfoot = 2
 			this.server = this.service + '/uploadworkImage'
-			this.myajax()
+			this.next()
 		},
 		computed: {
 			swiper() {
@@ -205,6 +208,10 @@
 				});
 
 			},
+			next:function(){
+				this.pageNum++
+				this.myajax()
+			},
 			myajax: function() {
 				function plusReady() {
 					// 显示自动消失的提示消息
@@ -221,12 +228,18 @@
 					url: that.service + "/queryListByCuserIdNetwork",
 					dataType: 'json',
 					data: {
-						cuserIdNetwork: localStorage.getItem('userid')
+						cuserIdNetwork: localStorage.getItem('userid'),
+						pageNum:that.pageNum,
+						pageSize:that.pageSize
 					},
 					success: function(res) {
-						console.log(res)
-						that.mydata = res.data[0]
-						plus.nativeUI.closeWaiting()
+						
+						that.mydata = res.data
+						for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
+						console.log(that.list)
+//						plus.nativeUI.closeWaiting()
 					},
 					error: function(err) {
 						console.log(err)

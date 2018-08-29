@@ -148,6 +148,7 @@
 						cfileStation: that.lng + ',' + that.lat,
 						ctypeTwoId: that.bottomtwoid
 					}
+					console.log(JSON.stringify(dataJson))
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCfileAndCuser",

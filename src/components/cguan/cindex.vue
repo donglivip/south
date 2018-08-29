@@ -45,7 +45,7 @@
 				<swiper-slide>
 					<div class="workcamera">
 						<div class="box-group">
-							<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
+							<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span style="width: auto;">{{val.createTime1}}</span>
@@ -53,7 +53,8 @@
 								<span class="text">{{val.cworkTitle}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;" />
 							</div>
-							<p v-if="workphoto.length==0">暂无数据</p>
+							<div class="more"  @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
+							<div class="more"  v-if="pageNum&gt;workphoto.lastPage||pageNum==workphoto.lastPage">没有更多啦~</div>
 						</div>
 						<footer style="bottom: 0;">
 							<div class="box-upload">
@@ -139,14 +140,17 @@
 				navtype: 2,
 				cfileStation: '',
 				wimg: '',
-				mapboo: false
+				mapboo: false,
+				pageNum:0,
+				pageSize:10,
+				list:[]
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 1,
-				this.mylocation()
+			this.mylocation()
 			this.server = this.service + '/uploadworkImage'
-			this.myajax()
+			this.next()
 			this.tab(2)
 		},
 		methods: {
@@ -376,6 +380,10 @@
 				});
 
 			},
+			next:function(){
+				this.pageNum++
+				this.myajax()
+			},
 			myajax: function() {
 				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
@@ -384,10 +392,15 @@
 					url: that.service + "/querAllCwork",
 					dataType: 'json',
 					data: {
-						cuserId: localStorage.getItem('userid')
+						cuserId: localStorage.getItem('userid'),
+						pageNum:that.pageNum,
+						pageSize:that.pageSize
 					},
 					success: function(res) {
 						that.workphoto = res.data
+						for (var i=0;i<res.data.list.length;i++) {
+							that.list.push(res.data.list[i])
+						}
 						plus.nativeUI.closeWaiting()
 					}
 				})

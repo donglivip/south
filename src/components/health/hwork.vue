@@ -18,7 +18,7 @@
 		<div id="main" style="position: relative;">
 			<div>
 				<div class="box-group">
-					<div class="group" v-for="val in workphoto" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
+					<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
 						<div class="riqi">
 							<div class="circle width12"></div>
 							<span style="width: auto;">{{val.createTime1}}</span>
@@ -26,7 +26,8 @@
 						<span class="text">{{val.cworkTitle}}</span>
 						<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;"/>
 					</div>
-					<p v-if="workphoto.length==0">暂无数据</p>
+					<div class="more"  @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;workphoto.lastPage||pageNum==workphoto.lastPage">没有更多啦~</div>
 				</div>
 			</div>
 		</div>
@@ -56,16 +57,23 @@
 				files: [],
 				alertboo: false,
 				workphoto: '',
-				cworkTitle: ''
+				cworkTitle: '',
+				pageNum:1,
+				pageSize:10,
+				list:[]
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 2
 			this.server = this.service + '/uploadworkImage'
-			this.myajax()
+			this.next()
 
 		},
 		methods: {
+			next:function(){
+				this.pageNum++
+				this.myajax()
+			},
 			myajax: function() {
 				var that = this
 				$.ajax({
@@ -73,10 +81,15 @@
 					url: that.service + "/querAllCwork",
 					dataType: 'json',
 					data: {
-						cuserId: localStorage.getItem('userid')
+						cuserId: localStorage.getItem('userid'),
+						pageNum:that.pageNum,
+						pageSize:that.pageSize
 					},
 					success: function(res) {
 						that.workphoto = res.data
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
 					}
 				});
 			},

@@ -63,6 +63,7 @@
 				if(this.start) {
 					that.havecenter()
 				} else {
+					alert('quxiao')
 					plus.geolocation.clearWatch(that.setime);
 					that.setime=''
 				}
@@ -84,6 +85,7 @@
 					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
 					that.marker.setPosition(JSON.parse(that.mapcenter));
 					that.map.setCenter(JSON.parse(that.mapcenter));
+					alert(JSON.stringify(that.mapcenter))
 					$.ajax({
 						type: "post",
 						url: that.service + "/insertCworkBytxt",

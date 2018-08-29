@@ -41,7 +41,7 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="val in list" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -66,12 +66,11 @@
 							</div>
 						</div>
 					</div>
-					<p v-show='mydata.length==0'>
-						暂无案卷
-					</p>
+					<div class="more"  @click="next(2)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -94,9 +93,8 @@
 							</div>
 						</div>
 					</div>
-					<p v-show='mydata.length==0'>
-						暂无案卷
-					</p>
+					<div class="more"  @click="next(0)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 			</swiper>
 		</div>
@@ -126,7 +124,10 @@
 				mydata: [],
 				server: '',
 				cfileDealAfterImg1: '',
-				files: []
+				files: [],
+				pageNum:0,
+				pageSize:10,
+				list:[]
 			}
 		},
 		components: {
@@ -138,7 +139,7 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 2
-			this.myajax(2)
+			this.next(2)
 			this.server = this.service + '/uploadRegisterImage'
 		},
 		computed: {
@@ -156,14 +157,20 @@
 					name: target
 				})
 			},
+			next:function(index){
+				this.pageNum++
+				this.myajax(index)
+			},
 			myajax: function(type) {
 				var that = this
-				plus.nativeUI.showWaiting("数据加载中,请耐心等待...");
+//				plus.nativeUI.showWaiting("数据加载中,请耐心等待...");
 				var ajaxJson = {
 					cuserId: localStorage.getItem('userid'),
 					cfileResult: type,
 					createTime1: that.starttime,
-					handingTime1: that.endtime
+					handingTime1: that.endtime,
+					pageNum:that.pageNum,
+					pageSize:1
 				}
 				if(this.starttime == '') {
 					delete ajaxJson.createTime1
@@ -171,14 +178,20 @@
 				if(this.endtime == '') {
 					delete ajaxJson.handingTime1
 				}
+				console.log(ajaxJson)
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
-						plus.nativeUI.closeWaiting()
+						for (var i=0;i<res.data.list.length;i++) {
+							that.list.push(res.data.list[i])
+						}
+						console.log(that.list)
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

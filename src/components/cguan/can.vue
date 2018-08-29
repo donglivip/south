@@ -41,7 +41,7 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group" v-for="val in mydata" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="val in list" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -64,12 +64,11 @@
 							</div>
 						</div>
 					</div>
-					<p v-show='mydata.length==0'>
-						暂无案卷
-					</p>
+					<div class="more"  @click="next(0)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -92,10 +91,8 @@
 							</div>
 						</div>
 					</div>
-					<p v-show='mydata.length==0'>
-						暂无案卷
-					</p>
-					
+					<div class="more"  @click="next(2)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				
 			</swiper>
@@ -126,7 +123,10 @@
 				mydata: [],
 				server:'',
 				cfileDealAfterImg1:'',
-				files:[]
+				files:[],
+				pageNum:0,
+				pageSize:10,
+				list:[]
 			}
 		},
 		components: {
@@ -156,6 +156,10 @@
 					name: target
 				})
 			},
+			next:function(index){
+				this.pageNum++
+				this.myajax(index)
+			},
 			myajax: function(type) {
 //				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
@@ -164,7 +168,9 @@
 						cfileResult: type,
 						createTime1:that.starttime,
 						handingTime1:that.endtime,
-						cuserRole:localStorage.getItem('cuserRole')
+						cuserRole:localStorage.getItem('cuserRole'),
+						pageNum:that.pageNum,
+						pageSize:that.pageSize
 					}
 				if(that.starttime==''){
 					delete ajaxJson.createTime1
@@ -177,7 +183,12 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
+						for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
+						console.log(that.list)
 //						plus.nativeUI.closeWaiting()	
 						
 					}

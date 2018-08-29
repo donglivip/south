@@ -70,7 +70,7 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="box-group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
+					<div class="box-group" v-for="val in list" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
 						<div class="group">
 							<div class="riqi">
 								<div class="circle width12"></div>
@@ -80,10 +80,12 @@
 							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
 					</div>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<!--未整改-->
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in mydata" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -106,10 +108,12 @@
 							</div>
 						</div>
 					</div>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<!--已整改-->
 				<swiper-slide>
-					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==2">
+					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in list" v-if="val.cfileResult==2">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -134,11 +138,13 @@
 							</div>
 						</div>
 					</div>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<!--未处理-->
 				<swiper-slide>
 					<div class="box-group">
-						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in mydata" v-if="val.cfileResult==3">
+						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in list" v-if="val.cfileResult==3">
 							<div class="riqi">
 								<div class="circle width12"></div>
 								<span>{{val.createTime1}}</span>
@@ -146,6 +152,8 @@
 							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
 						</div>
+						<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+						<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 					</div>
 				</swiper-slide>
 			</swiper>
@@ -206,7 +214,10 @@
 				bottomdata: [],
 				mydata: [],
 				files: [],
-				cfileDealAfterImg1: ''
+				cfileDealAfterImg1: '',
+				pageNum:0,
+				pageSize:10,
+				list:[]
 			}
 		},
 		components: {
@@ -214,7 +225,7 @@
 			swiperSlide
 		},
 		mounted() {
-			this.myajax()
+			this.next()
 			this.server = this.service + '/uploadworkImage'
 		},
 		computed: {
@@ -280,15 +291,21 @@
 				});
 
 			},
+			next:function(){
+				this.pageNum++
+				this.myajax()
+			},
 			myajax: function() {
-				plus.nativeUI.showWaiting("数据加载中,请稍后...")
+//				plus.nativeUI.showWaiting("数据加载中,请稍后...")
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,
 					handingTime1: that.endtime,
 					ctypeId: that.navid,
 					cgridId: that.gridid,
-					cmultipleCommunitiesId: that.communityid
+					cmultipleCommunitiesId: that.communityid,
+						pageNum:that.pageNum,
+						pageSize:that.pageSize
 				}
 				if(that.starttime == '') {
 					delete dataJson.createTime1
@@ -312,7 +329,10 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata = res.data
-						plus.nativeUI.closeWaiting();
+//						plus.nativeUI.closeWaiting();
+						for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
 					}
 				});
 			},

@@ -136,3 +136,4 @@ body,html,#wrapper,#app,.wrapper{height: 100%;width: 100%;position: relative;ove
 }
 .btnactive{background: #1e81d2!important;color: white;font-weight: 600;}
 .bottom-nav{height: 100%;overflow-y: scroll;}
+.more{text-align: center;line-height: .5rem;}
