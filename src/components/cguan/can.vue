@@ -18,10 +18,10 @@
 		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
-					未整改案卷
+					<span @click="myajax(0)">未整改案卷</span>
 				</div>
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					已整改案卷
+					<span @click="myajax(2)">已整改案卷</span>
 				</div>
 			</div>
 			<div class="time-box">
@@ -40,8 +40,9 @@
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
+				<!--已整改-->
 				<swiper-slide>
-					<div class="select-group" v-for="val in list" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="val in list01" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -64,9 +65,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(0)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
-					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
+					<div class="more"  @click="next(2)" v-if="pageNum<size">点击加载更多~</div>
 				</swiper-slide>
+				<!--未整改-->
 				<swiper-slide>
 					<div class="select-group" v-for="(val,index) in list" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
@@ -91,8 +92,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(2)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
-					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
+					<div class="more"  @click="next(0)" v-if="pageNum<size">点击加载更多~</div>
 				</swiper-slide>
 				
 			</swiper>
@@ -120,13 +120,14 @@
 				uploadtarget: '',
 				navboo: false,
 				navtext: '分类',
-				mydata: [],
 				server:'',
 				cfileDealAfterImg1:'',
 				files:[],
-				pageNum:0,
+				pageNum:1,
 				pageSize:10,
-				list:[]
+				list:[],
+				list01:[],
+				size:0
 			}
 		},
 		components: {
@@ -140,6 +141,7 @@
 			this.$store.state.tfoot = 4
 			this.toswiper(1)
 			this.server=this.service+'/uploadRegisterImage'
+			this.myajax(0)
 		},
 		computed: {
 			swiper() {
@@ -161,7 +163,7 @@
 				this.myajax(index)
 			},
 			myajax: function(type) {
-//				plus.nativeUI.showWaiting('数据加载中')
+				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				var ajaxJson={
 						cuserId: localStorage.getItem('userid'),
@@ -169,8 +171,7 @@
 						createTime1:that.starttime,
 						handingTime1:that.endtime,
 						cuserRole:localStorage.getItem('cuserRole'),
-						pageNum:that.pageNum,
-						pageSize:that.pageSize
+						pageNum:that.pageNum
 					}
 				if(that.starttime==''){
 					delete ajaxJson.createTime1
@@ -183,13 +184,18 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
-						console.log(res)
-						that.mydata=res.data
-						for (var i=0;i<res.data.list.length;i++) {
+						that.size=res.data.pages
+						if(type==0){
+							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list01.push(res.data.list[i])
+							}
+						}
 						console.log(that.list)
-//						plus.nativeUI.closeWaiting()	
+						plus.nativeUI.closeWaiting()	
 						
 					}
 				});
@@ -201,11 +207,7 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
-				if(index==0){
-					this.myajax(2)
-				}else{
-					this.myajax(0)
-				}
+				this.pageNum=1
 			},
 			timeshow: function(type) {
 				var that = this

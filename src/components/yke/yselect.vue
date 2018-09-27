@@ -43,11 +43,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="more"  @click="myajax()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
-			<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
-			<p v-if="mydata.length==0">
-				暂无案卷
-			</p>
+			<div class="more"  @click="myajax()" v-if="pageNum<size">点击加载更多~</div>
 		</div>
 		<transition name='nav'>
 			<bootom-nav v-show='navboo' v-on:navshow='navshow'></bootom-nav>
@@ -73,7 +69,8 @@
 				cuserCode: '',
 				pageNum:0,
 				pageSize:10,
-				list:[]
+				list:[],
+				size:0
 			}
 		},
 		components: {
@@ -102,6 +99,7 @@
 				})
 			},
 			myajax: function(type) {
+				alert(123)
 				this.pageNum++
 				var that = this
 				function plusReady() {
@@ -120,7 +118,6 @@
 					if(that.endtime == '') {
 						delete ajaxJson.handingTime1
 					}
-					console.log(ajaxJson)
 					$.ajax({
 						type: "post",
 						url: that.service + "/queryByCfilePojo",
@@ -128,7 +125,7 @@
 						data: ajaxJson,
 						success: function(res) {
 							console.log(res)
-							that.mydata=res.data
+							that.size=res.data.pages
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
@@ -143,6 +140,9 @@
 							} else {
 								document.addEventListener("plusready", plusReady, false);
 							}
+						},
+						error:function(err){
+							console.log(err)
 						}
 					});
 				}

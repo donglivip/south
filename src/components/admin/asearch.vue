@@ -32,8 +32,8 @@
 					</div>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<p v-if="mydata.length==0">
-					暂无数据
+				<p v-if="pageNum<size" @click="myajax">
+					点击加载更多~
 				</p>
 			</div>
 		</div>
@@ -90,7 +90,9 @@
 					text: '街办管理员',
 					id: 8
 				}, ],
-				mydata: []
+				mydata: [],
+				size:0,
+				pageNum:0
 			}
 		},
 		mounted() {
@@ -102,9 +104,11 @@
 			myajax: function() {
 //				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
+				that.pageNum++
 				var dataJson = {
 					cuserName: that.uname,
-					cuserRole: that.navid
+					cuserRole: that.navid,
+					pageNum:that.pageNum
 				}
 				if(that.uname == '') {
 					delete dataJson.cuserName
@@ -118,10 +122,11 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata = res.data
-					},
-					error:function(err){
-						console.log(err)
+						console.log(res)
+						that.size=res.data.pages
+						for (var i=0;i<res.data.list.length;i++) {
+							that.mydata.push(res.data.list[i])
+						}
 					}
 				});
 //				plus.nativeUI.closeWaiting()

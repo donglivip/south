@@ -80,7 +80,7 @@
 								未整改
 							</div>
 						</div>
-						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;">
+						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==2">
 							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-show="changephoto.length!=0">
 								<div class="riqi">
 									<div class="circle width12"></div>
@@ -89,7 +89,18 @@
 								<span class="text">{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 							</div>
-							<p v-if="changephoto.length==0">暂无数据</p>
+							<p v-if="changephoto.length==0" @click="">点击加载更多~</p>
+						</div>
+						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==0">
+							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto01" v-show="changephoto.length!=0">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>{{val.createTime}}</span>
+								</div>
+								<span class="text">{{val.cgridName}}</span>
+								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+							</div>
+							<p v-if="changephoto.length==0" @click="">点击加载更多~</p>
 						</div>
 						<footer style="bottom: 0;height: 2rem;">
 							<div class="box-upload workcamera" style="height: 2rem;">
@@ -135,7 +146,7 @@
 				server: '',
 				cworkImg: '',
 				cworkTitle: '',
-				changephoto: '',
+				changephoto: [],
 				marker: '',
 				uploadtarget: '',
 				files: [],
@@ -145,7 +156,9 @@
 				mapboo: false,
 				pageNum:0,
 				pageSize:10,
-				list:[]
+				list:[],
+				size:0,
+				changephoto01:[]
 			}
 		},
 		mounted() {
@@ -153,7 +166,7 @@
 			this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.next()
-			this.tab(2)
+			this.tab(0)
 		},
 		methods: {
 			tab: function(inedx) {
@@ -206,7 +219,6 @@
 							cfileStation: that.lng + ',' + that.lat,
 							ctypeTwoId: that.bottomtwoid
 						}
-						console.log(JSON.stringify(dataJson))
 						$.ajax({
 							type: "post",
 							url: that.service + "/insertCfileAndCuserAreadyRegister",
@@ -390,7 +402,7 @@
 				this.myajax()
 			},
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中')
+//				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				$.ajax({
 					type: "get",
@@ -407,25 +419,38 @@
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
-						plus.nativeUI.closeWaiting()
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 				that.havechange(2)
 			},
 			havechange:function(type){
-				plus.nativeUI.showWaiting('数据加载中')
+//				plus.nativeUI.showWaiting('数据加载中')
 				var that=this
+				that.pageNum++
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
 					data: {
 						cuserId: localStorage.getItem('userid'),
-						cfileResult:type
+						cfileResult:type,
+						pageNum:that.pageNum
 					},
 					success: function(res) {
-						that.changephoto = res.data
-						plus.nativeUI.closeWaiting()
+						console.log(res)
+						that.size=res.data.pages
+						that.mydata=res.data
+						if(type==0){
+							for (var i=0;i<res.data.list.length;i++) {
+								that.changephoto.push(res.data.list[i])
+							}
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.changephoto01.push(res.data.list[i])
+							}
+						}
+//						plus.nativeUI.closeWaiting()
 					}
 				});
 			},

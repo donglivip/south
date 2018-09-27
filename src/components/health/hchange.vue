@@ -10,8 +10,7 @@
 					整改
 				</div>
 			</div>
-			<div class="box-group">
-				<div class="box-group">
+			<div class="box-group" v-if="navtype==0">
 					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in list">
 						<div class="riqi">
 							<div class="circle width12"></div>
@@ -20,9 +19,18 @@
 						<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
 						<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 					</div>
-					<div class="more"  @click="next()" v-if="pageNum&lt;changephoto.lastPage">点击加载更多</div>
-							<div class="more"  v-if="pageNum&gt;changephoto.lastPage||pageNum==changephoto.lastPage">没有更多啦~</div>
-				</div>
+					<div class="more"  @click="next()" v-if="pageNum<size">点击加载更多~</div>
+			</div>
+			<div class="box-group" v-if="navtype==2">
+					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in list01">
+						<div class="riqi">
+							<div class="circle width12"></div>
+							<span>{{val.createTime}}</span>
+						</div>
+						<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
+						<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+					</div>
+					<div class="more"  @click="next()" v-if="pageNum<size">点击加载更多~</div>
 			</div>
 		</div>
 		<footer>
@@ -40,9 +48,6 @@
 			<bottom-nav v-show='navboo' v-on:navshow='navshow'></bottom-nav>
 		</transition>
 		<t-foot></t-foot>
-		<transition name='bottom'>
-			<map-change v-show='mapboo' @mapshow="mapshow"></map-change>
-		</transition>
 	</div>
 	</div>
 </template>
@@ -64,7 +69,9 @@
 				mapboo: false,
 				pageNum:0,
 				pageSize:10,
-				list:[]
+				list:[],
+				size:'',
+				list01:[]
 			}
 		},
 		mounted() {
@@ -202,8 +209,9 @@
 				this.myajax()
 			},
 			myajax: function() {
-				plus.nativeUI.showWaiting('加载中')
+				plus.nativeUI.showWaiting('加载中~')
 				var that = this
+				console.log(this.navtype)
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCuserId",
@@ -211,20 +219,30 @@
 					data: {
 						cuserId: localStorage.getItem('userid'),
 						cfileResult: that.navtype,
-						pageNum:that.pageNum,
-						pageSize:1
+						pageNum:that.pageNum
 					},
 					success: function(res) {
-						that.changephoto = res.data
-						for (var i=0;i<res.data.list.length;i++) {
+						console.log(res)
+						that.size = res.data.pages
+						if(that.navtype==0){
+							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list01.push(res.data.list[i])
+							}
+						}
+						
 						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
 			tab: function(inedx) {
+				this.pageNum=1
 				this.navtype = inedx
+				this.list=[]
+				this.list01=[]
 				this.myajax()
 			},
 			navshow: function(id) {
@@ -405,7 +423,10 @@
 	.hwzhenggai .text {
 		width: 4.4rem;
 	}
-	
+	.box-group{
+		height: calc(100% - 2.7rem);
+		overflow-y: scroll;
+	}
 	.hwzhenggai .width12 {
 		width: .17rem;
 		height: .17rem;

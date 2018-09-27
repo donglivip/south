@@ -21,16 +21,16 @@
 			<div>美丽南钢</div>
 			<span></span>
 		</div>
-		<div id="main">
+		<div id="main" style="height: calc(100% - 1.6rem);">
 			<div class="tselect-top">
-				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					未受理案卷
-				</div>
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
 					未整改案卷
 				</div>
 				<div class="top-nav" :class="swiperindex==2?'active':''" @click="toswiper(2)">
 					已整改案卷
+				</div>
+				<div class="top-nav" :class="swiperindex==3?'active':''" @click="toswiper(3)">
+					未受理案卷
 				</div>
 			</div>
 			<div class="time-box">
@@ -69,15 +69,16 @@
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
+				<!--退回-->
 				<swiper-slide>
-					<div class="box-group" v-for="val in list" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
-						<div class="group">
+					<div class="box-group">
+						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in list02">
 							<div class="riqi">
 								<div class="circle width12"></div>
-								<span>{{val.createTime1}}</span>
+								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
 							</div>
 							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
+							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
 						</div>
 					</div>
 					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
@@ -85,7 +86,7 @@
 				</swiper-slide>
 				<!--未整改-->
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in list" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list"  @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -100,7 +101,7 @@
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-										<img src="../../static/uploadselect.png" /></div>
+										<img src="../../static/uploadselect.png"/></div>
 									<div class="state">
 										上传图片
 									</div>
@@ -113,7 +114,7 @@
 				</swiper-slide>
 				<!--已整改-->
 				<swiper-slide>
-					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in list" v-if="val.cfileResult==2">
+					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in list01">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -141,19 +142,16 @@
 					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
-				<!--未处理-->
 				<swiper-slide>
-					<div class="box-group">
-						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in list" v-if="val.cfileResult==3">
+					<div class="box-group" v-for="val in list03"  @click="opennew('ydetail',val.cfileId)">
+						<div class="group">
 							<div class="riqi">
 								<div class="circle width12"></div>
-								<span>{{val.createTime1}}</span>
+								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
 							</div>
 							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" />
+							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
 						</div>
-						<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
-						<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 					</div>
 				</swiper-slide>
 			</swiper>
@@ -164,7 +162,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.ctypeTitle,val.ctypeId)" :class="navindex==index?'active':''">
 						{{val.ctypeTitle}}
 					</div>
-					<div class="sub-nav clear" @click.stop="navshow()">
+					<div class="sub-nav clear">
 						取消
 					</div>
 				</div>
@@ -172,7 +170,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cmultipleCommunitiesName,val.cmultipleCommunitiesId)" :class="navindex==index?'active':''">
 						{{val.cmultipleCommunitiesName}}
 					</div>
-					<div class="sub-nav clear" @click.stop="navshow()">
+					<div class="sub-nav clear">
 						取消
 					</div>
 				</div>
@@ -180,7 +178,7 @@
 					<div class="sub-nav" v-for="(val,index) in bottomdata" @click.stop="navchange(val.cgridName,val.cgridId)" :class="navindex==index?'active':''">
 						{{val.cgridName}}
 					</div>
-					<div class="sub-nav clear" @click.stop="navshow()">
+					<div class="sub-nav clear">
 						取消
 					</div>
 				</div>
@@ -196,7 +194,7 @@
 		data() {
 			return {
 				swiperOption: {},
-				swiperindex: 0,
+				swiperindex: 1,
 				starttime: '',
 				endtime: '',
 				startshow: false,
@@ -217,15 +215,20 @@
 				cfileDealAfterImg1: '',
 				pageNum:0,
 				pageSize:10,
-				list:[]
+				list:[],
+				cfileResult:0,
+				list01:[],
+				list02:[],
+				list03:[]
 			}
 		},
 		components: {
 			swiper,
-			swiperSlide
+			swiperSlide,
+			THead: resolve => require(['./tourists/thead'], resolve)
 		},
 		mounted() {
-			this.next()
+			this.next(0)
 			this.server = this.service + '/uploadworkImage'
 		},
 		computed: {
@@ -240,6 +243,38 @@
 			}
 		},
 		methods: {
+			back: function() {
+				this.$router.back()
+			},
+			imgok: function(id) {
+				var that = this
+				if(that.cfileDealAfterImg1 == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请点击图片选择上传的图片后再上传");
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+					return false;
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/updateCfileAndCuserCase",
+					dataType: 'json',
+					data: {
+						userId: localStorage.getItem('userid'),
+						cfileId: id,
+						cfileDealAfterImg1: that.cfileDealAfterImg1
+					},
+					success: function(res) {
+						that.myajax(2)
+						that.toswiper(0)
+					}
+				});
+			},
 			workphotod: function(id) {
 				var that = this
 				var btnArray = [{
@@ -291,21 +326,30 @@
 				});
 
 			},
-			next:function(){
+			next:function(index){
 				this.pageNum++
 				this.myajax()
+				this.cfileResult=index
 			},
 			myajax: function() {
-//				plus.nativeUI.showWaiting("数据加载中,请稍后...")
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中，可能用时较长，请耐心等待。。。");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,
 					handingTime1: that.endtime,
 					ctypeId: that.navid,
 					cgridId: that.gridid,
-					cmultipleCommunitiesId: that.communityid,
-						pageNum:that.pageNum,
-						pageSize:that.pageSize
+					cmultipleCommunitiesId: '5e0b3ad5-8257-11e8-9366-00155dc504d0',
+					pageNum:that.pageNum,
+					cfileResult:that.cfileResult
 				}
 				if(that.starttime == '') {
 					delete dataJson.createTime1
@@ -328,11 +372,38 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata = res.data
-//						plus.nativeUI.closeWaiting();
-						for (var i=0;i<res.data.list.length;i++) {
+						that.mydata=res.data
+						if(that.swiperindex==0){
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list02.push(res.data.list[i])
+							}
+							console.log(that.list02)
+						}else if(that.swiperindex==1){
+							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
+							console.log(that.list)
+						}else if(that.swiperindex==2){
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list01.push(res.data.list[i])
+							}
+							console.log(that.list01)
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list03.push(res.data.list[i])
+							}
+							console.log(that.list03)
+						}
+						
+						function plusReady() {
+							// 弹出系统等待对话框
+							plus.nativeUI.closeWaiting();
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 					}
 				});
 			},
@@ -404,10 +475,22 @@
 						}
 					});
 				}
+				
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
+				this.list=this.list01=this.list02=this.list03=[]
+				this.pageNum=1
+				if(index==0){
+					this.myajax(3)
+				}else if(index==1){
+					this.myajax(1)
+				}else if(index==2){
+					this.myajax(2)
+				}else{
+					this.myajax(0)
+				}
 			},
 			timeshow: function(type) {
 				var that = this

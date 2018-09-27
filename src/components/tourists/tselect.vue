@@ -41,7 +41,7 @@
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
 				<swiper-slide>
-					<div class="select-group" v-for="val in list" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="val in list01" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -66,8 +66,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(2)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
-					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
+					<div class="more"  @click="next(2)" v-if="pageNum&lt;mydata.lastPage">点击加载更多~</div>
 				</swiper-slide>
 				<swiper-slide>
 					<div class="select-group" v-for="(val,index) in list" @click="opennew('changedetail',val.cfileId)">
@@ -93,8 +92,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(0)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
-					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
+					<div class="more"  @click="next(0)" v-if="pageNum&lt;mydata.lastPage">点击加载更多~</div>
 				</swiper-slide>
 			</swiper>
 		</div>
@@ -125,9 +123,10 @@
 				server: '',
 				cfileDealAfterImg1: '',
 				files: [],
-				pageNum:0,
+				pageNum:1,
 				pageSize:10,
-				list:[]
+				list:[],
+				list01:[]
 			}
 		},
 		components: {
@@ -139,7 +138,7 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 2
-			this.next(2)
+			this.toswiper(0)
 			this.server = this.service + '/uploadRegisterImage'
 		},
 		computed: {
@@ -169,8 +168,7 @@
 					cfileResult: type,
 					createTime1: that.starttime,
 					handingTime1: that.endtime,
-					pageNum:that.pageNum,
-					pageSize:1
+					pageNum:that.pageNum
 				}
 				if(this.starttime == '') {
 					delete ajaxJson.createTime1
@@ -178,7 +176,6 @@
 				if(this.endtime == '') {
 					delete ajaxJson.handingTime1
 				}
-				console.log(ajaxJson)
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryByCfilePojoRegister",
@@ -187,10 +184,16 @@
 					success: function(res) {
 						console.log(res)
 						that.mydata=res.data
-						for (var i=0;i<res.data.list.length;i++) {
-							that.list.push(res.data.list[i])
+						if(type==0){
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list01.push(res.data.list[i])
+							}
 						}
-						console.log(that.list)
+						
 //						plus.nativeUI.closeWaiting()
 					}
 				});
@@ -202,6 +205,9 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
+				this.pageNum=1
+				this.list=[]
+				this.list01=[]
 				if(index == 0) {
 					this.myajax(2)
 				} else {

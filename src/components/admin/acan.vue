@@ -81,7 +81,7 @@
 				<!--退回-->
 				<swiper-slide>
 					<div class="box-group">
-						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in list" v-if="val.cfileResult==3">
+						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in list02">
 							<div class="riqi">
 								<div class="circle width12"></div>
 								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
@@ -95,7 +95,7 @@
 				</swiper-slide>
 				<!--未整改-->
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in list" v-if="val.cfileResult==1||val.cfileResult==0" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list"  @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -123,7 +123,7 @@
 				</swiper-slide>
 				<!--已整改-->
 				<swiper-slide>
-					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in list" v-if="val.cfileResult==2">
+					<div class="select-group" @click="opennew('changedetail',val.cfileId)" v-for="val in list01">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}案卷-{{val.cmultipleCommunitiesName}}{{val.cgridName}}
@@ -214,7 +214,10 @@
 				cfileDealAfterImg1: '',
 				pageNum:0,
 				pageSize:10,
-				list:[]
+				list:[],
+				cfileResult:0,
+				list01:[],
+				list02:[]
 			}
 		},
 		components: {
@@ -224,7 +227,7 @@
 			TFoot: resolve => require(['./afoot'], resolve)
 		},
 		mounted() {
-			this.next()
+			this.next(0)
 			this.server = this.service + '/uploadworkImage'
 		},
 		computed: {
@@ -319,9 +322,10 @@
 				});
 
 			},
-			next:function(){
+			next:function(index){
 				this.pageNum++
 				this.myajax()
+				this.cfileResult=index
 			},
 			myajax: function() {
 				function plusReady() {
@@ -339,9 +343,9 @@
 					handingTime1: that.endtime,
 					ctypeId: that.navid,
 					cgridId: that.gridid,
-					cmultipleCommunitiesId: that.communityid,
-						pageNum:that.pageNum,
-						pageSize:that.pageSize
+					cmultipleCommunitiesId: '5e0b3ad5-8257-11e8-9366-00155dc504d0',
+					pageNum:that.pageNum,
+					cfileResult:that.cfileResult
 				}
 				if(that.starttime == '') {
 					delete dataJson.createTime1
@@ -364,11 +368,24 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
 						that.mydata=res.data
-						for (var i=0;i<res.data.list.length;i++) {
+						if(that.swiperindex==0){
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list02.push(res.data.list[i])
+							}
+							console.log(that.list02)
+						}else if(that.swiperindex==1){
+							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
+							console.log(that.list)
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list01.push(res.data.list[i])
+							}
+							console.log(that.list01)
+						}
+						
 						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
@@ -454,6 +471,15 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
+				this.list=this.list01=this.list02=[]
+				this.pageNum=1
+				if(index==0){
+					this.myajax(3)
+				}else if(index==1){
+					this.myajax(1)
+				}else{
+					this.myajax(2)
+				}
 			},
 			timeshow: function(type) {
 				var that = this

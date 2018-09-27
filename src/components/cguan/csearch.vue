@@ -19,7 +19,8 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" v-if="(val.count1!=0||val.count2!=0)&&val.cuserName!=null">
+				<!--v-if="(val.count1!=0||val.count2!=0)&&val.cuserName!=null"-->
+				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" >
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName}}
@@ -32,8 +33,8 @@
 					</div>
 					<img src="../../../static/arrright.png" />
 				</div>
-				<p v-if="mydata.length==0">
-					暂无数据
+				<p @click="myajax" v-if="lastPage>=pageNum">
+					点击加载更多~
 				</p>
 			</div>
 		</div>
@@ -79,7 +80,9 @@
 					text: '街办管理员',
 					id: 8
 				}, ],
-				mydata:[]
+				mydata:[],
+				pageNum:0,
+				lastPage:0
 			}
 		},
 		mounted() {
@@ -90,9 +93,11 @@
 			myajax: function() {
 				plus.nativeUI.showWaiting('数据加载中...')
 				var that = this
+				that.pageNum++
 				var dataJson = {
 					cuserName: that.uname,
-					cuserRole: that.navid
+					cuserRole: that.navid,
+					pageNum:that.pageNum
 				}
 				if(that.uname==''){
 					delete dataJson.cuserName
@@ -106,14 +111,11 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						for(var i=0;i<res.data[0].length;i++){
-							if(res.data[i+1]!=null){
-								res.data[0][i].count2=res.data[i+1].count2
-							}else{
-								res.data[0][i].count2=0
-							}
+						console.log(res)
+						for(var i=0;i<res.data.list.length;i++){
+							that.mydata.push(res.data.list[i])
 						}
-						that.mydata=res.data[0]
+						that.lastPage=res.data.pages
 						plus.nativeUI.closeWaiting()
 					}
 				});

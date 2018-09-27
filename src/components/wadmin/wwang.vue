@@ -32,7 +32,7 @@
 				<swiper-slide>
 					<div class="select-group workcamera" style="background: none;">
 						<div class="box-group">
-							<div class="group" v-for="val in list" v-if="val.cfileResult==3" @click="opennew('ydetail',val.cfileId)">
+							<div class="group" v-for="val in list"  @click="opennew('ydetail',val.cfileId)">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span style="width: auto;">{{val.createTime1}}</span>
@@ -48,8 +48,9 @@
 						</div>
 					</div>
 				</swiper-slide>
+				<!--待处理-->
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in list" v-if="val.cfileResult==1" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list01" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cgridName}}
@@ -75,8 +76,9 @@
 					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
+				<!--已处理-->
 				<swiper-slide>
-					<div class="select-group" v-for="(val,index) in list" v-if="val.cfileResult==2" @click="opennew('changedetail',val.cfileId)">
+					<div class="select-group" v-for="(val,index) in list02" @click="opennew('changedetail',val.cfileId)">
 						<div class="group-inner">
 							<div class="group-title">
 								{{val.createTime1}}{{val.cgridName}}
@@ -131,7 +133,9 @@
 				cfileDealAfterImg1: '',
 				pageNum:0,
 				pageSize:10,
-				list:[]
+				list:[],
+				list01:[],
+				list02:[]//0预处理1待处理2已处理
 			}
 		},
 		components: {
@@ -230,16 +234,25 @@
 					data: {
 						cuserIdNetwork: localStorage.getItem('userid'),
 						pageNum:that.pageNum,
-						pageSize:that.pageSize
+						status:that.swiperindex
 					},
 					success: function(res) {
-						
+						console.log(res)
 						that.mydata = res.data
-						for (var i=0;i<res.data.list.length;i++) {
+						if(that.swiperindex==0){
+							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
-						console.log(that.list)
-//						plus.nativeUI.closeWaiting()
+						}else if(that.swiperindex==1){
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list01.push(res.data.list[i])
+							}
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list02.push(res.data.list[i])
+							}
+						}
+						plus.nativeUI.closeWaiting()
 					},
 					error: function(err) {
 						console.log(err)
@@ -259,6 +272,7 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
+				this.myajax(index)
 			},
 			startchang: function(date, formatDate) {
 				if(this.timety == 0) {

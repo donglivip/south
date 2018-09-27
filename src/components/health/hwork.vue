@@ -27,7 +27,6 @@
 						<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;"/>
 					</div>
 					<div class="more"  @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
-					<div class="more"  v-if="pageNum&gt;workphoto.lastPage||pageNum==workphoto.lastPage">没有更多啦~</div>
 				</div>
 			</div>
 		</div>
@@ -82,10 +81,10 @@
 					dataType: 'json',
 					data: {
 						cuserId: localStorage.getItem('userid'),
-						pageNum:that.pageNum,
-						pageSize:that.pageSize
+						pageNum:that.pageNum
 					},
 					success: function(res) {
+						console.log(res)
 						that.workphoto = res.data
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])

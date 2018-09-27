@@ -72,6 +72,7 @@
 						cuserPassword: that.pwd
 					},
 					success: function(res) {
+						console.log(res)
 //						plus.nativeUI.closeWaiting()
 						if(res.status != 200) {
 //							plus.nativeUI.toast(res.msg)
