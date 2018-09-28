@@ -44,7 +44,7 @@
 				</swiper-slide>
 				<swiper-slide>
 					<div class="workcamera">
-						<div class="box-group">
+						<div class="box-group" style="height: calc(100% - 3rem);overflow-y: scroll;">
 							<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)">
 								<div class="riqi">
 									<div class="circle width12"></div>
@@ -55,6 +55,7 @@
 							</div>
 							<div class="more"  @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
 							<div class="more"  v-if="pageNum&gt;workphoto.lastPage||pageNum==workphoto.lastPage">没有更多啦~</div>
+							<p v-if="workphoto.length==0">暂无数据</p>
 						</div>
 						<footer style="bottom: 0;">
 							<div class="box-upload">
@@ -79,8 +80,8 @@
 								未整改
 							</div>
 						</div>
-						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;">
-							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-if="changephoto.length!=0">
+						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==2">
+							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-show="changephoto.length!=0">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span>{{val.createTime}}</span>
@@ -88,10 +89,21 @@
 								<span class="text">{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 							</div>
-							<p v-if="changephoto.length==0">暂无数据</p>
+							<p v-if="changephoto.length==0" @click="">点击加载更多~</p>
 						</div>
-						<footer style="bottom: 0;">
-							<div class="box-upload workcamera">
+						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==0">
+							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto01" v-show="changephoto.length!=0">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span>{{val.createTime}}</span>
+								</div>
+								<span class="text">{{val.cgridName}}</span>
+								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+							</div>
+							<p v-if="changephoto.length==0" @click="">点击加载更多~</p>
+						</div>
+						<footer style="bottom: 0;height: 2rem;">
+							<div class="box-upload workcamera" style="height: 2rem;">
 								<div class="upload" style="height: 2rem;">
 									<img src="../../../static/upload02.png" id="img2" @click="upload('2')">
 									<div class="shangchuan">
@@ -102,6 +114,7 @@
 							</div>
 						</footer>
 					</div>
+
 				</swiper-slide>
 			</swiper>
 		</div>
@@ -133,7 +146,7 @@
 				server: '',
 				cworkImg: '',
 				cworkTitle: '',
-				changephoto: '',
+				changephoto: [],
 				marker: '',
 				uploadtarget: '',
 				files: [],
@@ -143,7 +156,9 @@
 				mapboo: false,
 				pageNum:0,
 				pageSize:10,
-				list:[]
+				list:[],
+				size:0,
+				changephoto01:[]
 			}
 		},
 		mounted() {
@@ -151,16 +166,17 @@
 			this.mylocation()
 			this.server = this.service + '/uploadworkImage'
 			this.next()
-			this.tab(2)
+			this.tab(0)
 		},
 		methods: {
 			tab: function(inedx) {
 				this.navtype = inedx
-				if(inedx == 2) {
+				if(inedx==2){
 					this.havechange(2)
-				} else {
+				}else{
 					this.havechange(0)
 				}
+				
 			},
 			mapshow: function(type) {
 				this.mapboo = !this.mapboo
@@ -173,6 +189,7 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
+
 					}
 					if(window.plus) {
 						plusReady();
@@ -194,39 +211,39 @@
 					return false;
 				}
 				var that = this
-				// 弹出系统等待对话框
-				that.w = plus.nativeUI.showWaiting("上传中...");
-				var dataJson = {
-					cuserId: localStorage.getItem('userid'),
-					cfileDealPrevImg1: that.wimg,
-					cfileStation: that.lng + ',' + that.lat,
-					ctypeTwoId: that.bottomtwoid
-				}
-				$.ajax({
-					type: "post",
-					url: that.service + "/insertCfileAndCuserAreadyRegister",
-					dataType: 'json',
-					data: dataJson,
-					success: function(res) {
-						if(res.status != 200) {
-							alert(res.msg)
-						} else {
-							function plusReady() {
-								plus.nativeUI.closeWaiting();
-								plus.nativeUI.toast("上传完成");
-								that.navtext = '选择分类'
-							}
-							if(window.plus) {
-								plusReady();
-							} else {
-								document.addEventListener("plusready", plusReady, false);
-							}
+					// 弹出系统等待对话框
+					that.w = plus.nativeUI.showWaiting("上传中...");
+						var dataJson = {
+							cuserId: localStorage.getItem('userid'),
+							cfileDealPrevImg1: that.wimg,
+							cfileStation: that.lng + ',' + that.lat,
+							ctypeTwoId: that.bottomtwoid
 						}
-					},
-					error: function(err) {
-						console.log(JSON.stringify(err))
-					}
-				});
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCfileAndCuserAreadyRegister",
+							dataType: 'json',
+							data: dataJson,
+							success: function(res) {
+								if(res.status != 200) {
+									alert(res.msg)
+								} else {
+									function plusReady() {
+										plus.nativeUI.closeWaiting();
+										plus.nativeUI.toast("上传完成");
+										that.navtext = '选择分类'
+									}
+									if(window.plus) {
+										plusReady();
+									} else {
+										document.addEventListener("plusready", plusReady, false);
+									}
+								}
+							},
+							error: function(err) {
+								console.log(JSON.stringify(err))
+							}
+						});
 			},
 			workupload: function() {
 				var that = this
@@ -234,13 +251,13 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请把信息填写完整！");
-						return false;
 					}
 					if(window.plus) {
 						plusReady();
 					} else {
 						document.addEventListener("plusready", plusReady, false);
 					}
+					return false;
 				}
 
 				function plusReady() {
@@ -392,33 +409,47 @@
 					url: that.service + "/querAllCwork",
 					dataType: 'json',
 					data: {
-						cuserId: localStorage.getItem('userid'),
+						cuserId:localStorage.getItem('userid'),
 						pageNum:that.pageNum,
 						pageSize:that.pageSize
 					},
 					success: function(res) {
+						
 						that.workphoto = res.data
-						for (var i=0;i<res.data.list.length;i++) {
-							that.list.push(res.data.list[i])
-						}
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+							}
 						plus.nativeUI.closeWaiting()
 					}
-				})
+				});
+				that.havechange(2)
 			},
-			havechange: function(type) {
+			havechange:function(type){
 				plus.nativeUI.showWaiting('数据加载中')
-				var that = this
+				var that=this
+				that.pageNum++
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
 					data: {
 						cuserId: localStorage.getItem('userid'),
-						cfileResult: type
+						cfileResult:type,
+						pageNum:that.pageNum
 					},
 					success: function(res) {
 						console.log(res)
-						that.changephoto = res.data
+						that.size=res.data.pages
+						that.mydata=res.data
+						if(type==0){
+							for (var i=0;i<res.data.list.length;i++) {
+								that.changephoto.push(res.data.list[i])
+							}
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.changephoto01.push(res.data.list[i])
+							}
+						}
 						plus.nativeUI.closeWaiting()
 					}
 				});
@@ -429,8 +460,8 @@
 				if(this.start) {
 					that.havecenter()
 				} else {
-					plus.geolocation.clearWatch(that.setime);
-					that.setime = ''
+					clearInterval(that.setime)
+					that.setime=''
 				}
 			},
 			mylocation: function() {
@@ -446,25 +477,28 @@
 			},
 			havecenter: function() {
 				var that = this
-				that.setime = plus.geolocation.watchPosition(function(p) {
-					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
-					that.marker.setPosition(JSON.parse(that.mapcenter));
-					that.map.setCenter(JSON.parse(that.mapcenter));
-					$.ajax({
-						type: "post",
-						url: that.service + "/insertCworkBytxt",
-						dataType: 'json',
-						data: {
-							cuserId: localStorage.getItem('userid'),
-							point: that.mapcenter
-						},
-						success: function(res) {
-
-						}
+				that.setime = setInterval(function(){
+					plus.geolocation.getCurrentPosition(function(p) {
+						that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
+						that.marker.setPosition(JSON.parse(that.mapcenter));
+						that.map.setCenter(JSON.parse(that.mapcenter));
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCworkBytxt",
+							dataType: 'json',
+							data: {
+								cuserId: localStorage.getItem('userid'),
+								point: that.mapcenter
+							},
+							success: function(res) {
+								
+							}
+						});
+					}, function(e) {
+						alert('错误信息:' + e.message);
 					});
-				}, function(e) {
-					alert('错误信息:' + e.message);
-				});
+				},5000)
+
 			},
 			opennew: function(target, id) {
 				this.$store.state.windexid = id
@@ -557,7 +591,6 @@
 						scale = w / h;
 					w = 800 || w; //480  你想压缩到多大，改这里
 					h = w / scale;
-
 					//生成canvas
 					var canvas = document.createElement('canvas');
 					var ctx = canvas.getContext('2d');
@@ -655,15 +688,15 @@
 
 <style type="text/css" lang="scss">
 	.windex {
-		p {
-			text-align: center;
-			line-height: 1rem;
-		}
 		.nav {
 			display: flex;
 			width: 100%;
 			height: .8rem;
 			background: white;
+		}
+		.workcamera{
+			height: calc(100% - 1rem);
+			position: relative;
 		}
 		.nav-tab {
 			flex: 1;
@@ -673,6 +706,10 @@
 		}
 		.active {
 			border-bottom: 2px solid #1e81d2;
+		}
+		p {
+			text-align: center;
+			line-height: 1rem;
 		}
 		.tselect-top {
 			display: flex;
@@ -709,7 +746,7 @@
 			}
 		}
 		.swiper-container {
-			height: calc(100% - 1rem);
+			height: 100%;
 		}
 		.map {
 			width: 100%;

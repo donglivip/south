@@ -21,8 +21,9 @@
 			<div>美丽南钢</div>
 			<span></span>
 		</div>
-		<div id="main" style="height: calc(100% - 1.6rem);">
+		<div id="main">
 			<div class="tselect-top">
+				
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
 					未整改案卷
 				</div>
@@ -69,21 +70,6 @@
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
-				<!--退回-->
-				<swiper-slide>
-					<div class="box-group">
-						<div class="group" @click="opennew('cbackdetail',val.cfileId)" v-for="val in list02">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
-							</div>
-							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
-						</div>
-					</div>
-					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
-					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
-				</swiper-slide>
 				<!--未整改-->
 				<swiper-slide>
 					<div class="select-group" v-for="(val,index) in list"  @click="opennew('changedetail',val.cfileId)">
@@ -347,7 +333,7 @@
 					handingTime1: that.endtime,
 					ctypeId: that.navid,
 					cgridId: that.gridid,
-					cmultipleCommunitiesId: '5e0b3ad5-8257-11e8-9366-00155dc504d0',
+					cmultipleCommunitiesId: that.communityid,
 					pageNum:that.pageNum,
 					cfileResult:that.cfileResult
 				}
@@ -373,26 +359,18 @@
 					data: dataJson,
 					success: function(res) {
 						that.mydata=res.data
-						if(that.swiperindex==0){
-							for (var i=0;i<res.data.list.length;i++) {
-								that.list02.push(res.data.list[i])
-							}
-							console.log(that.list02)
-						}else if(that.swiperindex==1){
+						if(that.swiperindex==1){
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
-							console.log(that.list)
 						}else if(that.swiperindex==2){
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list01.push(res.data.list[i])
 							}
-							console.log(that.list01)
 						}else{
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list03.push(res.data.list[i])
 							}
-							console.log(that.list03)
 						}
 						
 						function plusReady() {

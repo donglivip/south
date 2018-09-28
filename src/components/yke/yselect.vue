@@ -99,7 +99,6 @@
 				})
 			},
 			myajax: function(type) {
-				alert(123)
 				this.pageNum++
 				var that = this
 				function plusReady() {

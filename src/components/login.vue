@@ -52,7 +52,7 @@
 				})
 			},
 			submit: function() {
-//				plus.nativeUI.showWaiting('登录中...')
+				plus.nativeUI.showWaiting('登录中...')
 				if(this.phone == '' || this.pwd == '') {
 					alert('账号或密码不能为空！')
 					return
@@ -73,9 +73,9 @@
 					},
 					success: function(res) {
 						console.log(res)
-//						plus.nativeUI.closeWaiting()
+						plus.nativeUI.closeWaiting()
 						if(res.status != 200) {
-//							plus.nativeUI.toast(res.msg)
+							plus.nativeUI.toast(res.msg)
 							return false;
 						} else {
 							localStorage.setItem('userid', res.data.cuserId)

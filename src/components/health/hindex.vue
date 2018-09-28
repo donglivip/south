@@ -64,7 +64,7 @@
 					that.havecenter()
 				} else {
 					alert('quxiao')
-					plus.geolocation.clearWatch(that.setime);
+					clearInterval(that.setime)
 					that.setime=''
 				}
 			},
@@ -81,26 +81,27 @@
 			},
 			havecenter: function() {
 				var that = this
-				that.setime = plus.geolocation.watchPosition(function(p) {
-					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
-					that.marker.setPosition(JSON.parse(that.mapcenter));
-					that.map.setCenter(JSON.parse(that.mapcenter));
-					alert(JSON.stringify(that.mapcenter))
-					$.ajax({
-						type: "post",
-						url: that.service + "/insertCworkBytxt",
-						dataType: 'json',
-						data: {
-							cuserId: localStorage.getItem('userid'),
-							point: that.mapcenter
-						},
-						success: function(res) {
-							
-						}
+				that.setime = setInterval(function(){
+					plus.geolocation.getCurrentPosition(function(p) {
+						that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
+						that.marker.setPosition(JSON.parse(that.mapcenter));
+						that.map.setCenter(JSON.parse(that.mapcenter));
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCworkBytxt",
+							dataType: 'json',
+							data: {
+								cuserId: localStorage.getItem('userid'),
+								point: that.mapcenter
+							},
+							success: function(res) {
+								
+							}
+						});
+					}, function(e) {
+						alert('错误信息:' + e.message);
 					});
-				}, function(e) {
-					alert('错误信息:' + e.message);
-				},{enableHighAccuracy:true});
+				},5000)
 			},
 			opennew: function(target) {
 				this.$router.push({

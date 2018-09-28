@@ -45,7 +45,7 @@
 				<swiper-slide>
 					<div class="workcamera">
 						<div class="box-group" style="height: calc(100% - 3rem);overflow-y: scroll;">
-							<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0&&val.cworkTitle!=null">
+							<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)" >
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span style="width: auto;">{{val.createTime1}}</span>
@@ -402,7 +402,7 @@
 				this.myajax()
 			},
 			myajax: function() {
-//				plus.nativeUI.showWaiting('数据加载中')
+				plus.nativeUI.showWaiting('数据加载中')
 				var that = this
 				$.ajax({
 					type: "get",
@@ -419,13 +419,14 @@
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
-//						plus.nativeUI.closeWaiting()
+						console.log(that.list)
+						plus.nativeUI.closeWaiting()
 					}
 				});
 				that.havechange(2)
 			},
 			havechange:function(type){
-//				plus.nativeUI.showWaiting('数据加载中')
+				plus.nativeUI.showWaiting('数据加载中')
 				var that=this
 				that.pageNum++
 				$.ajax({
@@ -450,7 +451,7 @@
 								that.changephoto01.push(res.data.list[i])
 							}
 						}
-//						plus.nativeUI.closeWaiting()
+						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
@@ -460,7 +461,7 @@
 				if(this.start) {
 					that.havecenter()
 				} else {
-					plus.geolocation.clearWatch(that.setime);
+					clearInterval(that.setime)
 					that.setime=''
 				}
 			},
@@ -477,25 +478,27 @@
 			},
 			havecenter: function() {
 				var that = this
-				that.setime = plus.geolocation.watchPosition(function(p) {
-					that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
-					that.marker.setPosition(JSON.parse(that.mapcenter));
-					that.map.setCenter(JSON.parse(that.mapcenter));
-					$.ajax({
-						type: "post",
-						url: that.service + "/insertCworkBytxt",
-						dataType: 'json',
-						data: {
-							cuserId: localStorage.getItem('userid'),
-							point: that.mapcenter
-						},
-						success: function(res) {
-							
-						}
+				that.setime = setInterval(function(){
+					plus.geolocation.getCurrentPosition(function(p) {
+						that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
+						that.marker.setPosition(JSON.parse(that.mapcenter));
+						that.map.setCenter(JSON.parse(that.mapcenter));
+						$.ajax({
+							type: "post",
+							url: that.service + "/insertCworkBytxt",
+							dataType: 'json',
+							data: {
+								cuserId: localStorage.getItem('userid'),
+								point: that.mapcenter
+							},
+							success: function(res) {
+								
+							}
+						});
+					}, function(e) {
+						alert('错误信息:' + e.message);
 					});
-				}, function(e) {
-					alert('错误信息:' + e.message);
-				});
+				},5000)
 			},
 			opennew: function(target, id) {
 				this.$store.state.windexid = id
@@ -690,6 +693,14 @@
 			width: 100%;
 			height: .8rem;
 			background: white;
+		}
+		.workcamera{
+			height: calc(100% - 1rem);
+			position: relative;
+		}
+		.hwzhenggai{
+			height: calc(100% - 1rem);
+			position: relative;
 		}
 		.nav-tab {
 			flex: 1;
