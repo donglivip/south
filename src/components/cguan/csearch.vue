@@ -19,8 +19,8 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<!--v-if="(val.count1!=0||val.count2!=0)&&val.cuserName!=null"-->
-				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" >
+				
+				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" v-if="(val.count1!=0||val.count2!=0)&&val.cuserName!=null">
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName}}
@@ -91,7 +91,14 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中...')
+				function plusReady(){
+					plus.nativeUI.showWaiting('数据加载中~')
+				}
+				if(window.plus){
+					plusReady();
+				}else{
+					document.addEventListener("plusready",plusReady,false);
+				}
 				var that = this
 				that.pageNum++
 				var dataJson = {
@@ -116,7 +123,14 @@
 							that.mydata.push(res.data.list[i])
 						}
 						that.lastPage=res.data.pages
-						plus.nativeUI.closeWaiting()
+						function plusReady(){
+							plus.nativeUI.closeWaiting()
+						}
+						if(window.plus){
+							plusReady();
+						}else{
+							document.addEventListener("plusready",plusReady,false);
+						}
 					}
 				});
 			},

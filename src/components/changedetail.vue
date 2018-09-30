@@ -122,11 +122,27 @@
 					title: '提示'
 				});
 				marker.setMap(map);
-								plus.nativeUI.closeWaiting()
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.closeWaiting()
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 			},
 			myajax: function() {
 				var that = this
-								plus.nativeUI.showWaiting('数据加载中...')
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中，可能用时较长，请耐心等待。。。");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryListByCfileId",
@@ -137,7 +153,7 @@
 					success: function(res) {
 						that.mydata = res.data
 						that.havemap()
-
+						
 					}
 				});
 			},

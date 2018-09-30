@@ -21,7 +21,7 @@
 			<div>美丽南钢</div>
 			<span></span>
 		</div>
-		<div id="main" style="height: calc(100% - 1.6rem);">
+		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
 					退回案卷
@@ -350,7 +350,7 @@
 					handingTime1: that.endtime,
 					ctypeId: that.navid,
 					cgridId: that.gridid,
-					cmultipleCommunitiesId: '5e0b3ad5-8257-11e8-9366-00155dc504d0',
+					cmultipleCommunitiesId: that.communityid,
 					pageNum:that.pageNum,
 					cfileResult:that.cfileResult
 				}
@@ -369,6 +369,7 @@
 				if(that.communityid == '') {
 					delete dataJson.cmultipleCommunitiesId
 				}
+				console.log()
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryReturnFile",
@@ -486,12 +487,16 @@
 				this.list=this.list01=this.list02=this.list03=[]
 				this.pageNum=1
 				if(index==0){
+					this.cfileResult=0
 					this.myajax(3)
 				}else if(index==1){
+					this.cfileResult=1
 					this.myajax(1)
 				}else if(index==2){
+					this.cfileResult=2
 					this.myajax(2)
 				}else{
+					this.cfileResult=0
 					this.myajax(0)
 				}
 			},

@@ -111,7 +111,6 @@
 			} else if(cuserRole == 8) {
 				that.opennew('asearch')
 			}
-			
 		},
 		methods: {
 			opennew: function(target, type) {

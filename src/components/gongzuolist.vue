@@ -12,15 +12,18 @@
 				<div class="group" @click="opennew('hworkdetail',val.cworkId)" v-for="val in mydata">
 					<div class="circle"></div>
 					<div class="name">
-						{{val.cworkTitle}}
+						{{val.cworkTitle==null?'名称暂缺':val.cworkTitle}}
 					</div>
 					<div class="oknum" style="white-space: nowrap;flex: 1;text-align: right;margin-right: .1rem;">
 						{{val.createTime1}}
 					</div>
 					<img src="../../static/arrright.png" style="margin-right: .15rem;"/>
 				</div>
+				<p v-if='pageNum<size' @click="myajax">
+					点击加载更多~
+				</p>
 				<p v-if="mydata.length==0">
-					暂无数据
+					暂无工作照
 				</p>
 			</div>
 		</div>
@@ -65,7 +68,9 @@
 					text: '街办管理员',
 					id: 8
 				}, ],
-				mydata:[]
+				mydata:[],
+				size:0,
+				pageNum:0
 			}
 		},
 		mounted() {
@@ -73,10 +78,21 @@
 		},
 		methods: {
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中...')
+				function plusReady() {
+					// 弹出系统等待对话框
+					plus.nativeUI.showWaiting('加载中~')
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
+				that.pageNum++
 				var dataJson = {
-					cuserId: that.windexid
+					cuserId: that.windexid,
+					pageNum:that.pageNum,
+					status:0
 				}
 				$.ajax({
 					type: "get",
@@ -84,9 +100,20 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
-						that.mydata=res.data
-						plus.nativeUI.closeWaiting()
+						that.size=res.data.pages
+						for (var i=0;i<res.data.list.length;i++) {
+							that.mydata.push(res.data.list[i])
+						}
+						console.log(that.mydata)
+						function plusReady() {
+							// 弹出系统等待对话框
+							plus.nativeUI.closeWaiting()
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 					}
 				});
 			},

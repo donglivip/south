@@ -49,6 +49,7 @@
 				if(that.mydate == '请选择日期') {
 					delete dataJson.createTime1
 				}
+				console.log(dataJson)
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryAllWorkByCreateTime",

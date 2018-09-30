@@ -114,7 +114,15 @@
 		},
 		methods: {
 			myajax:function(){
-				plus.nativeUI.showWaiting( "加载中..." );
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中，可能用时较长，请耐心等待。。。");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that=this
 				var formData={
 					createTime1: that.starttime,
@@ -130,6 +138,7 @@
 					dataType: 'json',
 					data: formData,
 					success: function(res) {
+						console.log(res)
 						function plusReady(){
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();
@@ -145,6 +154,9 @@
 							}
 						}
 						that.mydata=res.data[0]
+					},
+					error:function(err){
+						console.log(err)
 					}
 				});
 			},

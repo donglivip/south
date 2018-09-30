@@ -150,7 +150,15 @@
 		},
 		methods: {
 			myajax: function() {
-//				plus.nativeUI.showWaiting( "加载中..." );
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中~");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
 				var dataJson = {
 					createTime1: that.starttime,
@@ -180,10 +188,8 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						for(var i=0;i<res.data[0].length;i++){
-							res.data[0][i].count2=res.data[i+1].count2
-						}
-						that.mydata = res.data[0]
+						console.log(res)
+						that.mydata = res.data
 						function plusReady() {
 							// 弹出系统等待对话框
 							plus.nativeUI.closeWaiting();

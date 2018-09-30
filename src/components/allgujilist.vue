@@ -30,7 +30,7 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('cdetail',val.cuserId,index)" v-for="(val,index) in mydata" v-if="val.cworkTrajectory!=null" style="position: relative;z-index: 88;">
+				<div class="group" @click="opennew('cdetail',val.cuserId,index)" v-for="(val,index) in list" v-if="val.cworkTrajectory!=null" style="position: relative;z-index: 88;">
 					<div class="circle"></div>
 					<div class="name" style="width: auto;font-weight: bold;white-space: nowrap;">
 						{{val.createTime1}}
@@ -43,8 +43,8 @@
 					</div>
 					<img src="../../static/arrright.png" style="margin: 0 .15rem;"/>
 				</div>
-				<p style="position: absolute;top: 2.7rem;left: 0;width: 100%;">
-					该用户暂无轨迹
+				<p style="position: absolute;top: 2.7rem;left: 0;width: 100%;" v-if="size" @click="myajax">
+					点击加载更多~
 				</p>
 			</div>
 		</div>
@@ -62,7 +62,10 @@
 				navid: '',
 				mydata:[],
 				starttime: '开始时间',
-				endtime: '结束时间'
+				endtime: '结束时间',
+				size:0,
+				list:[],
+				pageNum:0
 			}
 		},
 		mounted() {
@@ -70,12 +73,22 @@
 		},
 		methods: {
 			myajax: function() {
-//				plus.nativeUI.showWaiting( "加载中..." );
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中，可能用时较长，请耐心等待。。。");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
+				that.pageNum++
 				var dataJson = {
 					cuserId: that.windexid,
 					createTime1: that.starttime,
-					updataTime1: that.endtime
+					updataTime1: that.endtime,
+					pageNum:that.pageNum
 				}
 				if(that.starttime == '开始时间') {
 					delete dataJson.createTime1
@@ -89,8 +102,19 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						that.mydata=res.data
-//						plus.nativeUI.closeWaiting()
+						that.size=res.data.pages
+						for (var i=0;i<res.data.list.length;i++) {
+							that.list.push(res.data.list[i])
+						}
+						function plusReady() {
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 					}
 				});
 			},

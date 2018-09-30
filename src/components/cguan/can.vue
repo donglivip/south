@@ -21,7 +21,7 @@
 					<span @click="myajax(0)">未整改案卷</span>
 				</div>
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					<span @click="myajax(2)">已整改案卷</span>
+					<span @click="myajax(1)">已整改案卷</span>
 				</div>
 			</div>
 			<div class="time-box">
@@ -50,14 +50,14 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
+										<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealAfterImg1 | myimg" /></div>
+										<img :src="val.cfileDealAfterImg1 | myimg" /></div>
 									<div class="state">
 										整改后
 									</div>
@@ -65,7 +65,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(2)" v-if="pageNum<size">点击加载更多~</div>
+					<div class="more" @click="next(2)" v-if="pageNum<size">点击加载更多~</div>
 				</swiper-slide>
 				<!--未整改-->
 				<swiper-slide>
@@ -77,14 +77,14 @@
 							<div class="img-box">
 								<div class="img-group">
 									<div class="myimg-box">
-									<img :src="val.cfileDealPrevImg1 | myimg" /></div>
+										<img :src="val.cfileDealPrevImg1 | myimg" /></div>
 									<div class="state">
 										整改前
 									</div>
 								</div>
 								<div class="img-group">
 									<div class="myimg-box">
-									<img src="../../../static/uploadselect.png"/></div>
+										<img src="../../../static/uploadselect.png" /></div>
 									<div class="state">
 										上传图片
 									</div>
@@ -92,9 +92,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(0)" v-if="pageNum<size">点击加载更多~</div>
+					<div class="more" @click="next(0)" v-if="pageNum<size">点击加载更多~</div>
 				</swiper-slide>
-				
+
 			</swiper>
 		</div>
 		<transition name='nav'>
@@ -120,14 +120,14 @@
 				uploadtarget: '',
 				navboo: false,
 				navtext: '分类',
-				server:'',
-				cfileDealAfterImg1:'',
-				files:[],
-				pageNum:1,
-				pageSize:10,
-				list:[],
-				list01:[],
-				size:0
+				server: '',
+				cfileDealAfterImg1: '',
+				files: [],
+				pageNum: 1,
+				pageSize: 10,
+				list: [],
+				list01: [],
+				size: 0
 			}
 		},
 		components: {
@@ -140,7 +140,7 @@
 		mounted() {
 			this.$store.state.tfoot = 4
 			this.toswiper(1)
-			this.server=this.service+'/uploadRegisterImage'
+			this.server = this.service + '/uploadRegisterImage'
 			this.myajax(0)
 		},
 		computed: {
@@ -152,30 +152,39 @@
 			}
 		},
 		methods: {
-			opennew: function(target,id) {
-				this.$store.state.windexid=id
+			opennew: function(target, id) {
+				this.$store.state.windexid = id
 				this.$router.push({
 					name: target
 				})
 			},
-			next:function(index){
+			next: function(index) {
 				this.pageNum++
-				this.myajax(index)
+					this.myajax(index)
 			},
 			myajax: function(type) {
-				plus.nativeUI.showWaiting('数据加载中')
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中，可能用时较长，请耐心等待。。。");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
-				var ajaxJson={
-						cuserId: localStorage.getItem('userid'),
-						cfileResult: type,
-						createTime1:that.starttime,
-						handingTime1:that.endtime,
-						cuserRole:localStorage.getItem('cuserRole'),
-						pageNum:that.pageNum
-					}
-				if(that.starttime==''){
+				var ajaxJson = {
+					cuserId: localStorage.getItem('userid'),
+					cfileResult: type,
+					createTime1: that.starttime,
+					handingTime1: that.endtime,
+					cuserRole: localStorage.getItem('cuserRole'),
+					pageNum: that.pageNum
+				}
+				if(that.starttime == '') {
 					delete ajaxJson.createTime1
-				}if(that.endtime==''){
+				}
+				if(that.endtime == '') {
 					delete ajaxJson.handingTime1
 				}
 				$.ajax({
@@ -184,19 +193,26 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
-						that.size=res.data.pages
-						if(type==0){
-							for (var i=0;i<res.data.list.length;i++) {
+						that.size = res.data.pages
+						if(type == 0) {
+							for(var i = 0; i < res.data.list.length; i++) {
 								that.list.push(res.data.list[i])
 							}
-						}else{
-							for (var i=0;i<res.data.list.length;i++) {
+						} else {
+							for(var i = 0; i < res.data.list.length; i++) {
 								that.list01.push(res.data.list[i])
 							}
 						}
-						console.log(that.list)
-						plus.nativeUI.closeWaiting()	
-						
+
+						function plusReady() {
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 					}
 				});
 			},
@@ -207,7 +223,10 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
-				this.pageNum=1
+				this.pageNum = 0
+				this.list = []
+				this.list01 = []
+
 			},
 			timeshow: function(type) {
 				var that = this
@@ -223,9 +242,9 @@
 				});
 			},
 			gosearch: function() {
-				if(this.swiperindex==0){
+				if(this.swiperindex == 0) {
 					this.myajax(0)
-				}else{
+				} else {
 					this.myajax(2)
 				}
 			},
@@ -239,7 +258,7 @@
 <style type="text/css" lang="scss">
 	.tselect {
 		background: #eeeeee;
-		p{
+		p {
 			text-align: center;
 		}
 		.type {

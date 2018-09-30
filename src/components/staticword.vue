@@ -74,7 +74,15 @@
 				]
 			}
 			var that=this
-			plus.nativeUI.showWaiting('图表生成中')
+			function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中~");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 			$.ajax({
 				type: "post",
 				url: that.service + "/queryAndGridAndCtypeIdReportCount",
@@ -82,18 +90,22 @@
 				asycn:false,
 				data: {},
 				success: function(res) {
-					for(var i=0;i<res.data[0].length;i++){
-							res.data[0][i].count2=res.data[i+1].count2
-						}
-					console.log(res.data[0])
-					for(var i=0;i<res.data[0].length;i++){
-						chartoption.xAxis[0].data.push(res.data[0][i].cgridName)
-						chartoption.series[0].data.push(res.data[0][i].count1)
-						chartoption.series[1].data.push(res.data[0][i].count2)
+					for(var i=0;i<res.data.length;i++){
+						chartoption.xAxis[0].data.push(res.data[i].cgridName)
+						chartoption.series[0].data.push(res.data[i].count1)
+						chartoption.series[1].data.push(res.data[i].count2)
 					}
 					let myChart = echarts.init(document.getElementById('myChart'))
 					myChart.setOption(chartoption)
-					plus.nativeUI.closeWaiting()
+					function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.closeWaiting()
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				}
 			});
 			

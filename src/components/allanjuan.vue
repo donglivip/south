@@ -200,7 +200,6 @@
 				files: [],
 				cfileDealAfterImg1: '',
 				pageNum:0,
-				pageSize:10,
 				list:[],
 				cfileResult:0,
 				list01:[],
@@ -214,7 +213,7 @@
 			THead: resolve => require(['./tourists/thead'], resolve)
 		},
 		mounted() {
-			this.next(0)
+			this.toswiper(1)
 			this.server = this.service + '/uploadworkImage'
 		},
 		computed: {
@@ -456,18 +455,19 @@
 				
 			},
 			toswiper: function(index) {
+				console.log(index)
 				this.swiperindex = index
-				this.swiper.slideTo(index, 1000, false)
+				this.swiper.slideTo(index-1, 1000, false)
 				this.list=this.list01=this.list02=this.list03=[]
-				this.pageNum=1
+				this.pageNum=0
 				if(index==0){
-					this.myajax(3)
+					this.next(3)
 				}else if(index==1){
-					this.myajax(1)
+					this.next(1)
 				}else if(index==2){
-					this.myajax(2)
+					this.next(2)
 				}else{
-					this.myajax(0)
+					this.next(0)
 				}
 			},
 			timeshow: function(type) {

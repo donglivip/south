@@ -45,7 +45,7 @@
 				<swiper-slide>
 					<div class="workcamera">
 						<div class="box-group" style="height: calc(100% - 3rem);overflow-y: scroll;">
-							<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)" >
+							<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)">
 								<div class="riqi">
 									<div class="circle width12"></div>
 									<span style="width: auto;">{{val.createTime1}}</span>
@@ -53,8 +53,8 @@
 								<span class="text">{{val.cworkTitle}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;" />
 							</div>
-							<div class="more"  @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
-							<div class="more"  v-if="pageNum&gt;workphoto.lastPage||pageNum==workphoto.lastPage">没有更多啦~</div>
+							<div class="more" @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
+							<div class="more" v-if="pageNum&gt;workphoto.lastPage||pageNum==workphoto.lastPage">没有更多啦~</div>
 							<p v-if="workphoto.length==0">暂无数据</p>
 						</div>
 						<footer style="bottom: 0;">
@@ -73,14 +73,14 @@
 				<swiper-slide>
 					<div class="hwzhenggai">
 						<div class="nav">
-							<div class="nav-tab" :class="navtype==2?'active':''" @click="tab(2)">
-								整改
-							</div>
 							<div class="nav-tab" :class="navtype==0?'active':''" @click="tab(0)">
 								未整改
 							</div>
+							<div class="nav-tab" :class="navtype==2?'active':''" @click="tab(2)">
+								已整改
+							</div>
 						</div>
-						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==2">
+						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==0">
 							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto" v-show="changephoto.length!=0">
 								<div class="riqi">
 									<div class="circle width12"></div>
@@ -89,9 +89,10 @@
 								<span class="text">{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 							</div>
-							<p v-if="changephoto.length==0" @click="">点击加载更多~</p>
+							<p v-if="size>pageNum" @click="havechange(2)">点击加载更多~</p>
+							<p v-if="size<=pageNum">暂无案卷</p>
 						</div>
-						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==0">
+						<div class="box-group" style="height: calc(100% - 2.8rem);overflow-y: scroll;" v-if="navtype==2">
 							<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in changephoto01" v-show="changephoto.length!=0">
 								<div class="riqi">
 									<div class="circle width12"></div>
@@ -100,7 +101,8 @@
 								<span class="text">{{val.cgridName}}</span>
 								<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
 							</div>
-							<p v-if="changephoto.length==0" @click="">点击加载更多~</p>
+							<p v-if="size>pageNum" @click="havechange(0)">点击加载更多~</p>
+							<p v-if="size<=pageNum">暂无案卷</p>
 						</div>
 						<footer style="bottom: 0;height: 2rem;">
 							<div class="box-upload workcamera" style="height: 2rem;">
@@ -154,29 +156,30 @@
 				cfileStation: '',
 				wimg: '',
 				mapboo: false,
-				pageNum:0,
-				pageSize:10,
-				list:[],
-				size:0,
-				changephoto01:[]
+				pageNum: 0,
+				pageSize: 10,
+				list: [],
+				size: 0,
+				changephoto01: []
 			}
 		},
 		mounted() {
 			this.$store.state.tfoot = 1,
-			this.mylocation()
+				this.mylocation()
 			this.server = this.service + '/uploadworkImage'
-			this.next()
-			this.tab(0)
+			
 		},
 		methods: {
 			tab: function(inedx) {
 				this.navtype = inedx
-				if(inedx==2){
+				this.pageNum = 0
+				this.changephoto = this.changephoto01 = []
+				if(inedx == 2) {
 					this.havechange(2)
-				}else{
+				} else {
 					this.havechange(0)
 				}
-				
+
 			},
 			mapshow: function(type) {
 				this.mapboo = !this.mapboo
@@ -211,39 +214,39 @@
 					return false;
 				}
 				var that = this
-					// 弹出系统等待对话框
-					that.w = plus.nativeUI.showWaiting("上传中...");
-						var dataJson = {
-							cuserId: localStorage.getItem('userid'),
-							cfileDealPrevImg1: that.wimg,
-							cfileStation: that.lng + ',' + that.lat,
-							ctypeTwoId: that.bottomtwoid
-						}
-						$.ajax({
-							type: "post",
-							url: that.service + "/insertCfileAndCuserAreadyRegister",
-							dataType: 'json',
-							data: dataJson,
-							success: function(res) {
-								if(res.status != 200) {
-									alert(res.msg)
-								} else {
-									function plusReady() {
-										plus.nativeUI.closeWaiting();
-										plus.nativeUI.toast("上传完成");
-										that.navtext = '选择分类'
-									}
-									if(window.plus) {
-										plusReady();
-									} else {
-										document.addEventListener("plusready", plusReady, false);
-									}
-								}
-							},
-							error: function(err) {
-								console.log(JSON.stringify(err))
+				// 弹出系统等待对话框
+				that.w = plus.nativeUI.showWaiting("上传中...");
+				var dataJson = {
+					cuserId: localStorage.getItem('userid'),
+					cfileDealPrevImg1: that.wimg,
+					cfileStation: that.lng + ',' + that.lat,
+					ctypeTwoId: that.bottomtwoid
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/insertCfileAndCuserAreadyRegister",
+					dataType: 'json',
+					data: dataJson,
+					success: function(res) {
+						if(res.status != 200) {
+							alert(res.msg)
+						} else {
+							function plusReady() {
+								plus.nativeUI.closeWaiting();
+								plus.nativeUI.toast("上传完成");
+								that.navtext = '选择分类'
 							}
-						});
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
+						}
+					},
+					error: function(err) {
+						console.log(JSON.stringify(err))
+					}
+				});
 			},
 			workupload: function() {
 				var that = this
@@ -397,61 +400,97 @@
 				});
 
 			},
-			next:function(){
+			next: function() {
 				this.pageNum++
-				this.myajax()
+					this.myajax()
 			},
 			myajax: function() {
-				plus.nativeUI.showWaiting('数据加载中')
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中~");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
 				$.ajax({
 					type: "get",
 					url: that.service + "/querAllCwork",
 					dataType: 'json',
 					data: {
-						cuserId:localStorage.getItem('userid'),
-						pageNum:that.pageNum,
-						pageSize:that.pageSize
+						cuserId: localStorage.getItem('userid'),
+						pageNum: that.pageNum,
+						status: 0
 					},
 					success: function(res) {
-						
+
 						that.workphoto = res.data
-							for (var i=0;i<res.data.list.length;i++) {
-								that.list.push(res.data.list[i])
-							}
+						for(var i = 0; i < res.data.list.length; i++) {
+							that.list.push(res.data.list[i])
+						}
 						console.log(that.list)
-						plus.nativeUI.closeWaiting()
+
+						function plusReady() {
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 					}
 				});
 				that.havechange(2)
 			},
-			havechange:function(type){
-				plus.nativeUI.showWaiting('数据加载中')
-				var that=this
+			havechange: function(type) {
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中~");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+				var that = this
 				that.pageNum++
+					var ajaxjson = {
+						cuserId: localStorage.getItem('userid'),
+						cfileResult: type,
+						pageNum: that.pageNum
+					}
+				console.log(ajaxjson)
 				$.ajax({
 					type: "get",
 					url: that.service + "/queryByCfilePojoRegister",
 					dataType: 'json',
-					data: {
-						cuserId: localStorage.getItem('userid'),
-						cfileResult:type,
-						pageNum:that.pageNum
-					},
+					data: ajaxjson,
 					success: function(res) {
 						console.log(res)
-						that.size=res.data.pages
-						that.mydata=res.data
-						if(type==0){
-							for (var i=0;i<res.data.list.length;i++) {
+						that.size = res.data.pages
+						that.mydata = res.data
+						if(type == 0) {
+							for(var i = 0; i < res.data.list.length; i++) {
 								that.changephoto.push(res.data.list[i])
 							}
-						}else{
-							for (var i=0;i<res.data.list.length;i++) {
+						} else {
+							for(var i = 0; i < res.data.list.length; i++) {
 								that.changephoto01.push(res.data.list[i])
 							}
 						}
-						plus.nativeUI.closeWaiting()
+
+						function plusReady() {
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 					}
 				});
 			},
@@ -462,7 +501,7 @@
 					that.havecenter()
 				} else {
 					clearInterval(that.setime)
-					that.setime=''
+					that.setime = ''
 				}
 			},
 			mylocation: function() {
@@ -478,7 +517,7 @@
 			},
 			havecenter: function() {
 				var that = this
-				that.setime = setInterval(function(){
+				that.setime = setInterval(function() {
 					plus.geolocation.getCurrentPosition(function(p) {
 						that.mapcenter = '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
 						that.marker.setPosition(JSON.parse(that.mapcenter));
@@ -492,13 +531,13 @@
 								point: that.mapcenter
 							},
 							success: function(res) {
-								
+
 							}
 						});
 					}, function(e) {
 						alert('错误信息:' + e.message);
 					});
-				},5000)
+				}, 5000)
 			},
 			opennew: function(target, id) {
 				this.$store.state.windexid = id
@@ -508,6 +547,11 @@
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
+				this.pageNum=0
+				if(index==2){
+					this.tab(2)
+				}
+				this.list=this.changephoto01=this.changephoto=[]
 				this.swiper.slideTo(index, 1000, false)
 			},
 			navshow: function(id) {
@@ -694,11 +738,11 @@
 			height: .8rem;
 			background: white;
 		}
-		.workcamera{
+		.workcamera {
 			height: calc(100% - 1rem);
 			position: relative;
 		}
-		.hwzhenggai{
+		.hwzhenggai {
 			height: calc(100% - 1rem);
 			position: relative;
 		}

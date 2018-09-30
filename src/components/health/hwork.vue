@@ -16,19 +16,19 @@
 		</transition>
 		<t-head></t-head>
 		<div id="main" style="position: relative;">
-			<div>
-				<div class="box-group">
-					<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)" v-if="workphoto.length!=0">
-						<div class="riqi">
-							<div class="circle width12"></div>
-							<span style="width: auto;">{{val.createTime1}}</span>
+			<div class="box-group" style="height: calc(100% - 3rem);overflow-y: scroll;">
+							<div class="group" v-for="val in list" @click="opennew('hworkdetail',val.cworkId)">
+								<div class="riqi">
+									<div class="circle width12"></div>
+									<span style="width: auto;">{{val.createTime1}}</span>
+								</div>
+								<span class="text">{{val.cworkTitle}}</span>
+								<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;" />
+							</div>
+							<div class="more"  @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
+							<div class="more"  v-if="pageNum&gt;workphoto.lastPage||pageNum==workphoto.lastPage">没有更多啦~</div>
+							<p v-if="workphoto.length==0">暂无数据</p>
 						</div>
-						<span class="text">{{val.cworkTitle}}</span>
-						<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cworkId)" style="margin-right: .2rem;"/>
-					</div>
-					<div class="more"  @click="next()" v-if="pageNum&lt;workphoto.lastPage">点击加载更多</div>
-				</div>
-			</div>
 		</div>
 		<footer>
 			<div class="box-upload">
@@ -74,6 +74,14 @@
 				this.myajax()
 			},
 			myajax: function() {
+				function plusReady(){
+					plus.nativeUI.showWaiting('数据加载中~')
+				}
+				if(window.plus){
+					plusReady();
+				}else{
+					document.addEventListener("plusready",plusReady,false);
+				}
 				var that = this
 				$.ajax({
 					type: "get",
@@ -81,7 +89,8 @@
 					dataType: 'json',
 					data: {
 						cuserId: localStorage.getItem('userid'),
-						pageNum:that.pageNum
+						pageNum:that.pageNum,
+						status:0
 					},
 					success: function(res) {
 						console.log(res)
@@ -89,6 +98,17 @@
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list.push(res.data.list[i])
+						}
+						function plusReady(){
+							plus.nativeUI.closeWaiting()
+						}
+						if(window.plus){
+							plusReady();
+						}else{
+							document.addEventListener("plusready",plusReady,false);
+						}
 					}
 				});
 			},

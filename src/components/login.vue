@@ -52,7 +52,15 @@
 				})
 			},
 			submit: function() {
-				plus.nativeUI.showWaiting('登录中...')
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中，可能用时较长，请耐心等待。。。");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				if(this.phone == '' || this.pwd == '') {
 					alert('账号或密码不能为空！')
 					return
@@ -73,7 +81,15 @@
 					},
 					success: function(res) {
 						console.log(res)
-						plus.nativeUI.closeWaiting()
+						function plusReady() {
+							// 弹出系统等待对话框
+							var w = plus.nativeUI.closeWaiting()
+						}
+						if(window.plus) {
+							plusReady();
+						} else {
+							document.addEventListener("plusready", plusReady, false);
+						}
 						if(res.status != 200) {
 							plus.nativeUI.toast(res.msg)
 							return false;

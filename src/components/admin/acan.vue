@@ -90,7 +90,7 @@
 							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
 						</div>
 					</div>
-					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  @click="next(0)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<!--未整改-->
@@ -118,7 +118,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  @click="next(1)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<!--已整改-->
@@ -148,7 +148,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  @click="next(2)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				
@@ -323,9 +323,10 @@
 
 			},
 			next:function(index){
+				console.log(index)
 				this.pageNum++
-				this.myajax()
 				this.cfileResult=index
+				this.myajax()
 			},
 			myajax: function() {
 				function plusReady() {
@@ -362,18 +363,19 @@
 				if(that.communityid == '') {
 					delete dataJson.cmultipleCommunitiesId
 				}
+				console.log(dataJson)
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryReturnFile",
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.mydata=res.data
 						if(that.swiperindex==0){
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list02.push(res.data.list[i])
 							}
-							console.log(that.list02)
 						}else if(that.swiperindex==1){
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
@@ -470,6 +472,7 @@
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
+				this.cfileResult=index
 				this.swiper.slideTo(index, 1000, false)
 				this.list=this.list01=this.list02=[]
 				this.pageNum=1
@@ -582,22 +585,22 @@
 			border-radius: 50%;
 			margin-right: .35rem;
 		}
-		.group:nth-of-type(1) .circle {
+		.group:nth-of-type(1n) .circle {
 			background: blue;
 		}
-		.group:nth-of-type(2) .circle {
+		.group:nth-of-type(2n) .circle {
 			background: yellow;
 		}
-		.group:nth-of-type(3) .circle {
+		.group:nth-of-type(3n) .circle {
 			background: red;
 		}
-		.group:nth-of-type(4) .circle {
+		.group:nth-of-type(4n) .circle {
 			background: pink;
 		}
-		.group:nth-of-type(5) .circle {
+		.group:nth-of-type(5n) .circle {
 			background: peru;
 		}
-		.group:nth-of-type(6) .circle {
+		.group:nth-of-type(6n) .circle {
 			background: green;
 		}
 		.back-group {

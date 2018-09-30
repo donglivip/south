@@ -1,5 +1,5 @@
 <template>
-	<div class="warpper hwxq">
+	<div class="warpper hwxq" style="background: #f4f4f4;">
 		<div class="main">
 			<header>
 				<span @click="back">
@@ -11,12 +11,13 @@
 			<content>
 				<div class="box-group">
 					<div class="group">
-						<span>{{mydata.cworkTitle}}</span>
+						<span>{{mydata.cworkTitle==null?'名称暂缺':mydata.cworkTitle}}</span>
 						<span>{{mydata.createTime1}}</span>
 					</div>
 				</div>
 				<div class="groupimg myimg-box">
-					<img :src="mydata.cworkImg | myimg">
+					<img :src="mydata.cworkImg | myimg" v-if="mydata.cworkImg!=null">
+					<p v-if="mydata.cworkImg==null">暂无工作照</p>
 				</div>
 
 			</content>
@@ -43,7 +44,7 @@
 				},
 				success: function(res) {
 					that.mydata = res.data[0]
-					console.log(that.windexid)
+					console.log(res)
 				}
 			});
 		},
@@ -72,6 +73,7 @@
 	html,
 	body,
 	.warpper {
+		background: #f4f4f4;
 		padding: 0px;
 		margin: 0px;
 		font-size: .2rem;

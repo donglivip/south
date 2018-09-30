@@ -102,7 +102,15 @@
 		},
 		methods: {
 			myajax: function() {
-//				plus.nativeUI.showWaiting('数据加载中')
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中~");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 				var that = this
 				that.pageNum++
 				var dataJson = {
@@ -129,7 +137,15 @@
 						}
 					}
 				});
-//				plus.nativeUI.closeWaiting()
+				function plusReady() {
+					// 弹出系统等待对话框
+					var w = plus.nativeUI.closeWaiting()
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
 			},
 			opennew: function(target, id) {
 				this.$store.state.windexid = id

@@ -36,7 +36,7 @@
 					layers: [new AMap.TileLayer.Satellite(),new AMap.TileLayer.RoadNet()]
 				})
 				var marker = new AMap.Marker({
-				    icon: "http://27.54.248.14:8080/uploadImg/image/lryh/20180730/icon.png",
+				    icon: "http://202.109.131.175:7080/uploadImg/image/lryh/20180730/icon.png",
 				    position:JSON.parse(mapcenter),
 				    offset: new AMap.Pixel(-32, -32) 
 				});
