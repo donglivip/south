@@ -232,7 +232,7 @@
 							alert(res.msg)
 						} else {
 							function plusReady() {
-								plus.nativeUI.closeWaiting();
+								that.tab(0)
 								plus.nativeUI.toast("上传完成");
 								that.navtext = '选择分类'
 							}
@@ -425,7 +425,7 @@
 						status: 0
 					},
 					success: function(res) {
-
+						console.log(res)
 						that.workphoto = res.data
 						for(var i = 0; i < res.data.list.length; i++) {
 							that.list.push(res.data.list[i])
@@ -549,7 +549,10 @@
 				this.swiperindex = index
 				this.pageNum=0
 				if(index==2){
-					this.tab(2)
+					this.tab(0)
+				}
+				if(index==1){
+					this.myajax()
 				}
 				this.list=this.changephoto01=this.changephoto=[]
 				this.swiper.slideTo(index, 1000, false)

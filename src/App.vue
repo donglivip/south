@@ -131,7 +131,6 @@
 			var that = this
 			that.havenew()
 			that.set01 = setInterval(function() {
-				if(localStorage.getItem('cuserRole')==4||localStorage.getItem('cuserRole')==5||localStorage.getItem('cuserRole')==6||localStorage.getItem('cuserRole')==7){
 					plus.geolocation.getCurrentPosition(function(p) {
 						$.ajax({
 							type: "post",
@@ -151,7 +150,6 @@
 					}, function(e) {
 						alert('错误信息:' + e.message);
 					});
-				}
 			}, 60000)
 
 			function plusReady() {

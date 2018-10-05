@@ -9,7 +9,7 @@
 				<span></span>
 			</header>
 			<content>
-				<div class="box-group">
+				<div class="box-group" style="height: .8rem;">
 					<div class="group">
 						<span>{{mydata.cworkTitle==null?'名称暂缺':mydata.cworkTitle}}</span>
 						<span>{{mydata.createTime1}}</span>
