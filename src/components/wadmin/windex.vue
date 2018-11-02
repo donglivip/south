@@ -125,7 +125,7 @@
 		</transition>
 		<h-foot></h-foot>
 		<transition name='bottom'>
-			<map-change v-show='mapboo' @mapshow="mapshow"></map-change>
+			<map-change v-if='mapboo' @mapshow="mapshow"></map-change>
 		</transition>
 	</div>
 </template>

@@ -71,7 +71,7 @@
 			<bottom-nav v-show='bottomboo' @navshow='navshow'></bottom-nav>
 		</transition>
 		<transition name='bottom'>
-			<map-change v-show='mapboo' @mapshow="mapshow"></map-change>
+			<map-change v-if='mapboo' @mapshow="mapshow"></map-change>
 		</transition>
 	</div>
 </template>
