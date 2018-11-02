@@ -11,26 +11,26 @@
 				</div>
 			</div>
 			<div class="box-group" v-if="navtype==0">
-					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in list">
-						<div class="riqi">
-							<div class="circle width12"></div>
-							<span>{{val.createTime}}</span>
-						</div>
-						<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-						<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+				<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in list">
+					<div class="riqi">
+						<div class="circle width12"></div>
+						<span>{{val.createTime}}</span>
 					</div>
-					<div class="more"  @click="next()" v-if="pageNum<size">点击加载更多~</div>
+					<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
+					<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+				</div>
+				<div class="more" @click="next()" v-if="pageNum<size">点击加载更多~</div>
 			</div>
 			<div class="box-group" v-if="navtype==2">
-					<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in list01">
-						<div class="riqi">
-							<div class="circle width12"></div>
-							<span>{{val.createTime}}</span>
-						</div>
-						<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-						<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+				<div class="group" @click="opennew('changedetail',val.cfileId)" v-for="val in list01">
+					<div class="riqi">
+						<div class="circle width12"></div>
+						<span>{{val.createTime}}</span>
 					</div>
-					<div class="more"  @click="next()" v-if="pageNum<size">点击加载更多~</div>
+					<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
+					<img src="../../../static/shanchu.png" @click.stop="filephotod(val.cfileId)">
+				</div>
+				<div class="more" @click="next()" v-if="pageNum<size">点击加载更多~</div>
 			</div>
 		</div>
 		<footer>
@@ -65,13 +65,13 @@
 				navtype: 0,
 				changephoto: [],
 				cfileStation: '',
-				wimg:'',
+				wimg: '',
 				mapboo: false,
-				pageNum:0,
-				pageSize:10,
-				list:[],
-				size:'',
-				list01:[]
+				pageNum: 0,
+				pageSize: 10,
+				list: [],
+				size: '',
+				list01: []
 			}
 		},
 		mounted() {
@@ -113,39 +113,39 @@
 					return false;
 				}
 				var that = this
-					// 弹出系统等待对话框
-					that.w = plus.nativeUI.showWaiting("上传中...");
-						var dataJson = {
-							cuserId: localStorage.getItem('userid'),
-							cfileDealPrevImg1: that.wimg,
-							cfileStation: that.lng + ',' + that.lat,
-							ctypeTwoId: that.bottomtwoid
-						}
-						$.ajax({
-							type: "post",
-							url: that.service + "/insertCfileAndCuserAreadyRegister",
-							dataType: 'json',
-							data: dataJson,
-							success: function(res) {
-								if(res.status != 200) {
-									alert(res.msg)
-								} else {
-									function plusReady() {
-										plus.nativeUI.closeWaiting();
-										plus.nativeUI.toast("上传完成");
-										that.navtext = '选择分类'
-									}
-									if(window.plus) {
-										plusReady();
-									} else {
-										document.addEventListener("plusready", plusReady, false);
-									}
-								}
-							},
-							error: function(err) {
-								console.log(JSON.stringify(err))
+				// 弹出系统等待对话框
+				that.w = plus.nativeUI.showWaiting("上传中...");
+				var dataJson = {
+					cuserId: localStorage.getItem('userid'),
+					cfileDealPrevImg1: that.wimg,
+					cfileStation: that.lng + ',' + that.lat,
+					ctypeTwoId: that.bottomtwoid
+				}
+				$.ajax({
+					type: "post",
+					url: that.service + "/insertCfileAndCuserAreadyRegister",
+					dataType: 'json',
+					data: dataJson,
+					success: function(res) {
+						if(res.status != 200) {
+							alert(res.msg)
+						} else {
+							function plusReady() {
+								plus.nativeUI.closeWaiting();
+								plus.nativeUI.toast("上传完成");
+								that.navtext = '选择分类'
 							}
-						});
+							if(window.plus) {
+								plusReady();
+							} else {
+								document.addEventListener("plusready", plusReady, false);
+							}
+						}
+					},
+					error: function(err) {
+						console.log(JSON.stringify(err))
+					}
+				});
 			},
 			filephotod: function(id) {
 				var that = this
@@ -204,9 +204,9 @@
 					name: target
 				})
 			},
-			next:function(){
+			next: function() {
 				this.pageNum++
-				this.myajax()
+					this.myajax()
 			},
 			myajax: function() {
 				plus.nativeUI.showWaiting('加载中~')
@@ -219,30 +219,30 @@
 					data: {
 						cuserId: localStorage.getItem('userid'),
 						cfileResult: that.navtype,
-						pageNum:that.pageNum
+						pageNum: that.pageNum
 					},
 					success: function(res) {
 						console.log(res)
 						that.size = res.data.pages
-						if(that.navtype==0){
-							for (var i=0;i<res.data.list.length;i++) {
+						if(that.navtype == 0) {
+							for(var i = 0; i < res.data.list.length; i++) {
 								that.list.push(res.data.list[i])
 							}
-						}else{
-							for (var i=0;i<res.data.list.length;i++) {
+						} else {
+							for(var i = 0; i < res.data.list.length; i++) {
 								that.list01.push(res.data.list[i])
 							}
 						}
-						
+
 						plus.nativeUI.closeWaiting()
 					}
 				});
 			},
 			tab: function(inedx) {
-				this.pageNum=1
+				this.pageNum = 1
 				this.navtype = inedx
-				this.list=[]
-				this.list01=[]
+				this.list = []
+				this.list01 = []
 				this.myajax()
 			},
 			navshow: function(id) {
@@ -423,10 +423,12 @@
 	.hwzhenggai .text {
 		width: 4.4rem;
 	}
-	.box-group{
+	
+	.box-group {
 		height: calc(100% - 2.7rem);
 		overflow-y: scroll;
 	}
+	
 	.hwzhenggai .width12 {
 		width: .17rem;
 		height: .17rem;
