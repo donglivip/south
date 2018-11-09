@@ -60,7 +60,7 @@
 							{{endtime==''?'结束时间':endtime}}
 							<img src="../../static/arrbottom.png" />
 						</div>
-						<div class="box-go" @click="myajax">
+						<div class="box-go" @click="toswiper(swiperindex)">
 							搜索
 						</div>
 					</div>

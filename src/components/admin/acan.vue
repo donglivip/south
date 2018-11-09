@@ -56,7 +56,7 @@
 							{{endtime==''?'结束时间':endtime}}
 							<img src="../../../static/arrbottom.png" />
 						</div>
-						<div class="box-go" @click="myajax">
+						<div class="box-go" @click="toswiper(swiperindex)">
 							搜索
 						</div>
 					</div>
@@ -344,7 +344,7 @@
 					handingTime1: that.endtime,
 					ctypeId: that.navid,
 					cgridId: that.gridid,
-					cmultipleCommunitiesId: '5e0b3ad5-8257-11e8-9366-00155dc504d0',
+					cmultipleCommunitiesId: that.communityid,
 					pageNum:that.pageNum,
 					cfileResult:that.cfileResult
 				}
