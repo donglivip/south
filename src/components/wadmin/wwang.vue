@@ -18,7 +18,7 @@
 		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					预处理案卷
+					待受理案卷
 				</div>
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
 					待处理案卷
@@ -135,7 +135,7 @@
 				pageSize:10,
 				list:[],
 				list01:[],
-				list02:[]//0预处理1待处理2已处理
+				list02:[]//0待受理1待处理2已处理
 			}
 		},
 		components: {

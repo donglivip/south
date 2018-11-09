@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="csearch-main">
-				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" >
+				<div class="group" @click="opennew('allgujilist',val.cuserId)" v-for="val in mydata" v-if="val.count2!=0">
 					<div class="circle"></div>
 					<div class="name">
 						{{val.cuserName==null?'名称暂缺':val.cuserName}}

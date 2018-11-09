@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
 	// 定义状态d
 	state: {
-//		service:'http://192.168.2.239',
+//		service:'http://192.168.2.116',
 		service:'http://202.109.131.175:7080',
 		thead:false,
 		tfoot:1,

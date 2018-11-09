@@ -100,6 +100,7 @@
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
+						console.log(res)
 						that.size=res.data.pages
 						for (var i=0;i<res.data.list.length;i++) {
 							that.mydata.push(res.data.list[i])

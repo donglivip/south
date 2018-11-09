@@ -17,11 +17,11 @@
 		<t-head></t-head>
 		<div id="main">
 			<div class="tselect-top">
-				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
-					<span @click="myajax(0)">未整改案卷</span>
-				</div>
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
 					<span @click="myajax(1)">已整改案卷</span>
+				</div>
+				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
+					<span @click="myajax(0)">未整改案卷</span>
 				</div>
 			</div>
 			<div class="time-box">
@@ -94,7 +94,6 @@
 					</div>
 					<div class="more" @click="next(0)" v-if="pageNum<size">点击加载更多~</div>
 				</swiper-slide>
-
 			</swiper>
 		</div>
 		<transition name='nav'>
@@ -111,7 +110,7 @@
 		data() {
 			return {
 				swiperOption: {},
-				swiperindex: 1,
+				swiperindex: 0,
 				starttime: '',
 				endtime: '',
 				startshow: false,
@@ -139,9 +138,9 @@
 		},
 		mounted() {
 			this.$store.state.tfoot = 4
-			this.toswiper(1)
+			this.toswiper(0)
 			this.server = this.service + '/uploadRegisterImage'
-			this.myajax(0)
+			this.myajax(1)
 		},
 		computed: {
 			swiper() {
@@ -175,7 +174,7 @@
 				var that = this
 				var ajaxJson = {
 					cuserId: localStorage.getItem('userid'),
-					cfileResult: type,
+					cfileResult: type==0?1:2,
 					createTime1: that.starttime,
 					handingTime1: that.endtime,
 					cuserRole: localStorage.getItem('cuserRole'),
@@ -193,6 +192,7 @@
 					dataType: 'json',
 					data: ajaxJson,
 					success: function(res) {
+						console.log(res)
 						that.size = res.data.pages
 						if(type == 0) {
 							for(var i = 0; i < res.data.list.length; i++) {
@@ -226,7 +226,6 @@
 				this.pageNum = 0
 				this.list = []
 				this.list01 = []
-
 			},
 			timeshow: function(type) {
 				var that = this
@@ -243,9 +242,11 @@
 			},
 			gosearch: function() {
 				if(this.swiperindex == 0) {
-					this.myajax(0)
+					this.myajax(1)
+					this.toswiper(0)
 				} else {
-					this.myajax(2)
+					this.myajax(0)
+					this.toswiper(1)
 				}
 			},
 			alerttab: function() {

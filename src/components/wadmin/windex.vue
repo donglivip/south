@@ -425,13 +425,11 @@
 						status: 0
 					},
 					success: function(res) {
-						console.log(res)
+						that.list=[]
 						that.workphoto = res.data
 						for(var i = 0; i < res.data.list.length; i++) {
 							that.list.push(res.data.list[i])
 						}
-						console.log(that.list)
-
 						function plusReady() {
 							// 弹出系统等待对话框
 							var w = plus.nativeUI.closeWaiting()
@@ -506,9 +504,14 @@
 			},
 			mylocation: function() {
 				var that = this
+				var googleLayer = new AMap.TileLayer({
+				  getTileUrl: 'http://mt{1,2,3,0}.google.cn/vt/lyrs=s&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galile'
+				});
+				var roadNetLayer = new AMap.TileLayer.RoadNet();
 				that.map = new AMap.Map('map-container', {
 					zoom: 25,
-					center: JSON.parse(that.mapcenter)
+					center: JSON.parse(that.mapcenter),
+					layers: [googleLayer,roadNetLayer]
 				})
 				that.marker = new AMap.Marker({
 					title: '提示'

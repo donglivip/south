@@ -201,7 +201,7 @@
 				cfileDealAfterImg1: '',
 				pageNum:0,
 				list:[],
-				cfileResult:0,
+				cfileResult:1,
 				list01:[],
 				list02:[],
 				list03:[]
@@ -313,8 +313,8 @@
 			},
 			next:function(index){
 				this.pageNum++
-				this.myajax()
 				this.cfileResult=index
+				this.myajax()
 			},
 			myajax: function() {
 				function plusReady() {
@@ -351,6 +351,7 @@
 				if(that.communityid == '') {
 					delete dataJson.cmultipleCommunitiesId
 				}
+				console.log(that.cfileResult)
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryReturnFile",
