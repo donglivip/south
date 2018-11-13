@@ -35,7 +35,9 @@
 				});
 				var roadNetLayer = new AMap.TileLayer.RoadNet();
 				var map = new AMap.Map('container', {
+					resizeEnable: true,
 					zoom: 18,
+					dragEnable: true,
 					center: JSON.parse(mapcenter),
 					layers: [googleLayer,roadNetLayer]
 				})
@@ -45,7 +47,33 @@
 					offset: new AMap.Pixel(-32, -32)
 				});
 				marker.setMap(map);
-
+				AMap.event.addListener(map, 'dragging', function() {
+					marker.setPosition(map.getCenter())
+				});
+	
+				// 停止移动
+				AMap.event.addListener(map, 'dragend', function() {
+					console.log(map.getCenter())
+					marker.setPosition(map.getCenter())
+					marker.setAnimation('AMAP_ANIMATION_DROP')
+					that.$store.state.lng = map.getCenter().lng
+					that.$store.state.lat = map.getCenter().lat
+				});
+//				var _onClick = function(e) {
+//					AMap.service('AMap.Geocoder', function() {
+//						var geocoder = new AMap.Geocoder({
+//							city: ""
+//						});
+//						geocoder.getAddress(e.lnglat, function(status, result) {
+//							if(status === 'complete' && result.info === 'OK') {
+//								marker.setPosition([e.lnglat.lng, e.lnglat.lat]);
+//								that.$store.state.lng = e.lnglat.lng
+//								that.$store.state.lat = e.lnglat.lat
+//							}
+//						});
+//					})
+//				}
+//				AMap.event.addListener(map, "click", _onClick);
 				var text = new AMap.Text({
 					text: '南钢街道办事处',
 					textAlign: 'center', // 'left' 'right', 'center',
@@ -5924,22 +5952,6 @@
 					position: [115.999258, 28.631804]
 				});
 				text.setMap(map);
-
-				var _onClick = function(e) {
-					AMap.service('AMap.Geocoder', function() {
-						var geocoder = new AMap.Geocoder({
-							city: ""
-						});
-						geocoder.getAddress(e.lnglat, function(status, result) {
-							if(status === 'complete' && result.info === 'OK') {
-								marker.setPosition([e.lnglat.lng, e.lnglat.lat]);
-								that.$store.state.lng = e.lnglat.lng
-								that.$store.state.lat = e.lnglat.lat
-							}
-						});
-					})
-				}
-				AMap.event.addListener(map, "click", _onClick);
 			}, function(e) {
 				alert('定位失败,请检查网络是否正常，或者是否打开了定位服务');
 			});

@@ -150,7 +150,7 @@
 					}, function(e) {
 						alert('错误信息:' + e.message);
 					});
-			}, 5000)
+			}, 500000)
 
 			function plusReady() {
 				plus.key.addEventListener("backbutton", function() {

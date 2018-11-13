@@ -219,7 +219,7 @@
 				pageNum:0,
 				pageSize:10,
 				list:[],
-				cfileResult:0,
+				cfileResult:3,
 				list01:[],
 				list02:[],
 				list03:[]
@@ -486,7 +486,7 @@
 				this.list=this.list01=this.list02=this.list03=[]
 				this.pageNum=1
 				if(index==0){
-					this.cfileResult=0
+					this.cfileResult=3
 					this.myajax(3)
 				}else if(index==1){
 					this.cfileResult=1
@@ -600,22 +600,22 @@
 			border-radius: 50%;
 			margin-right: .35rem;
 		}
-		.group:nth-of-type(1) .circle {
+		.group:nth-of-type(1n) .circle {
 			background: blue;
 		}
-		.group:nth-of-type(2) .circle {
+		.group:nth-of-type(2n) .circle {
 			background: yellow;
 		}
-		.group:nth-of-type(3) .circle {
+		.group:nth-of-type(3n) .circle {
 			background: red;
 		}
-		.group:nth-of-type(4) .circle {
+		.group:nth-of-type(4n) .circle {
 			background: pink;
 		}
-		.group:nth-of-type(5) .circle {
+		.group:nth-of-type(5n) .circle {
 			background: peru;
 		}
-		.group:nth-of-type(6) .circle {
+		.group:nth-of-type(6n) .circle {
 			background: green;
 		}
 		.back-group {
