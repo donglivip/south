@@ -14,20 +14,26 @@
 				</div>
 			</div>
 		</transition>
-		<t-head></t-head>
-		<div id="main" style="height: calc(100% - 1.6rem);">
+		<div id="head">
+			<span>
+					
+				</span>
+			<div>美丽南钢</div>
+			<span></span>
+		</div>
+		<div id="main">
 			<div class="tselect-top">
 				<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
 					退回案卷
 				</div>
-				<!--<div class="top-nav" :class="swiperindex==0?'active':''" @click="toswiper(0)">
-					未受理案卷
-				</div>-->
 				<div class="top-nav" :class="swiperindex==1?'active':''" @click="toswiper(1)">
 					未整改案卷
 				</div>
 				<div class="top-nav" :class="swiperindex==2?'active':''" @click="toswiper(2)">
 					已整改案卷
+				</div>
+				<div class="top-nav" :class="swiperindex==3?'active':''" @click="toswiper(3)">
+					未受理案卷
 				</div>
 			</div>
 			<div class="time-box">
@@ -66,18 +72,6 @@
 			</div>
 			<swiper :options="swiperOption" ref="mySwiper" class='swiper-no-swiping'>
 				<!-- 这部分放你要渲染的那些内容 -->
-				<!--<swiper-slide>
-					<div class="box-group" v-for="val in mydata" v-if="val.cfileResult==0" @click="opennew('ydetail',val.cfileId)">
-						<div class="group">
-							<div class="riqi">
-								<div class="circle width12"></div>
-								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
-							</div>
-							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
-							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
-						</div>
-					</div>
-				</swiper-slide>-->
 				<!--退回-->
 				<swiper-slide>
 					<div class="box-group">
@@ -90,7 +84,7 @@
 							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
 						</div>
 					</div>
-					<div class="more"  @click="next(0)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<!--未整改-->
@@ -118,7 +112,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(1)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
 				<!--已整改-->
@@ -148,10 +142,21 @@
 							</div>
 						</div>
 					</div>
-					<div class="more"  @click="next(2)" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
+					<div class="more"  @click="next()" v-if="pageNum&lt;mydata.lastPage">点击加载更多</div>
 					<div class="more"  v-if="pageNum&gt;mydata.lastPage||pageNum==mydata.lastPage">没有更多啦~</div>
 				</swiper-slide>
-				
+				<swiper-slide>
+					<div class="box-group" v-for="val in list03"  @click="opennew('ydetail',val.cfileId)">
+						<div class="group">
+							<div class="riqi">
+								<div class="circle width12"></div>
+								<span style="width: auto;white-space: nowrap;">{{val.createTime1}}</span>
+							</div>
+							<span class="text">{{val.cmultipleCommunitiesName}}{{val.cgridName}}</span>
+							<img src="../../../static/shanchu.png" @click.stop="workphotod(val.cfileId)" style="margin-right: .2rem;"/>
+						</div>
+					</div>
+				</swiper-slide>
 			</swiper>
 		</div>
 		<transition name='nav'>
@@ -215,9 +220,10 @@
 				pageNum:0,
 				pageSize:10,
 				list:[],
-				cfileResult:0,
+				cfileResult:3,
 				list01:[],
-				list02:[]
+				list02:[],
+				list03:[]
 			}
 		},
 		components: {
@@ -242,6 +248,9 @@
 			}
 		},
 		methods: {
+			back: function() {
+				this.$router.back()
+			},
 			imgok: function(id) {
 				var that = this
 				if(that.cfileDealAfterImg1 == '') {
@@ -323,10 +332,9 @@
 
 			},
 			next:function(index){
-				console.log(index)
 				this.pageNum++
-				this.cfileResult=index
 				this.myajax()
+				this.cfileResult=index
 			},
 			myajax: function() {
 				function plusReady() {
@@ -363,29 +371,33 @@
 				if(that.communityid == '') {
 					delete dataJson.cmultipleCommunitiesId
 				}
-				console.log(dataJson)
 				$.ajax({
 					type: "post",
 					url: that.service + "/queryReturnFile",
 					dataType: 'json',
 					data: dataJson,
 					success: function(res) {
-						console.log(res)
 						that.mydata=res.data
 						if(that.swiperindex==0){
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list02.push(res.data.list[i])
 							}
+							console.log(that.list02)
 						}else if(that.swiperindex==1){
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list.push(res.data.list[i])
 							}
 							console.log(that.list)
-						}else{
+						}else if(that.swiperindex==2){
 							for (var i=0;i<res.data.list.length;i++) {
 								that.list01.push(res.data.list[i])
 							}
 							console.log(that.list01)
+						}else{
+							for (var i=0;i<res.data.list.length;i++) {
+								that.list03.push(res.data.list[i])
+							}
+							console.log(that.list03)
 						}
 						
 						function plusReady() {
@@ -472,16 +484,21 @@
 			},
 			toswiper: function(index) {
 				this.swiperindex = index
-				this.cfileResult=index
 				this.swiper.slideTo(index, 1000, false)
-				this.list=this.list01=this.list02=[]
+				this.list=this.list01=this.list02=this.list03=[]
 				this.pageNum=1
 				if(index==0){
+					this.cfileResult=3
 					this.myajax(3)
 				}else if(index==1){
+					this.cfileResult=1
 					this.myajax(1)
-				}else{
+				}else if(index==2){
+					this.cfileResult=2
 					this.myajax(2)
+				}else{
+					this.cfileResult=0
+					this.myajax(0)
 				}
 			},
 			timeshow: function(type) {
