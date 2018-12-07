@@ -139,7 +139,7 @@
 				swiperOption: {},
 				swiperindex: 0,
 				navboo: false,
-				navtext: '分类',
+				navtext: '选择分类',
 				start: false,
 				setime: '',
 				mapcenter: '[117.471564,34.366127]',
@@ -188,11 +188,23 @@
 				}
 			},
 			upmy: function() {
-				if(this.navtext == '选择分类') {
+				if(this.navtext == '选择分类'||this.navtext == '分类') {
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
 
+					}
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener("plusready", plusReady, false);
+					}
+					return false;
+				}
+				if(this.wimg == '') {
+					function plusReady() {
+						// 显示自动消失的提示消息
+						plus.nativeUI.toast("请上传图片!");
 					}
 					if(window.plus) {
 						plusReady();

@@ -139,7 +139,7 @@
 				swiperOption: {},
 				swiperindex: 0,
 				navboo: false,
-				navtext: '分类',
+				navtext: '选择分类',
 				start: false,
 				setime: '',
 				mapcenter: '[117.471564,34.366127]',
@@ -192,7 +192,6 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-
 					}
 					if(window.plus) {
 						plusReady();

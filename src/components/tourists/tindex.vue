@@ -118,7 +118,6 @@
 					function plusReady() {
 						// 显示自动消失的提示消息
 						plus.nativeUI.toast("请选择分类!");
-
 					}
 					if(window.plus) {
 						plusReady();

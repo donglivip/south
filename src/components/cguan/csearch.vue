@@ -13,7 +13,7 @@
 					<div class="csearch-group">
 						<input type="text" placeholder="姓名" v-model="uname" />
 					</div>
-					<div class="go-search flexc" @click="myajax">
+					<div class="go-search flexc" @click="myajax01">
 						查询
 					</div>
 				</div>
@@ -90,6 +90,11 @@
 			this.myajax()
 		},
 		methods: {
+			myajax01:function(){
+				this.pageNum=0
+				this.mydata=[]
+				this.myajax()
+			},
 			myajax: function() {
 				function plusReady(){
 					plus.nativeUI.showWaiting('数据加载中~')
