@@ -133,28 +133,28 @@
 		},
 		mounted() {
 			var that = this
-//			that.havenew()
-//			that.set01 = setInterval(function() {
-//					plus.geolocation.getCurrentPosition(function(p) {
-//						$.ajax({
-//							type: "post",
-//							url: that.service + "/saveCoordinate",
-//							dataType: 'json',
-//							data: {
-//								cuserId: localStorage.getItem('userid'),
-//								cuserCoordinate: '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
-//							},
-//							success: function(res) {
-//								console.log(JSON.stringify(res))
-//							},
-//							error: function(err) {
-//								console.log(JSON.stringify(err))
-//							}
-//						});
-//					}, function(e) {
-//						alert('错误信息:' + e.message);
-//					});
-//			}, 5000)
+			that.havenew()
+			that.set01 = setInterval(function() {
+					plus.geolocation.getCurrentPosition(function(p) {
+						$.ajax({
+							type: "post",
+							url: that.service + "/saveCoordinate",
+							dataType: 'json',
+							data: {
+								cuserId: localStorage.getItem('userid'),
+								cuserCoordinate: '[' + p.coords.longitude + ',' + p.coords.latitude + ']'
+							},
+							success: function(res) {
+								console.log(JSON.stringify(res))
+							},
+							error: function(err) {
+								console.log(JSON.stringify(err))
+							}
+						});
+					}, function(e) {
+						alert('错误信息:' + e.message);
+					});
+			}, 5000)
 
 			function plusReady() {
 				plus.key.addEventListener("backbutton", function() {
