@@ -237,7 +237,6 @@
 						status:that.swiperindex
 					},
 					success: function(res) {
-						console.log(res)
 						that.mydata = res.data
 						if(that.swiperindex==0){
 							for (var i=0;i<res.data.list.length;i++) {
@@ -272,7 +271,9 @@
 			toswiper: function(index) {
 				this.swiperindex = index
 				this.swiper.slideTo(index, 1000, false)
-				this.myajax(index)
+				this.pageNum=1
+				this.list01=[]
+				this.myajax()
 			},
 			startchang: function(date, formatDate) {
 				if(this.timety == 0) {
@@ -280,7 +281,6 @@
 				} else {
 					this.endtime = formatDate
 				}
-
 			},
 			timeshow: function(type) {
 				this.startshow = true
